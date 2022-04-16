@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Map Theme Preference -->
+    <string-array name="setting_map_theme_entries">
+        <item>@string/setting_map_theme_classic</item>
+        <item>@string/setting_map_theme_light</item>
+        <item>@string/setting_map_theme_dark</item>
+    </string-array>
+
+    <string-array name="setting_map_theme_values">
+        <item>classic</item>
+        <item>light</item>
+        <item>dark</item>
+    </string-array>
+
+    <!-- Compass Measure Unit Preference -->
+    <string-array name="setting_compass_measureunit_entries">
+        <item>@string/setting_compass_measureunit_meters</item>
+        <item>@string/setting_compass_measureunit_feet</item>
+    </string-array>
+
+    <string-array name="setting_compass_measureunit_values">
+        <item>meters</item>
+        <item>feet</item>
+    </string-array>
+</resources>
