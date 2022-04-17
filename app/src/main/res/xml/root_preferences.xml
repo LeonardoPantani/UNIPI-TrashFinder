@@ -2,11 +2,12 @@
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory app:title="@string/general_settings">
-        <!-- default value true per debug -->
         <SwitchPreferenceCompat
-            app:defaultValue="true"
+            app:defaultValue="false"
             app:key="setting_show_intro_at_startup"
-            app:title="@string/show_intro_at_startup" />
+            app:title="@string/show_intro_at_startup"
+            app:summaryOff="@string/show_intro_at_startup_summaryOff"
+            app:summaryOn="@string/show_intro_at_startup_summaryOn"/>
     </PreferenceCategory>
 
     <PreferenceCategory app:title="@string/map_settings">

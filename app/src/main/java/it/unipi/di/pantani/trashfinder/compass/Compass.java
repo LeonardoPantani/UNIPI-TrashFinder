@@ -50,6 +50,11 @@ class Compass implements SensorEventListener {
     public void onSensorChanged(SensorEvent event) {
         final float alpha = 0.97f;
 
+        // se l'accuratezza dei dati non è media/alta ignoro
+        if(event.accuracy != SensorManager.SENSOR_STATUS_ACCURACY_MEDIUM && event.accuracy != SensorManager.SENSOR_STATUS_ACCURACY_HIGH) {
+            return;
+        }
+
         synchronized (this) {
             if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
                 mGravity[0] = alpha * mGravity[0] + (1 - alpha)

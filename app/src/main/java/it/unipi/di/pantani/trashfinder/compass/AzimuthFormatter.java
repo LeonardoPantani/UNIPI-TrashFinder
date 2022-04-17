@@ -4,6 +4,7 @@ import android.content.Context;
 
 import it.unipi.di.pantani.trashfinder.R;
 
+
 class AzimuthFormatter {
     private static final int[] sides = {0, 45, 90, 135, 180, 225, 270, 315, 360};
     private static String[] names = null;

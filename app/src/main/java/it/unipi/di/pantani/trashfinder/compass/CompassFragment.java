@@ -23,6 +23,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.preference.PreferenceManager;
 
+
 import it.unipi.di.pantani.trashfinder.R;
 import it.unipi.di.pantani.trashfinder.Utils;
 
@@ -133,12 +134,15 @@ public class CompassFragment extends Fragment {
 
     private Compass.CompassListener getCompassListener() {
         return azimuth -> ((Activity) context).runOnUiThread(() -> {
+            if(current_location.getAccuracy() == 0f) return;
+
             float dist = current_location.distanceTo(target);
             if(measureUnitCode == 1) {
                 dist *= 3.281;
             }
 
             azim = (float) (azimuth - bearing(current_location.getLatitude(), current_location.getLongitude(), target.getLatitude(), target.getLongitude()));
+
 
             compass_text_distance.setText(context.getResources().getString(R.string.distance_difference, dist, measureUnit));
 

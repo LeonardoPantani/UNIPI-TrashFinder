@@ -7,6 +7,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import it.unipi.di.pantani.trashfinder.compass.CompassFragment;
 import it.unipi.di.pantani.trashfinder.map.MapsFragment;
+import it.unipi.di.pantani.trashfinder.mapeditor.MapEditorFragment;
 
 /**
  * A [FragmentPagerAdapter] that returns a fragment corresponding to
@@ -22,6 +23,10 @@ public class SectionsPagerAdapter extends FragmentStateAdapter {
     public Fragment createFragment(int position) {
         Fragment fragment;
         switch(position) {
+            case 2: {
+                fragment = new MapEditorFragment();
+                break;
+            }
             case 1: {
                 fragment = new CompassFragment();
                 break;
@@ -39,6 +44,6 @@ public class SectionsPagerAdapter extends FragmentStateAdapter {
 
     @Override
     public int getItemCount() {
-        return 2;
+        return 3;
     }
 }

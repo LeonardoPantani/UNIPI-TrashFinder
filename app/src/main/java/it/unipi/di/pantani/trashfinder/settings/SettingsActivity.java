@@ -9,6 +9,7 @@ import androidx.preference.PreferenceFragmentCompat;
 
 import it.unipi.di.pantani.trashfinder.R;
 
+
 public class SettingsActivity extends AppCompatActivity {
 
     @Override

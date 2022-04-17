@@ -7,12 +7,12 @@
     <string name="start_using_app">Inizia ad usare %1$s</string>
     <string name="label_settings">Impostazioni</string>
     <string name="general_settings">Generali</string>
-    <string name="map_settings">Impostazioni Mappa</string>
+    <string name="map_settings">Mappa</string>
     <string name="setting_map_theme">Tema</string>
     <string name="tab_name_maps">Mappa</string>
     <string name="tab_name_compass">Bussola</string>
-    <string name="compass_settings">Impostazioni Bussola</string>
-    <string name="compass_update_interval">Intervallo Aggiornamento</string>
+    <string name="compass_settings">Bussola</string>
+    <string name="compass_update_interval">Intervallo Aggiornamento (secondi)</string>
     <string name="distance_difference">%1$.2f %2$s di distanza</string>
     <string name="intro_desc_1">Visualizza posizioni precise e tipi di cestini intorno a te</string>
     <string name="intro_desc_2">Usa la mappa e bussola per trovare velocemente il cestino di cui hai bisogno</string>
@@ -25,7 +25,7 @@
     <string name="intro_title_3">Flessibile</string>
     <string name="intro_title_5">Hai fatto!</string>
     <string name="loading">Caricamento</string>
-    <string name="show_intro_at_startup">Mostra introduzione all\'avvio</string>
+    <string name="show_intro_at_startup">Introduzione</string>
     <string name="sotw_front">davanti</string>
     <string name="sotw_right">destra</string>
     <string name="sotw_back">dietro</string>
@@ -45,4 +45,10 @@
     <string name="setting_compass_measureunit">Unità di misura</string>
     <string name="setting_compass_measureunit_meters">metri</string>
     <string name="setting_compass_measureunit_feet">piedi</string>
+    <string name="show_intro_at_startup_summaryOff">Nessuna introduzione sarà mostrata al prossimo avvio dell\'app</string>
+    <string name="show_intro_at_startup_summaryOn">L\'introduzione sarà mostrata al prossimo avvio dell\'app</string>
+    <string name="waiting_for_sensors">In attesa dei sensori…</string>
+    <string name="waiting_for_gps">In attesa del GPS…</string>
+    <string name="tab_name_mapeditor">Editor Mappa</string>
+    <string name="marker">Marcatore</string>
 </resources>

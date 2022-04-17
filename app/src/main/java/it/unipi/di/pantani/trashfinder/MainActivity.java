@@ -56,10 +56,11 @@ public class MainActivity extends AppCompatActivity {
                 (tab, position) -> tab.setText(TAB_TITLES[position])
         ).attach();
 
-
         if (!checkPerms(getBaseContext())) {
             showPermissionWarningDialog();
         }
+
+        setPreference("setting_show_intro_at_startup", false);
     }
 
     public void startIntro() {
@@ -81,6 +82,12 @@ public class MainActivity extends AppCompatActivity {
         if (checkPerms(getBaseContext())) {
             view.setEnabled(false);
         }
+    }
+
+    public void setPreference(String preferenceName, boolean preferenceValue) {
+        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
+        editor.putBoolean(preferenceName, preferenceValue);
+        editor.apply();
     }
 
     /**
