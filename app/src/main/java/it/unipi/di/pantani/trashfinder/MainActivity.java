@@ -15,6 +15,7 @@ import android.view.View;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.preference.PreferenceManager;
 import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager2.widget.ViewPager2;
@@ -27,6 +28,7 @@ import it.unipi.di.pantani.trashfinder.settings.SettingsActivity;
 
 public class MainActivity extends AppCompatActivity {
     SharedPreferences sp;
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,10 +43,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void startApp(View view) {
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().show();
-        }
         setContentView(R.layout.activity_main_layout);
+
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this);
         ViewPager2 viewPager = findViewById(R.id.view_pager);
@@ -95,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_actionbar, menu);
+        getMenuInflater().inflate(R.menu.menu_toolbar, menu);
         return true;
     }
 
