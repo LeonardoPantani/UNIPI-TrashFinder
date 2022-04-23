@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <PreferenceCategory
+        app:icon="@drawable/ic_baseline_settings_applications_24"
+        app:title="@string/general_settings">
+        <SwitchPreferenceCompat
+            app:defaultValue="false"
+            app:key="setting_show_intro_at_startup"
+            app:summaryOff="@string/show_intro_at_startup_summaryOff"
+            app:summaryOn="@string/show_intro_at_startup_summaryOn"
+            app:title="@string/show_intro_at_startup" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:title="@string/map_settings"
+        app:icon="@drawable/ic_baseline_map_24">
+        <ListPreference
+            app:defaultValue="auto"
+            app:entries="@array/setting_map_theme_entries"
+            app:entryValues="@array/setting_map_theme_values"
+            app:key="setting_map_theme"
+            app:title="@string/setting_map_theme"
+            app:useSimpleSummaryProvider="true" />
+        <ListPreference
+            app:defaultValue="roads"
+            app:entries="@array/setting_map_type_entries"
+            app:entryValues="@array/setting_map_type_values"
+            app:key="setting_map_type"
+            app:title="@string/setting_map_type"
+            app:useSimpleSummaryProvider="true" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:title="@string/compass_settings"
+        app:icon="@drawable/ic_baseline_compass_24">
+        <ListPreference
+            app:defaultValue="meters"
+            app:entries="@array/setting_compass_measureunit_entries"
+            app:entryValues="@array/setting_compass_measureunit_values"
+            app:key="setting_compass_measureunit"
+            app:title="@string/setting_compass_measureunit"
+            app:useSimpleSummaryProvider="true" />
+        <SeekBarPreference
+            android:max="10"
+            app:adjustable="true"
+            app:defaultValue="1"
+            app:isPreferenceVisible="true"
+            app:key="setting_compass_update_interval"
+            app:min="1"
+            app:seekBarIncrement="1"
+            app:showSeekBarValue="true"
+            app:title="@string/setting_compass_update_interval" />
+        <SwitchPreferenceCompat
+            app:defaultValue="true"
+            app:key="setting_compass_show_tip_switchtomap"
+            app:summaryOff="@string/setting_compass_show_tip_switchtomap_summaryOff"
+            app:summaryOn="@string/setting_compass_show_tip_switchtomap_summaryOn"
+            app:title="@string/setting_compass_show_tip_switchtomap" />
+    </PreferenceCategory>
+</PreferenceScreen>

@@ -1,0 +1,139 @@
+<resources>
+    <!-- APP GENERALS -->
+    <string name="app_name">Trash Finder</string>
+    <string name="loading">Loading</string>
+    <string name="coming_soon">Coming soon…</string>
+    <string name="waiting_for_sensors">Waiting for sensors…</string>
+    <string name="waiting_for_gps">Waiting for GPS…</string>
+    <string name="credits">App developed by Leonardo Pantani as SAM course Project\\n All Rights Reserved©</string>
+    <string name="section_home">Home</string>
+    <string name="section_maps">Map</string>
+    <string name="section_compass">Compass</string>
+    <string name="section_community">Community</string>
+    <string name="section_contributions">Contributions</string>
+    <string name="section_mapeditor">Map Editor</string>
+
+    <string name="dialog_nolocationperm_title">Unable to get location</string>
+    <string name="dialog_nolocationperm_desc">If you do not give %1$s location access, some app functionalities may not work correctly.</string>
+    <string name="dialog_nolocationperm_button_ok">Oh no! Anyway</string>
+    <string name="dialog_nolocationperm_button_grantperms">Grant permissions</string>
+
+    <string name="warning_noperms">This feature may not work if you do not grant the location permission to %1$s.</string>
+
+    <!-- INTRODUCTION -->
+    <string name="swipe_right">Swipe to continue</string>
+    <string name="swipe_icon">Swipe icon</string>
+    <string name="require_permissions">Give permissions</string>
+    <string name="start_using_app">Start using %1$s</string>
+    <string name="intro_title_1">Find</string>
+    <string name="intro_desc_1">View accurate locations and types of trash bins around you</string>
+    <string name="intro_title_2">Save time</string>
+    <string name="intro_desc_2">Use the map and compass to quickly reach the trash bin you need</string>
+    <string name="intro_title_3">Flexible</string>
+    <string name="intro_desc_3">Anyone can update the map to add new trash bins and recycling depots</string>
+    <string name="intro_title_4">Location access?</string>
+    <string name="intro_desc_4">You need to provide permission to the location to make the best use of the app</string>
+    <string name="intro_location_permissiongranted">Thank you! Enjoy full functionalities of %1$s.</string>
+    <string name="intro_location_permissiondenied">You will be able to change app permissions from your phone\'s settings.</string>
+    <string name="intro_title_5">You are done!</string>
+    <string name="intro_desc_5">Press the button below to start using Trash Finder!</string>
+
+    <!-- SETTINGS -->
+    <string name="label_settings">Settings</string>
+    <!-- General settings -->
+    <string name="general_settings">General</string>
+    <string name="show_intro_at_startup">Introduction</string>
+    <string name="show_intro_at_startup_summaryOff">No introduction will be shown at the next startup</string>
+    <string name="show_intro_at_startup_summaryOn">Introduction will be shown at the next startup</string>
+    <string name="show_intro_at_startup_tiprestart_title">Would you like to restart %1$s?</string>
+    <string name="show_intro_at_startup_tiprestart_button">Restart</string>
+    <!-- Map settings -->
+    <string name="map_settings">Map</string>
+    <string name="setting_map_theme">Theme</string>
+    <string name="setting_map_theme_auto">Auto</string>
+    <string name="setting_map_theme_classic">Classic</string>
+    <string name="setting_map_theme_light">Light</string>
+    <string name="setting_map_theme_dark">Dark</string>
+    <string name="setting_map_type">Map Type</string>
+    <string name="setting_map_type_roads">Roadmap</string>
+    <string name="setting_map_type_satellite">Satellite</string>
+
+
+    <!-- Compass settings -->
+    <string name="compass_settings">Compass</string>
+    <string name="setting_compass_update_interval">Update Interval (seconds)</string>
+    <string name="setting_compass_show_tip_switchtomap">Switch to map tip</string>
+    <string name="setting_compass_show_tip_switchtomap_summaryOff">No tip to switch to map will be shown if you are close to the target.</string>
+    <string name="setting_compass_show_tip_switchtomap_summaryOn">When close to the target, a tip will be shown to switch to the map view.</string>
+    <string name="setting_compass_measureunit">Measure unit</string>
+    <string name="setting_compass_measureunit_meters">meters</string>
+    <string name="setting_compass_measureunit_kilometers">kilometers</string>
+    <string name="setting_compass_measureunit_feet">feet</string>
+    <string name="setting_compass_measureunit_miles">miles</string>
+
+    <!-- TABS -->
+    <string name="tab_name_maps">Map</string>
+    <string name="tab_name_compass">Compass</string>
+
+    <!-- COMPASS -->
+    <string name="distance_difference">%1$.2f %2$s away</string>
+    <plurals name="update_interval_info_box">
+        <item quantity="one">Update interval: %d second</item>
+        <item quantity="other">Update interval: %1$d seconds</item>
+    </plurals>
+    <string name="compass_icon_description">Compass icon</string>
+    <string name="compass_tipswitchtomap_title">You are close to the target.</string>
+    <string name="compass_tipswitchtomap_button">Switch to map</string>
+
+    <string name="sotw_front">front</string>
+    <string name="sotw_right">right</string>
+    <string name="sotw_back">back</string>
+    <string name="sotw_left">left</string>
+    <string name="sotw_frontright">front right</string>
+    <string name="sotw_frontleft">front left</string>
+    <string name="sotw_backright">back right</string>
+    <string name="sotw_backleft">back left</string>
+
+    <!-- MAP EDITOR -->
+    <string name="marker">Marker</string>
+
+    <!-- DRAWER -->
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Drawer Title</string>
+    <string name="nav_header_subtitle">Drawer SubTitle</string>
+    <string name="nav_header_desc">Navigation header</string>
+
+    <!-- FEEDBACK -->
+    <string name="label_feedback">Feedback</string>
+    <string name="feedback_title">What would you like us to know?</string>
+    <string name="feedback_type_error">Error</string>
+    <string name="feedback_type_suggestion">Suggestion</string>
+    <string name="feedback_text_hint">Write here…</string>
+    <string name="feedback_button">Send feedback</string>
+    <string name="feedback_text_error">Feedback text length must be between 10 and 500 characters long.</string>
+    <string name="feedback_type_field_error">Choose a type of feedback</string>
+    <string name="feedback_chooser">Select an app to send feedback</string>
+    <string name="feedback_chooser_error">You do not have a valid app to send feedback.</string>
+    <string name="feedback_thanks">Thank you for taking the time to provide your feedback. It is very important to us that the user is satisfied while using our app.</string>
+    <string name="feedback_smile_description">Smiley face</string>
+
+    <!-- COMMUNITY -->
+    <string name="community_yourcontribute_title">Your contribution:</string>
+    <string name="community_yourcontribute_proposedchanges">Proposed changes → %1$d</string>
+    <string name="community_yourcontribute_evaluatedchanges">Evaluated changes → %1$d</string>
+    <string name="community_yourcontribute_description">Your contribution image</string>
+
+    <string name="community_generalstats_title">General stats:</string>
+    <string name="community_generalstats_numbertrashbins">Number of bins → %1$d</string>
+    <string name="community_generalstats_numberchanges">Total changes made → %1$d</string>
+    <string name="community_generalstats_description">General stats image</string>
+
+    <string name="community_gotomapeditor_title">Open map editor</string>
+    <string name="community_gotomapeditor_desc">You will be able to propose new trash bin locations and edit already existing ones.</string>
+    <string name="community_gotomapeditor_description">Go to map editor image</string>
+
+    <!-- MAP EDITOR -->
+    <string name="mapeditor_youareineditingmode">You are in Editing Mode</string>
+
+</resources>

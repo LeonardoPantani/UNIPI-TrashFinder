@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:title="@string/section_home"
+            android:icon="@drawable/ic_baseline_home_24">
+            <menu>
+                <item
+                    android:id="@+id/nav_map"
+                    android:icon="@drawable/ic_baseline_map_24"
+                    android:title="@string/section_maps" />
+                <item
+                    android:id="@+id/nav_compass"
+                    android:icon="@drawable/ic_baseline_compass_24"
+                    android:title="@string/section_compass" />
+            </menu>
+        </item>
+
+        <item
+            android:title="@string/section_community"
+            android:icon="@drawable/ic_baseline_people_24">
+            <menu>
+                <item
+                    android:id="@+id/nav_community"
+                    android:icon="@drawable/ic_baseline_speaker_notes_24"
+                    android:title="@string/section_contributions" />
+                <item
+                    android:id="@+id/nav_map_editor"
+                    android:icon="@drawable/ic_baseline_create_24"
+                    android:title="@string/section_mapeditor" />
+            </menu>
+        </item>
+    </group>
+</menu>

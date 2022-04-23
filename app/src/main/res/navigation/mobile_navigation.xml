@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_map">
+
+    <fragment
+        android:id="@+id/nav_map"
+        android:name="it.unipi.di.pantani.trashfinder.home.HomeFragment"
+        tools:layout="@layout/fragment_home">
+        <argument
+            android:name="directMap"
+            app:argType="boolean"
+            android:defaultValue="true"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_compass"
+        android:name="it.unipi.di.pantani.trashfinder.home.HomeFragment"
+        tools:layout="@layout/fragment_compass">
+        <argument
+            android:name="directCompass"
+            app:argType="boolean"
+            android:defaultValue="true"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_community"
+        android:name="it.unipi.di.pantani.trashfinder.community.CommunityFragment"
+        tools:layout="@layout/fragment_community" />
+
+    <fragment
+        android:id="@+id/nav_map_editor"
+        android:name="it.unipi.di.pantani.trashfinder.community.MapEditorFragment"
+        tools:layout="@layout/fragment_map_editor" />
+</navigation>
