@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/infowindow_root"
+    android:baselineAligned="false"
+    android:orientation="horizontal"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:weightSum="1"
+    android:background="@android:color/transparent">
+
+    <LinearLayout
+        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:background="@drawable/rounded_border"
+        android:orientation="vertical"
+        android:layout_weight="0.75"
+        android:padding="10dp">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/infowindow_title"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:layout_weight="1.6"
+                android:text="@string/infowindow_defaultbintitle"
+                android:textColor="#000"
+                android:textSize="16sp"
+                />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/infowindow_id"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:layout_weight="0.4"
+                android:text="@string/infowindow_defaultid"
+                android:textAlignment="textEnd"
+                android:textColor="#666"
+                android:textSize="12sp"
+                />
+        </LinearLayout>
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@android:color/darker_gray"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="10"
+            android:textSize="14sp"
+            android:textColor="#000"
+            android:text="@string/infowindow_notestitle"
+            android:textStyle="bold"
+            android:id="@+id/infowindow_snippet_title"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="10"
+            android:textSize="14sp"
+            android:textColor="#000"
+            android:text="@string/infowindow_notesnotfound"
+            android:id="@+id/infowindow_snippet"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@android:color/darker_gray"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="10"
+            android:textSize="14sp"
+            android:textColor="#777"
+            android:text="@string/infowindow_tipclickcompass" />
+    </LinearLayout>
+</LinearLayout>

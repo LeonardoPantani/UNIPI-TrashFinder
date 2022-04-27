@@ -21,6 +21,7 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 
+import it.unipi.di.pantani.trashfinder.data.Marker;
 import trashfinder.R;
 
 public class Utils {
@@ -32,7 +33,8 @@ public class Utils {
     public static final double DEFAULT_LOCATION_LON = 12.496366;
 
     public static final int DEFAULT_ZOOM = 5;
-    public static final int LOCATION_ZOOM = 19;
+    public static final int LOCATION_ZOOM = 16;
+    public static final int MARKER_ZOOM = 19;
 
     public static final int REQUIRE_PERMISSION_CODE_INTRO = 1;
 
@@ -67,6 +69,12 @@ public class Utils {
     public static void setPreference(Context context, String preferenceName, boolean preferenceValue) {
         SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
         editor.putBoolean(preferenceName, preferenceValue);
+        editor.apply();
+    }
+
+    public static void setPreference(Context context, String preferenceName, String preferenceValue) {
+        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        editor.putString(preferenceName, preferenceValue);
         editor.apply();
     }
 
@@ -124,5 +132,58 @@ public class Utils {
         } else {
             gmap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         }
+    }
+
+    // MARCATORE
+    public static String getTitleFromMarker(Context context, Marker marker) {
+        String trashbin_type;
+
+        switch(marker.getType()) {
+            case trashbin_indifferenziato: {
+                trashbin_type = context.getString(R.string.markertype_undifferentiated);
+                break;
+            }
+            case trashbin_plastica: {
+                trashbin_type = context.getString(R.string.markertype_plastic);
+                break;
+            }
+            case trashbin_alluminio: {
+                trashbin_type = context.getString(R.string.markertype_aluminium);
+                break;
+            }
+            case trashbin_carta: {
+                trashbin_type = context.getString(R.string.markertype_paper);
+                break;
+            }
+            case trashbin_organico: {
+                trashbin_type = context.getString(R.string.markertype_organic);
+                break;
+            }
+            case trashbin_farmaci: {
+                trashbin_type = context.getString(R.string.markertype_medication);
+                break;
+            }
+            case trashbin_pile: {
+                trashbin_type = context.getString(R.string.markertype_batteries);
+                break;
+            }
+            case trashbin_olio: {
+                trashbin_type = context.getString(R.string.markertype_oil);
+                break;
+            }
+            case recyclingdepot: {
+                trashbin_type = context.getString(R.string.markertype_recyclingdepot);
+                break;
+            }
+            default: {
+                trashbin_type = context.getString(R.string.markertype_undefined);
+            }
+        }
+
+        return "#" + marker.getId() + " " + context.getString(R.string.markertype_main, trashbin_type);
+    }
+
+    public static String getSnippetFromMarker(Marker marker) {
+        return marker.getNotes();
     }
 }

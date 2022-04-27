@@ -32,6 +32,6 @@
 
     <fragment
         android:id="@+id/nav_map_editor"
-        android:name="it.unipi.di.pantani.trashfinder.community.MapEditorFragment"
+        android:name="it.unipi.di.pantani.trashfinder.mapeditor.MapEditorFragment"
         tools:layout="@layout/fragment_map_editor" />
 </navigation>

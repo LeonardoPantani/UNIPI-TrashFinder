@@ -1,4 +1,4 @@
-package it.unipi.di.pantani.trashfinder.home;
+package it.unipi.di.pantani.trashfinder.compass;
 
 import android.content.Context;
 import android.hardware.Sensor;

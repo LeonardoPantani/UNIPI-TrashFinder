@@ -1,4 +1,4 @@
-package it.unipi.di.pantani.trashfinder.community;
+package it.unipi.di.pantani.trashfinder.mapeditor;
 
 import static it.unipi.di.pantani.trashfinder.Utils.checkPerms;
 import static it.unipi.di.pantani.trashfinder.Utils.pointLocation;
@@ -19,8 +19,6 @@ import androidx.fragment.app.Fragment;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 
 import trashfinder.R;
 import trashfinder.databinding.FragmentMapEditorBinding;
@@ -68,13 +66,6 @@ public class MapEditorFragment extends Fragment implements OnMapReadyCallback {
         updateMapStyleByPreference(context, sp, mMap);
         // punta la mappa sulla posizione attuale
         pointLocation(context, mMap);
-
-        // biliardo (test)
-        LatLng t = new LatLng(43.7231751360382, 10.435376588242777);
-        mMap.addMarker(new MarkerOptions().position(t).title("Biliardo"));
-
-        // guardare video su infowindows
-        // https://www.youtube.com/watch?v=DhYofrJPzlI
     }
 
     @Override

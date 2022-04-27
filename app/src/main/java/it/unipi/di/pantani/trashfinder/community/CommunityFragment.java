@@ -11,6 +11,7 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import it.unipi.di.pantani.trashfinder.mapeditor.MapEditorFragment;
 import trashfinder.R;
 import trashfinder.databinding.FragmentCommunityBinding;
 

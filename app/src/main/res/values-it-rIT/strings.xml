@@ -107,4 +107,26 @@
     <string name="section_compass">Bussola</string>
     <string name="section_maps">Mappa</string>
     <string name="mapeditor_youareineditingmode">Sei in Modalità Editor</string>
+    <string name="markertype_main">Cestino %1$s</string>
+    <string name="markertype_undefined">non specificato</string>
+    <string name="markertype_undifferentiated">indifferenziato</string>
+    <string name="markertype_plastic">plastica</string>
+    <string name="markertype_aluminium">alluminio</string>
+    <string name="markertype_paper">carta</string>
+    <string name="markertype_glass">vetro</string>
+    <string name="markertype_organic">organico</string>
+    <string name="markertype_bulky">ingombrante</string>
+    <string name="markertype_electrical">componenti elettrici</string>
+    <string name="markertype_medication">farmaci scaduti</string>
+    <string name="markertype_batteries">pile esauste</string>
+    <string name="markertype_oil">olio esausto</string>
+    <string name="markertype_recyclingdepot">(isola ecologica)</string>
+    <string name="infowindow_defaultbintitle">Elemento generico</string>
+    <string name="infowindow_defaultid">#id</string>
+    <string name="infowindow_notestitle">Note:</string>
+    <string name="infowindow_notesnotfound">Nessuna nota per questo elemento.</string>
+    <string name="infowindow_tipclickcompass">Clicca su questa finestra per selezionare l\'elemento come bersaglio per la bussola.</string>
+    <string name="infowindow_setcompass">Bersaglio impostato nella vista Bussola.</string>
+    <string name="compass_tipchoosetargetfirst">Per favore seleziona un bersaglio sulla mappa prima di usare questa funzione.</string>
+    <string name="generic_error">Errore interno all\'app!</string>
 </resources>

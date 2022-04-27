@@ -25,13 +25,13 @@
 
         <!-- Activity Settings -->
         <activity
-            android:name="it.unipi.di.pantani.trashfinder.SettingsActivity"
+            android:name="it.unipi.di.pantani.trashfinder.settings.SettingsActivity"
             android:label="@string/label_settings">
         </activity>
 
         <!-- Activity Feedback -->
         <activity
-            android:name="it.unipi.di.pantani.trashfinder.FeedbackActivity"
+            android:name="it.unipi.di.pantani.trashfinder.feedback.FeedbackActivity"
             android:label="@string/label_feedback">
         </activity>
 

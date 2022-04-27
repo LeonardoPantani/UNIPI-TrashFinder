@@ -1,4 +1,4 @@
-package it.unipi.di.pantani.trashfinder.home;
+package it.unipi.di.pantani.trashfinder.compass;
 
 import static it.unipi.di.pantani.trashfinder.Utils.checkPerms;
 
@@ -9,7 +9,11 @@ import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+
+import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.PreferenceManager;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,10 +58,15 @@ public class CompassFragment extends Fragment {
     private Compass compass;
     private boolean showTip;
 
+    private boolean activateCompass;
+
+    private CompassViewModel mCompassViewModel;
+
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         this.context = context;
+        Log.d("ISTANZA", "attaccato compass");
     }
 
     @Nullable
@@ -78,9 +87,8 @@ public class CompassFragment extends Fragment {
 
         AzimuthFormatter azimuthFormatter = new AzimuthFormatter(context);
 
-        // biliardo (test)
-        target.setLatitude(43.7231751360382);
-        target.setLongitude(10.435376588242777);
+        // view model
+        mCompassViewModel = new ViewModelProvider(this).get(CompassViewModel.class);
 
         return view;
     }
@@ -95,6 +103,7 @@ public class CompassFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        Log.d("ISTANZA", "resume compass");
 
         location_refresh_time = sp.getInt("setting_compass_update_interval", Utils.default_location_refresh_time);
         location_refresh_time *= 1000;
@@ -128,6 +137,27 @@ public class CompassFragment extends Fragment {
         }
 
         isTipShown = false;
+
+
+        String markerid = sp.getString("compass_markerid", "invalid");
+
+        if(!markerid.equals("invalid")) {
+            mCompassViewModel.getMarkerId(Integer.parseInt(markerid)).observe(getViewLifecycleOwner(), targetMarker -> {
+                target.setLatitude(targetMarker.getLatitude());
+                target.setLongitude(targetMarker.getLongitude());
+            });
+            activateCompass = true;
+            warning_notif = null;
+        } else {
+            activateCompass = false;
+            if(warning_notif == null) {
+                warning_notif = Snackbar.make(view.findViewById(R.id.compass), getResources().getString(R.string.compass_tipchoosetargetfirst), Snackbar.LENGTH_INDEFINITE);
+                View a = warning_notif.getView();
+                a.setBackgroundColor(ContextCompat.getColor(context, R.color.darkyellow));
+                warning_notif.show();
+            }
+            compass_text_distance.setText("{{{(>_<)}}}");
+        }
     }
 
     @Override
@@ -135,10 +165,14 @@ public class CompassFragment extends Fragment {
         super.onPause();
         locationManager.removeUpdates(this::onLocationChanged);
         compass.stop();
-        if(warning_notif != null)
+        if (warning_notif != null) {
             warning_notif.dismiss();
-        if(mySnackbar != null)
+            warning_notif = null;
+        }
+        if (mySnackbar != null) {
             mySnackbar.dismiss();
+            mySnackbar = null;
+        }
     }
 
     public void onLocationChanged(Location location) {
@@ -159,7 +193,7 @@ public class CompassFragment extends Fragment {
     Snackbar mySnackbar;
     private Compass.CompassListener getCompassListener() {
         return azimuth -> ((Activity) context).runOnUiThread(() -> {
-            if(current_location.getAccuracy() == 0f) return;
+            if(current_location.getAccuracy() == 0f || !activateCompass) return;
 
             float dist = current_location.distanceTo(target);
             if(measureUnitCode == 1) {

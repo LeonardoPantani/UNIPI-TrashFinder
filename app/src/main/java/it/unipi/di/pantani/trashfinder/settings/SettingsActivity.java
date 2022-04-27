@@ -1,4 +1,4 @@
-package it.unipi.di.pantani.trashfinder;
+package it.unipi.di.pantani.trashfinder.settings;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -12,6 +12,7 @@ import androidx.preference.PreferenceManager;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import it.unipi.di.pantani.trashfinder.Utils;
 import trashfinder.R;
 
 

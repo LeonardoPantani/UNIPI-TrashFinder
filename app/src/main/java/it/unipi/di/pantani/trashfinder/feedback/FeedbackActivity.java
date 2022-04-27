@@ -1,4 +1,4 @@
-package it.unipi.di.pantani.trashfinder;
+package it.unipi.di.pantani.trashfinder.feedback;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
@@ -16,6 +16,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import it.unipi.di.pantani.trashfinder.Utils;
 import trashfinder.R;
 
 public class FeedbackActivity extends AppCompatActivity {

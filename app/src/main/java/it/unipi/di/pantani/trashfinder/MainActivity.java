@@ -33,7 +33,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
 import androidx.viewpager.widget.ViewPager;
 
+import it.unipi.di.pantani.trashfinder.feedback.FeedbackActivity;
 import it.unipi.di.pantani.trashfinder.intro.SliderAdapter;
+import it.unipi.di.pantani.trashfinder.settings.SettingsActivity;
 import trashfinder.R;
 import trashfinder.databinding.ActivityMainBinding;
 

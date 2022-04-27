@@ -2,6 +2,7 @@
     <!-- APP GENERALS -->
     <string name="app_name">Trash Finder</string>
     <string name="loading">Loading</string>
+    <string name="generic_error">Internal app error!</string>
     <string name="coming_soon">Coming soon…</string>
     <string name="waiting_for_sensors">Waiting for sensors…</string>
     <string name="waiting_for_gps">Waiting for GPS…</string>
@@ -84,6 +85,7 @@
     <string name="compass_icon_description">Compass icon</string>
     <string name="compass_tipswitchtomap_title">You are close to the target.</string>
     <string name="compass_tipswitchtomap_button">Switch to map</string>
+    <string name="compass_tipchoosetargetfirst">Please select a target on the map before using this feature.</string>
 
     <string name="sotw_front">front</string>
     <string name="sotw_right">right</string>
@@ -136,4 +138,26 @@
     <!-- MAP EDITOR -->
     <string name="mapeditor_youareineditingmode">You are in Editing Mode</string>
 
+    <!-- MARKERS -->
+    <string name="infowindow_defaultbintitle">Generic element</string>
+    <string name="infowindow_defaultid">#id</string>
+    <string name="infowindow_notestitle">Notes:</string>
+    <string name="infowindow_notesnotfound">No notes for this element.</string>
+    <string name="infowindow_tipclickcompass">Click on this window to select this element as target for the compass.</string>
+    <string name="infowindow_setcompass">Compass target set in the Compass View.</string>
+    <string name="markertype_main">%1$s waste</string>
+    <string name="markertype_undefined">undefined</string>
+
+    <string name="markertype_undifferentiated">undifferentiated</string>
+    <string name="markertype_plastic">plastic</string>
+    <string name="markertype_aluminium">aluminium</string>
+    <string name="markertype_paper">paper</string>
+    <string name="markertype_glass">glass</string>
+    <string name="markertype_organic">organic</string>
+    <string name="markertype_bulky">bulky</string>
+    <string name="markertype_electrical">electrical</string>
+    <string name="markertype_medication">medication</string>
+    <string name="markertype_batteries">batteries</string>
+    <string name="markertype_oil">oil</string>
+    <string name="markertype_recyclingdepot">recycling depot</string>
 </resources>
