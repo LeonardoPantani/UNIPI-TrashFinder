@@ -132,7 +132,7 @@
     <string name="community_generalstats_description">General stats image</string>
 
     <string name="community_gotomapeditor_title">Open map editor</string>
-    <string name="community_gotomapeditor_desc">You will be able to propose new trash bin locations and edit already existing ones.</string>
+    <string name="community_gotomapeditor_desc">Select "Map Editor" from the menu that will popup. Then you are going to be able to propose new trash bin locations and edit already existing ones.</string>
     <string name="community_gotomapeditor_description">Go to map editor image</string>
 
     <!-- MAP EDITOR -->
@@ -144,6 +144,7 @@
     <string name="infowindow_notestitle">Notes:</string>
     <string name="infowindow_notesnotfound">No notes for this element.</string>
     <string name="infowindow_tipclickcompass">Click on this window to select this element as target for the compass.</string>
+    <string name="infowindow_tipitemselected">This item is currently selected.</string>
     <string name="infowindow_setcompass">Compass target set in the Compass View.</string>
     <string name="markertype_main">%1$s waste</string>
     <string name="markertype_undefined">undefined</string>

@@ -24,7 +24,7 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 import it.unipi.di.pantani.trashfinder.data.Marker;
 import trashfinder.R;
 
-public class Utils {
+public abstract class Utils {
     public static final int default_location_refresh_time = 3; // in seconds
     public static final int[] TAB_TITLES = new int[]{R.string.tab_name_maps, R.string.tab_name_compass};
     public static final String FEEDBACK_MAIL = "l.pantani5@studenti.unipi.it";
@@ -183,7 +183,11 @@ public class Utils {
         return "#" + marker.getId() + " " + context.getString(R.string.markertype_main, trashbin_type);
     }
 
-    public static String getSnippetFromMarker(Marker marker) {
-        return marker.getNotes();
+    static com.google.android.gms.maps.model.Marker compassSelectedMarker;
+    public static void setCompassSelectedMarker(com.google.android.gms.maps.model.Marker m) {
+        compassSelectedMarker = m;
+    }
+    public static com.google.android.gms.maps.model.Marker getCompassSelectedMarker() {
+        return compassSelectedMarker;
     }
 }

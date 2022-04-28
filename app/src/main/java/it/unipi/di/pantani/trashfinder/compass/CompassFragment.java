@@ -1,6 +1,7 @@
 package it.unipi.di.pantani.trashfinder.compass;
 
 import static it.unipi.di.pantani.trashfinder.Utils.checkPerms;
+import static it.unipi.di.pantani.trashfinder.Utils.getCompassSelectedMarker;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -27,6 +28,7 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 
@@ -138,14 +140,15 @@ public class CompassFragment extends Fragment {
 
         isTipShown = false;
 
-
-        String markerid = sp.getString("compass_markerid", "invalid");
-
-        if(!markerid.equals("invalid")) {
-            mCompassViewModel.getMarkerId(Integer.parseInt(markerid)).observe(getViewLifecycleOwner(), targetMarker -> {
-                target.setLatitude(targetMarker.getLatitude());
-                target.setLongitude(targetMarker.getLongitude());
-            });
+        Marker selectedMarker = getCompassSelectedMarker();
+        if(selectedMarker != null && selectedMarker.getTag() != null) {
+            it.unipi.di.pantani.trashfinder.data.Marker tmarker = (it.unipi.di.pantani.trashfinder.data.Marker) selectedMarker.getTag();
+            if(tmarker != null) {
+                mCompassViewModel.getMarkerId(tmarker.getId()).observe(getViewLifecycleOwner(), targetMarker -> {
+                    target.setLatitude(targetMarker.getLatitude());
+                    target.setLongitude(targetMarker.getLongitude());
+                });
+            }
             activateCompass = true;
             warning_notif = null;
         } else {

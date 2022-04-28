@@ -97,7 +97,7 @@
     <string name="community_generalstats_numberchanges">Modifiche totali fatte → %1$d</string>
     <string name="community_generalstats_description">Immagine Statistiche generali</string>
     <string name="community_gotomapeditor_title">Apri editor mappa</string>
-    <string name="community_gotomapeditor_desc">Potrai proporre nuove posizioni per cestini e modificare quelle già esistenti.</string>
+    <string name="community_gotomapeditor_desc">Apri l\'Editor Mappa dal menu che apparirà. Una volta aperto, potrai proporre nuove posizioni per cestini e modificare quelle già esistenti.</string>
     <string name="community_gotomapeditor_description">Immagine Apri editor mappa</string>
     <string name="section_contributions">Contributi</string>
     <string name="section_mapeditor">Editor Mappa</string>
@@ -129,4 +129,5 @@
     <string name="infowindow_setcompass">Bersaglio impostato nella vista Bussola.</string>
     <string name="compass_tipchoosetargetfirst">Per favore seleziona un bersaglio sulla mappa prima di usare questa funzione.</string>
     <string name="generic_error">Errore interno all\'app!</string>
+    <string name="infowindow_tipitemselected">Questo elemento è attualmente selezionato.</string>
 </resources>

@@ -1,7 +1,10 @@
 package it.unipi.di.pantani.trashfinder;
 
+import static it.unipi.di.pantani.trashfinder.Utils.getCompassSelectedMarker;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
@@ -25,7 +28,8 @@ public class MarkerWindowAdapter implements GoogleMap.InfoWindowAdapter{
     }
 
     private void rendowWindowText(Marker marker, View view){
-
+        //GradientDrawable shape = (GradientDrawable) view.findViewById(R.id.infowindow_section_title).getBackground();
+        //shape.setColor(Color.BLUE);
         String title = marker.getTitle();
         TextView tvTitle = view.findViewById(R.id.infowindow_title);
 
@@ -38,8 +42,17 @@ public class MarkerWindowAdapter implements GoogleMap.InfoWindowAdapter{
         String snippet = marker.getSnippet();
         TextView tvSnippet = view.findViewById(R.id.infowindow_snippet);
 
-        if(snippet != null && !snippet.equals("")){
+        TextView infoWindowTip = view.findViewById(R.id.infowindow_selectedlement);
+
+        if(snippet != null && !snippet.equals("")) {
             tvSnippet.setText(snippet);
+        }
+
+        if(marker.equals(getCompassSelectedMarker())) {
+            infoWindowTip.setText(view.getResources().getString(R.string.infowindow_tipitemselected));
+            infoWindowTip.setHighlightColor(Color.RED);
+        } else {
+            infoWindowTip.setText(view.getResources().getString(R.string.infowindow_tipclickcompass));
         }
     }
 

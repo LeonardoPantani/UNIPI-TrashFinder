@@ -1,6 +1,8 @@
 package it.unipi.di.pantani.trashfinder.community;
 
+import android.app.Activity;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +10,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -36,10 +40,13 @@ public class CommunityFragment extends Fragment {
         CardView cardView = root.findViewById(R.id.community_card_openmapeditor);
 
         cardView.setOnClickListener(v -> {
-            // cambio fragment
-            FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-            transaction.replace(R.id.nav_host_fragment_content_main, new MapEditorFragment());
-            transaction.commit();
+            Activity mainactivity = getActivity();
+            DrawerLayout navDrawer;
+            if(mainactivity != null) {
+                navDrawer = mainactivity.findViewById(R.id.drawer_layout);
+                if(!navDrawer.isDrawerOpen(GravityCompat.START))
+                    navDrawer.openDrawer(GravityCompat.START);
+            }
         });
 
         return root;

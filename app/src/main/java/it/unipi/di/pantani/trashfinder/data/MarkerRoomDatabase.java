@@ -23,10 +23,9 @@ import java.util.concurrent.Executors;
 public abstract class MarkerRoomDatabase extends RoomDatabase {
     public abstract MarkerDao markerDao();
 
-    private static volatile MarkerRoomDatabase INSTANCE;
+    private static MarkerRoomDatabase INSTANCE;
     private static final int NUMBER_OF_THREADS = 4;
-    static final ExecutorService databaseWriteExecutor =
-            Executors.newFixedThreadPool(NUMBER_OF_THREADS);
+    static final ExecutorService databaseWriteExecutor = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
 
     static MarkerRoomDatabase getDatabase(final Context context) {
         if (INSTANCE == null) {
@@ -42,7 +41,7 @@ public abstract class MarkerRoomDatabase extends RoomDatabase {
         return INSTANCE;
     }
 
-    private static RoomDatabase.Callback sRoomDatabaseCallback = new RoomDatabase.Callback() {
+    private static final RoomDatabase.Callback sRoomDatabaseCallback = new RoomDatabase.Callback() {
         @Override
         public void onCreate(@NonNull SupportSQLiteDatabase db) {
             super.onCreate(db);
@@ -59,6 +58,8 @@ public abstract class MarkerRoomDatabase extends RoomDatabase {
                 test = new Marker(Marker.MarkerType.trashbin_olio, 43.72803527270394, 10.40780072366369, "Casa abu");
                 dao.insert(test);
                 test = new Marker(Marker.MarkerType.trashbin_carta, 43.69250697637072, 10.480910501919539, "");
+                dao.insert(test);
+                test = new Marker(Marker.MarkerType.trashbin_indifferenziato, 43.72258331949242, 10.436463139204944, "");
                 dao.insert(test);
             });
         }

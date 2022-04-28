@@ -2,10 +2,10 @@ package it.unipi.di.pantani.trashfinder.home;
 
 import static it.unipi.di.pantani.trashfinder.Utils.MARKER_ZOOM;
 import static it.unipi.di.pantani.trashfinder.Utils.checkPerms;
+import static it.unipi.di.pantani.trashfinder.Utils.getCompassSelectedMarker;
 import static it.unipi.di.pantani.trashfinder.Utils.getTitleFromMarker;
-import static it.unipi.di.pantani.trashfinder.Utils.getSnippetFromMarker;
 import static it.unipi.di.pantani.trashfinder.Utils.pointLocation;
-import static it.unipi.di.pantani.trashfinder.Utils.setPreference;
+import static it.unipi.di.pantani.trashfinder.Utils.setCompassSelectedMarker;
 import static it.unipi.di.pantani.trashfinder.Utils.updateMapStyleByPreference;
 
 import android.annotation.SuppressLint;
@@ -106,11 +106,14 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
             for(Marker m : markers) {
                 Log.d("ISTANZA", "marcatore " + m.getLatitude() + " | " + m.getLongitude());
-                mMap.addMarker(new MarkerOptions()
+                com.google.android.gms.maps.model.Marker newMarker = mMap.addMarker(new MarkerOptions()
                 .position(new LatLng(m.getLatitude(), m.getLongitude()))
                 .title(getTitleFromMarker(context, m))
-                .snippet(getSnippetFromMarker(m))
+                .snippet(m.getNotes())
                 .icon(BitmapDescriptorFactory.defaultMarker(getMarkerColorByType(m))));
+
+                if(newMarker != null) // imposto come tag il marker
+                    newMarker.setTag(m);
 
                 //builder.include(new LatLng(m.getLatitude(), m.getLongitude()));
             }
@@ -119,12 +122,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         });
 
         mMap.setOnInfoWindowClickListener(marker -> {
-            String marker_title = marker.getTitle();
-            if(marker_title != null) {
-                setPreference(context, "compass_markerid", marker_title.substring(1, marker.getTitle().indexOf(' ')));
+            if(!marker.equals(getCompassSelectedMarker())) {
+                setCompassSelectedMarker(marker);
                 Toast.makeText(context, getResources().getString(R.string.infowindow_setcompass), Toast.LENGTH_LONG).show();
-            } else {
-                Toast.makeText(context, getResources().getString(R.string.generic_error), Toast.LENGTH_LONG).show();
+                marker.hideInfoWindow();
             }
         });
     }
