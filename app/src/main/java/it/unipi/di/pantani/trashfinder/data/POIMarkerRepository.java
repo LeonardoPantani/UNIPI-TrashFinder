@@ -14,25 +14,25 @@ import java.util.List;
  * A Repository manages queries and allows you to use multiple backends.
  * In the most common example, the Repository implements the logic for deciding whether to fetch data from a network or use results cached in a local database.
  */
-public class MarkerRepository {
-    private MarkerDao mMarkerDao;
-    private LiveData<List<Marker>> mMarkerList;
+public class POIMarkerRepository {
+    private POIMarkerDAO mPOIMarkerDAO;
+    private LiveData<List<POIMarker>> mMarkerList;
 
-    public MarkerRepository(Application application) {
-        MarkerRoomDatabase db = MarkerRoomDatabase.getDatabase(application);
-        mMarkerDao = db.markerDao();
-        mMarkerList = mMarkerDao.getNearMarkers();
+    public POIMarkerRepository(Application application) {
+        POIMarkerRoomDatabase db = POIMarkerRoomDatabase.getDatabase(application);
+        mPOIMarkerDAO = db.markerDao();
+        mMarkerList = mPOIMarkerDAO.getNearMarkers();
     }
 
-    public LiveData<List<Marker>> getMarkerList() {
+    public LiveData<List<POIMarker>> getMarkerList() {
         return mMarkerList;
     }
 
-    public LiveData<Marker> getById(int id) {
-        return mMarkerDao.getById(id);
+    public LiveData<POIMarker> getById(int id) {
+        return mPOIMarkerDAO.getById(id);
     }
 
-    public void insert(Marker marker) {
-        MarkerRoomDatabase.databaseWriteExecutor.execute(() -> mMarkerDao.insert(marker));
+    public void insert(POIMarker marker) {
+        POIMarkerRoomDatabase.databaseWriteExecutor.execute(() -> mPOIMarkerDAO.insert(marker));
     }
 }

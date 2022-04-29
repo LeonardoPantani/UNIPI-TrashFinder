@@ -3,7 +3,7 @@
     android:id="@+id/infowindow_root"
     android:baselineAligned="false"
     android:orientation="horizontal"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center"
     android:weightSum="1"
@@ -15,7 +15,7 @@
         android:layout_width="0dp"
         android:background="@drawable/rounded_border"
         android:orientation="vertical"
-        android:layout_weight="0.75"
+        android:layout_weight="0.7"
         android:padding="10dp">
 
         <LinearLayout
@@ -28,7 +28,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/infowindow_title"
                 android:ellipsize="end"
-                android:maxLines="1"
+                android:maxLines="3"
                 android:layout_weight="1.6"
                 android:text="@string/infowindow_defaultbintitle"
                 android:textColor="#000"
@@ -48,34 +48,40 @@
                 />
         </LinearLayout>
 
-
-        <View
+        <LinearLayout
+            android:id="@+id/infowindow_section_notes"
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="10dp"
-            android:background="@android:color/darker_gray"/>
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            android:orientation="vertical">
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:background="@android:color/darker_gray"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxLines="10"
-            android:textSize="14sp"
-            android:textColor="#000"
-            android:text="@string/infowindow_notestitle"
-            android:textStyle="bold"
-            android:id="@+id/infowindow_snippet_title"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="10"
+                android:textSize="14sp"
+                android:textColor="#000"
+                android:text="@string/infowindow_notestitle"
+                android:textStyle="bold"
+                android:id="@+id/infowindow_snippet_title"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxLines="10"
-            android:textSize="14sp"
-            android:textColor="#000"
-            android:text="@string/infowindow_notesnotfound"
-            android:id="@+id/infowindow_snippet"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="10"
+                android:textSize="14sp"
+                android:textColor="#000"
+                android:text="@string/infowindow_notesnotfound"
+                android:id="@+id/infowindow_snippet"/>
+        </LinearLayout>
 
         <View
             android:layout_width="match_parent"

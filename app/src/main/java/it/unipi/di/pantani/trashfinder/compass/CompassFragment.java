@@ -33,6 +33,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 
 import it.unipi.di.pantani.trashfinder.Utils;
+import it.unipi.di.pantani.trashfinder.data.POIMarker;
 import trashfinder.R;
 
 public class CompassFragment extends Fragment {
@@ -64,13 +65,6 @@ public class CompassFragment extends Fragment {
 
     private CompassViewModel mCompassViewModel;
 
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        this.context = context;
-        Log.d("ISTANZA", "attaccato compass");
-    }
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -87,8 +81,6 @@ public class CompassFragment extends Fragment {
         compass = new Compass(context);
         setupCompass();
 
-        AzimuthFormatter azimuthFormatter = new AzimuthFormatter(context);
-
         // view model
         mCompassViewModel = new ViewModelProvider(this).get(CompassViewModel.class);
 
@@ -99,83 +91,6 @@ public class CompassFragment extends Fragment {
         compass = new Compass(context);
         Compass.CompassListener cl = getCompassListener();
         compass.setListener(cl);
-    }
-
-    @SuppressLint("MissingPermission")
-    @Override
-    public void onResume() {
-        super.onResume();
-        Log.d("ISTANZA", "resume compass");
-
-        location_refresh_time = sp.getInt("setting_compass_update_interval", Utils.default_location_refresh_time);
-        location_refresh_time *= 1000;
-
-        showTip = sp.getBoolean("setting_compass_show_tip_switchtomap", true);
-
-        if(sp.getString("setting_compass_measureunit", "meters").equals("meters")) {
-            measureUnit_low = context.getResources().getString(R.string.setting_compass_measureunit_meters);
-            measureUnit_high = context.getResources().getString(R.string.setting_compass_measureunit_kilometers);
-            measureUnitCode = 0;
-        } else {
-            measureUnit_low = context.getResources().getString(R.string.setting_compass_measureunit_feet);
-            measureUnit_high = context.getResources().getString(R.string.setting_compass_measureunit_miles);
-            measureUnitCode = 1;
-        }
-
-        if(!checkPerms(context)) {
-            warning_notif = Snackbar.make(view.findViewById(R.id.compass), getResources().getString(R.string.warning_noperms, getResources().getString(R.string.app_name)), Snackbar.LENGTH_INDEFINITE);
-            View a = warning_notif.getView();
-            a.setBackgroundColor(ContextCompat.getColor(context, R.color.red));
-            warning_notif.show();
-
-            compass_text_distance.setText("{{{(>_<)}}}");
-        }
-
-        compass.start();
-
-        if (checkPerms(context)) {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, location_refresh_time,
-                    LOCATION_REFRESH_DISTANCE, this::onLocationChanged);
-        }
-
-        isTipShown = false;
-
-        Marker selectedMarker = getCompassSelectedMarker();
-        if(selectedMarker != null && selectedMarker.getTag() != null) {
-            it.unipi.di.pantani.trashfinder.data.Marker tmarker = (it.unipi.di.pantani.trashfinder.data.Marker) selectedMarker.getTag();
-            if(tmarker != null) {
-                mCompassViewModel.getMarkerId(tmarker.getId()).observe(getViewLifecycleOwner(), targetMarker -> {
-                    target.setLatitude(targetMarker.getLatitude());
-                    target.setLongitude(targetMarker.getLongitude());
-                });
-            }
-            activateCompass = true;
-            warning_notif = null;
-        } else {
-            activateCompass = false;
-            if(warning_notif == null) {
-                warning_notif = Snackbar.make(view.findViewById(R.id.compass), getResources().getString(R.string.compass_tipchoosetargetfirst), Snackbar.LENGTH_INDEFINITE);
-                View a = warning_notif.getView();
-                a.setBackgroundColor(ContextCompat.getColor(context, R.color.darkyellow));
-                warning_notif.show();
-            }
-            compass_text_distance.setText("{{{(>_<)}}}");
-        }
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        locationManager.removeUpdates(this::onLocationChanged);
-        compass.stop();
-        if (warning_notif != null) {
-            warning_notif.dismiss();
-            warning_notif = null;
-        }
-        if (mySnackbar != null) {
-            mySnackbar.dismiss();
-            mySnackbar = null;
-        }
     }
 
     public void onLocationChanged(Location location) {
@@ -249,5 +164,96 @@ public class CompassFragment extends Fragment {
 
             compass_icon.startAnimation(an);
         });
+    }
+
+    @SuppressLint("MissingPermission")
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        location_refresh_time = sp.getInt("setting_compass_update_interval", Utils.default_location_refresh_time);
+        location_refresh_time *= 1000;
+
+        showTip = sp.getBoolean("setting_compass_show_tip_switchtomap", true);
+
+        if(sp.getString("setting_compass_measureunit", "meters").equals("meters")) {
+            measureUnit_low = context.getResources().getString(R.string.setting_compass_measureunit_meters);
+            measureUnit_high = context.getResources().getString(R.string.setting_compass_measureunit_kilometers);
+            measureUnitCode = 0;
+        } else {
+            measureUnit_low = context.getResources().getString(R.string.setting_compass_measureunit_feet);
+            measureUnit_high = context.getResources().getString(R.string.setting_compass_measureunit_miles);
+            measureUnitCode = 1;
+        }
+
+        if(!checkPerms(context)) {
+            warning_notif = Snackbar.make(getActivity().findViewById(R.id.compass), getResources().getString(R.string.warning_noperms, getResources().getString(R.string.app_name)), Snackbar.LENGTH_INDEFINITE);
+            View a = warning_notif.getView();
+            a.setBackgroundColor(ContextCompat.getColor(context, R.color.red));
+            warning_notif.show();
+
+            compass_text_distance.setText("{{{(>_<)}}}");
+        }
+
+        compass.start();
+
+        if (checkPerms(context)) {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, location_refresh_time,
+                    LOCATION_REFRESH_DISTANCE, this::onLocationChanged);
+        }
+
+        isTipShown = false;
+
+        Marker selectedMarker = getCompassSelectedMarker();
+        if(selectedMarker != null && selectedMarker.getTag() != null) {
+            POIMarker tmarker = (POIMarker) selectedMarker.getTag();
+            if(tmarker != null) {
+                mCompassViewModel.getMarkerId(tmarker.getId()).observe(getViewLifecycleOwner(), targetMarker -> {
+                    target.setLatitude(targetMarker.getLatitude());
+                    target.setLongitude(targetMarker.getLongitude());
+                });
+            }
+            activateCompass = true;
+            warning_notif = null;
+        } else {
+            activateCompass = false;
+            if(warning_notif == null) {
+                warning_notif = Snackbar.make(getActivity().findViewById(android.R.id.content), getResources().getString(R.string.compass_tipchoosetargetfirst), Snackbar.LENGTH_INDEFINITE);
+                View a = warning_notif.getView();
+                a.setBackgroundColor(ContextCompat.getColor(context, R.color.darkyellow));
+                warning_notif.show();
+            }
+            compass_text_distance.setText("{{{(>_<)}}}");
+        }
+        Log.d("ISTANZA", "compassFragment -> onResume");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        locationManager.removeUpdates(this::onLocationChanged);
+        compass.stop();
+        if (warning_notif != null) {
+            warning_notif.dismiss();
+            warning_notif = null;
+        }
+        if (mySnackbar != null) {
+            mySnackbar.dismiss();
+            mySnackbar = null;
+        }
+        Log.d("ISTANZA", "compassFragment -> onPause");
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        this.context = context;
+        Log.d("ISTANZA", "compass -> onAttach");
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        Log.d("ISTANZA", "compass -> onDetach");
     }
 }

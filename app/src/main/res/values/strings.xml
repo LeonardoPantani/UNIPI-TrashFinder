@@ -1,7 +1,8 @@
 <resources>
     <!-- APP GENERALS -->
     <string name="app_name">Trash Finder</string>
-    <string name="loading">Loading</string>
+    <string name="loading">Loading…</string>
+    <string name="loading_complete">Loading complete!</string>
     <string name="generic_error">Internal app error!</string>
     <string name="coming_soon">Coming soon…</string>
     <string name="waiting_for_sensors">Waiting for sensors…</string>
@@ -160,5 +161,6 @@
     <string name="markertype_medication">medication</string>
     <string name="markertype_batteries">batteries</string>
     <string name="markertype_oil">oil</string>
+    <string name="markertype_clothes">clothes</string>
     <string name="markertype_recyclingdepot">recycling depot</string>
 </resources>

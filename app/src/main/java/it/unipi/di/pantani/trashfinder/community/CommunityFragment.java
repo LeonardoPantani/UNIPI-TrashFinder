@@ -1,8 +1,11 @@
 package it.unipi.di.pantani.trashfinder.community;
 
+import static it.unipi.di.pantani.trashfinder.Utils.updateMapStyleByPreference;
+
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
-import android.view.Gravity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,9 +16,7 @@ import androidx.cardview.widget.CardView;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
-import it.unipi.di.pantani.trashfinder.mapeditor.MapEditorFragment;
 import trashfinder.R;
 import trashfinder.databinding.FragmentCommunityBinding;
 
@@ -56,5 +57,29 @@ public class CommunityFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        Log.d("ISTANZA", "community -> onAttach");
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        Log.d("ISTANZA", "community -> onDetach");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d("ISTANZA", "community -> onResume");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d("ISTANZA", "community -> onPause");
     }
 }

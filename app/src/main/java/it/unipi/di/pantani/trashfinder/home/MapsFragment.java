@@ -3,6 +3,7 @@ package it.unipi.di.pantani.trashfinder.home;
 import static it.unipi.di.pantani.trashfinder.Utils.MARKER_ZOOM;
 import static it.unipi.di.pantani.trashfinder.Utils.checkPerms;
 import static it.unipi.di.pantani.trashfinder.Utils.getCompassSelectedMarker;
+import static it.unipi.di.pantani.trashfinder.Utils.getMarkerColorByType;
 import static it.unipi.di.pantani.trashfinder.Utils.getTitleFromMarker;
 import static it.unipi.di.pantani.trashfinder.Utils.pointLocation;
 import static it.unipi.di.pantani.trashfinder.Utils.setCompassSelectedMarker;
@@ -20,6 +21,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -32,10 +34,12 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.snackbar.Snackbar;
 
-import it.unipi.di.pantani.trashfinder.MarkerWindowAdapter;
-import it.unipi.di.pantani.trashfinder.data.Marker;
+import it.unipi.di.pantani.trashfinder.POIMarkerWindowAdapter;
+import it.unipi.di.pantani.trashfinder.data.POIMarker;
 import trashfinder.R;
 
 
@@ -45,12 +49,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     private SharedPreferences sp;
 
     private MapsViewModel mMapViewModel;
-
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        this.context = context;
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -80,7 +78,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
 
-        mMap.setInfoWindowAdapter(new MarkerWindowAdapter(context));
+        mMap.setInfoWindowAdapter(new POIMarkerWindowAdapter(context));
 
         mMap.setOnMarkerClickListener(marker -> {
             CameraPosition cameraPosition = new CameraPosition.Builder()
@@ -101,12 +99,20 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         // punta la mappa sulla posizione attuale
         pointLocation(context, mMap);
 
-        mMapViewModel.getNearMarkers().observe(getViewLifecycleOwner(), markers -> {
-            //LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
-            for(Marker m : markers) {
-                Log.d("ISTANZA", "marcatore " + m.getLatitude() + " | " + m.getLongitude());
-                com.google.android.gms.maps.model.Marker newMarker = mMap.addMarker(new MarkerOptions()
+        Snackbar bar = Snackbar.make(getActivity().findViewById(android.R.id.content), R.string.loading, Snackbar.LENGTH_INDEFINITE);
+        Snackbar complete = Snackbar.make(getActivity().findViewById(android.R.id.content), R.string.loading_complete, Snackbar.LENGTH_SHORT);
+        ViewGroup contentLay = (ViewGroup) bar.getView().findViewById(com.google.android.material.R.id.snackbar_text).getParent();
+        ProgressBar item = new ProgressBar(context);
+        item.setIndeterminate(true);
+        contentLay.addView(item,0);
+        bar.show();
+
+
+
+        mMapViewModel.getNearMarkers().observe(getViewLifecycleOwner(), markers -> {
+            for(POIMarker m : markers) {
+                Marker newMarker = mMap.addMarker(new MarkerOptions()
                 .position(new LatLng(m.getLatitude(), m.getLongitude()))
                 .title(getTitleFromMarker(context, m))
                 .snippet(m.getNotes())
@@ -114,11 +120,12 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
                 if(newMarker != null) // imposto come tag il marker
                     newMarker.setTag(m);
-
-                //builder.include(new LatLng(m.getLatitude(), m.getLongitude()));
             }
-            //LatLngBounds bounds = builder.build();
-            //mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 0));
+
+            if(markers.size() != 0) { // se i dati sono stati caricati completamente levo il caricamento
+                bar.dismiss();
+                complete.show();
+            }
         });
 
         mMap.setOnInfoWindowClickListener(marker -> {
@@ -131,55 +138,28 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     }
 
     @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        this.context = context;
+        Log.d("ISTANZA", "maps -> onAttach");
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        Log.d("ISTANZA", "maps -> onDetach");
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         updateMapStyleByPreference(context, sp, mMap);
+        Log.d("ISTANZA", "maps -> onResume");
     }
 
-    private float getMarkerColorByType(Marker m) {
-        float ret;
-
-        switch(m.getType()) {
-            case trashbin_indifferenziato: {
-                ret = BitmapDescriptorFactory.HUE_RED;
-                break;
-            }
-            case trashbin_plastica: {
-                ret = BitmapDescriptorFactory.HUE_AZURE;
-                break;
-            }
-            case trashbin_alluminio: {
-                ret = BitmapDescriptorFactory.HUE_BLUE;
-                break;
-            }
-            case trashbin_carta: {
-                ret = BitmapDescriptorFactory.HUE_GREEN;
-                break;
-            }
-            case trashbin_organico: {
-                ret = BitmapDescriptorFactory.HUE_ORANGE;
-                break;
-            }
-            case trashbin_farmaci: {
-                ret = BitmapDescriptorFactory.HUE_VIOLET;
-                break;
-            }
-            case trashbin_pile: {
-                ret = BitmapDescriptorFactory.HUE_YELLOW;
-                break;
-            }
-            case trashbin_olio: {
-                ret = BitmapDescriptorFactory.HUE_ROSE;
-                break;
-            }
-            case recyclingdepot: {
-                ret = BitmapDescriptorFactory.HUE_MAGENTA;
-                break;
-            }
-            default: {
-                ret = BitmapDescriptorFactory.HUE_RED;
-            }
-        }
-        return ret;
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d("ISTANZA", "maps -> onPause");
     }
 }

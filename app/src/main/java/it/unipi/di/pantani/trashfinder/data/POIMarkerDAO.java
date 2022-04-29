@@ -14,19 +14,19 @@ import java.util.List;
  * Room uses the DAO to create a clean API for your code.
  */
 @Dao
-public interface MarkerDao {
+public interface POIMarkerDAO {
     @Insert
-    void insert(Marker marker);
+    void insert(POIMarker marker);
 
     @Query("SELECT * FROM marker_table WHERE id = :id")
-    LiveData<Marker> getById(int id);
+    LiveData<POIMarker> getById(int id);
 
     @Delete
-    void delete(Marker marker);
+    void delete(POIMarker marker);
 
     @Query("DELETE FROM marker_table")
     void deleteAll();
 
     @Query("SELECT * FROM marker_table WHERE (latitude BETWEEN latitude-1 AND latitude+1) AND (longitude BETWEEN longitude-1 AND latitude+1)")
-    LiveData<List<Marker>> getNearMarkers();
+    LiveData<List<POIMarker>> getNearMarkers();
 }

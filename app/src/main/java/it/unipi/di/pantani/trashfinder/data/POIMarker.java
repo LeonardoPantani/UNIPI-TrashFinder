@@ -3,9 +3,13 @@ package it.unipi.di.pantani.trashfinder.data;
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+import androidx.room.TypeConverters;
+
+import java.util.Set;
 
 @Entity(tableName = "marker_table")
-public class Marker {
+@TypeConverters(ListConverter.class)
+public class POIMarker {
     @PrimaryKey(autoGenerate = true)
     protected int id;
 
@@ -20,11 +24,12 @@ public class Marker {
         trashbin_farmaci, // violet
         trashbin_pile, // yellow
         trashbin_olio, // rose
+        trashbin_vestiti, // green
         // isola ecologica
         recyclingdepot // magenta
     }
     @NonNull
-    private MarkerType type;
+    public Set<MarkerType> types;
 
     private double latitude;
 
@@ -32,8 +37,8 @@ public class Marker {
 
     private String notes;
 
-    public Marker(@NonNull MarkerType type, double latitude, double longitude, String notes) {
-        this.type = type;
+    public POIMarker(@NonNull Set<MarkerType> types, double latitude, double longitude, String notes) {
+        this.types = types;
         this.latitude = latitude;
         this.longitude = longitude;
         this.notes = notes;
@@ -44,8 +49,8 @@ public class Marker {
     }
 
     @NonNull
-    public MarkerType getType() {
-        return type;
+    public Set<MarkerType> getType() {
+        return types;
     }
 
     public double getLatitude() {

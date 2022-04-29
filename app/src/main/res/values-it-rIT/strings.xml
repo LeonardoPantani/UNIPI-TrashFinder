@@ -24,7 +24,7 @@
     <string name="intro_title_4">Posizione?</string>
     <string name="intro_title_3">Flessibile</string>
     <string name="intro_title_5">Hai fatto!</string>
-    <string name="loading">Caricamento</string>
+    <string name="loading">Caricamento…</string>
     <string name="show_intro_at_startup">Introduzione</string>
     <string name="sotw_front">davanti</string>
     <string name="sotw_right">destra</string>
@@ -130,4 +130,6 @@
     <string name="compass_tipchoosetargetfirst">Per favore seleziona un bersaglio sulla mappa prima di usare questa funzione.</string>
     <string name="generic_error">Errore interno all\'app!</string>
     <string name="infowindow_tipitemselected">Questo elemento è attualmente selezionato.</string>
+    <string name="markertype_clothes">vestiti</string>
+    <string name="loading_complete">Caricamento completato!</string>
 </resources>

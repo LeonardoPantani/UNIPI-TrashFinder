@@ -11,23 +11,28 @@ import android.content.res.Configuration;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
+import android.util.Log;
 
 import androidx.core.app.ActivityCompat;
 import androidx.preference.PreferenceManager;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.Marker;
 
-import it.unipi.di.pantani.trashfinder.data.Marker;
+import it.unipi.di.pantani.trashfinder.data.POIMarker;
 import trashfinder.R;
 
 public abstract class Utils {
     public static final int default_location_refresh_time = 3; // in seconds
     public static final int[] TAB_TITLES = new int[]{R.string.tab_name_maps, R.string.tab_name_compass};
     public static final String FEEDBACK_MAIL = "l.pantani5@studenti.unipi.it";
+    // codice pisa: 3600042527 | codice italia: 3600365331 | codice toscana: 3600041977
+    public static final String OSM_IMPORT_STRING = "https://www.overpass-api.de/api/interpreter?data=[out:json];area(id:3600041977)-%3E.searchArea;(node[%22amenity%22=%22waste_basket%22](area.searchArea);node[%22amenity%22=%22waste_disposal%22](area.searchArea);node[%22amenity%22=%22recycling%22](area.searchArea););out%20body;%3E;out%20skel%20qt;";
 
     public static final double DEFAULT_LOCATION_LAT = 41.902782;
     public static final double DEFAULT_LOCATION_LON = 12.496366;
@@ -135,59 +140,116 @@ public abstract class Utils {
     }
 
     // MARCATORE
-    public static String getTitleFromMarker(Context context, Marker marker) {
-        String trashbin_type;
+    public static String getTitleFromMarker(Context context, POIMarker marker) {
+        String trashbin_type = "";
 
-        switch(marker.getType()) {
-            case trashbin_indifferenziato: {
-                trashbin_type = context.getString(R.string.markertype_undifferentiated);
-                break;
+        for(POIMarker.MarkerType a : marker.getType()) {
+            switch(a) {
+                case trashbin_plastica: {
+                    trashbin_type += context.getString(R.string.markertype_plastic) + " / ";
+                    break;
+                }
+                case trashbin_alluminio: {
+                    trashbin_type += context.getString(R.string.markertype_aluminium) + " / ";
+                    break;
+                }
+                case trashbin_carta: {
+                    trashbin_type += context.getString(R.string.markertype_paper) + " / ";
+                    break;
+                }
+                case trashbin_organico: {
+                    trashbin_type += context.getString(R.string.markertype_organic) + " / ";
+                    break;
+                }
+                case trashbin_farmaci: {
+                    trashbin_type += context.getString(R.string.markertype_medication) + " / ";
+                    break;
+                }
+                case trashbin_pile: {
+                    trashbin_type += context.getString(R.string.markertype_batteries) + " / ";
+                    break;
+                }
+                case trashbin_olio: {
+                    trashbin_type += context.getString(R.string.markertype_oil) + " / ";
+                    break;
+                }
+                case trashbin_vestiti: {
+                    trashbin_type += context.getString(R.string.markertype_clothes) + " / ";
+                    break;
+                }
+                case recyclingdepot: {
+                    trashbin_type += context.getString(R.string.markertype_recyclingdepot) + " / ";
+                    break;
+                }
+                case trashbin_indifferenziato: {
+                    trashbin_type += context.getString(R.string.markertype_undifferentiated) + " / ";
+                    break;
+                }
+                default: {
+
+                }
             }
-            case trashbin_plastica: {
-                trashbin_type = context.getString(R.string.markertype_plastic);
-                break;
-            }
-            case trashbin_alluminio: {
-                trashbin_type = context.getString(R.string.markertype_aluminium);
-                break;
-            }
-            case trashbin_carta: {
-                trashbin_type = context.getString(R.string.markertype_paper);
-                break;
-            }
-            case trashbin_organico: {
-                trashbin_type = context.getString(R.string.markertype_organic);
-                break;
-            }
-            case trashbin_farmaci: {
-                trashbin_type = context.getString(R.string.markertype_medication);
-                break;
-            }
-            case trashbin_pile: {
-                trashbin_type = context.getString(R.string.markertype_batteries);
-                break;
-            }
-            case trashbin_olio: {
-                trashbin_type = context.getString(R.string.markertype_oil);
-                break;
-            }
-            case recyclingdepot: {
-                trashbin_type = context.getString(R.string.markertype_recyclingdepot);
-                break;
-            }
-            default: {
-                trashbin_type = context.getString(R.string.markertype_undefined);
-            }
+        }
+
+        if(trashbin_type.equals("")) {
+            trashbin_type = context.getString(R.string.markertype_undefined);
+        } else {
+            trashbin_type = trashbin_type.substring(0, trashbin_type.length()-3);
         }
 
         return "#" + marker.getId() + " " + context.getString(R.string.markertype_main, trashbin_type);
     }
 
-    static com.google.android.gms.maps.model.Marker compassSelectedMarker;
-    public static void setCompassSelectedMarker(com.google.android.gms.maps.model.Marker m) {
+    public static float getMarkerColorByType(POIMarker m) {
+        float ret = BitmapDescriptorFactory.HUE_RED;
+        //Log.d("ISTANZA", "marcatore tipi: " + m.getType());
+
+        switch(m.getType().iterator().next()) { // mette come colore il primo
+            case trashbin_plastica: {
+                ret = BitmapDescriptorFactory.HUE_AZURE;
+                break;
+            }
+            case trashbin_alluminio: {
+                ret = BitmapDescriptorFactory.HUE_BLUE;
+                break;
+            }
+            case trashbin_carta: {
+                ret = BitmapDescriptorFactory.HUE_GREEN;
+                break;
+            }
+            case trashbin_organico: {
+                ret = BitmapDescriptorFactory.HUE_ORANGE;
+                break;
+            }
+            case trashbin_farmaci: {
+                ret = BitmapDescriptorFactory.HUE_VIOLET;
+                break;
+            }
+            case trashbin_pile: {
+                ret = BitmapDescriptorFactory.HUE_YELLOW;
+                break;
+            }
+            case trashbin_olio: {
+                ret = BitmapDescriptorFactory.HUE_ROSE;
+                break;
+            }
+            case recyclingdepot: {
+                ret = BitmapDescriptorFactory.HUE_MAGENTA;
+                break;
+            }
+            case trashbin_vestiti: { // TODO avere più colori
+                ret = BitmapDescriptorFactory.HUE_GREEN;
+                break;
+            }
+        }
+        return ret;
+    }
+
+    static Marker compassSelectedMarker;
+    public static void setCompassSelectedMarker(Marker m) {
         compassSelectedMarker = m;
     }
-    public static com.google.android.gms.maps.model.Marker getCompassSelectedMarker() {
+    public static Marker getCompassSelectedMarker() {
         return compassSelectedMarker;
     }
 }

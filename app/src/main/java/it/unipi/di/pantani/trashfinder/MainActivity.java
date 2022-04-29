@@ -40,11 +40,9 @@ import trashfinder.R;
 import trashfinder.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
-
-    private AppBarConfiguration mAppBarConfiguration;
     private ActivityMainBinding binding;
-
-    SharedPreferences sp;
+    private AppBarConfiguration mAppBarConfiguration;
+    private SharedPreferences sp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +55,8 @@ public class MainActivity extends AppCompatActivity {
             startIntro();
         }
     }
+
+
 
     public void startApp(View view) {
         binding = ActivityMainBinding.inflate(getLayoutInflater());

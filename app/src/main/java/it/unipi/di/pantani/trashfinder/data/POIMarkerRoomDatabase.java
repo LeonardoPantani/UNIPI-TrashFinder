@@ -1,6 +1,10 @@
 package it.unipi.di.pantani.trashfinder.data;
 
+import static it.unipi.di.pantani.trashfinder.Utils.OSM_IMPORT_STRING;
+
 import android.content.Context;
+import android.os.AsyncTask;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.room.Database;
@@ -8,6 +12,8 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -19,20 +25,20 @@ import java.util.concurrent.Executors;
     When Room queries return LiveData, the queries are automatically run asynchronously on a background thread.
  Room provides compile-time checks of SQLite statements.
  */
-@Database(entities = {Marker.class}, version = 1, exportSchema = false)
-public abstract class MarkerRoomDatabase extends RoomDatabase {
-    public abstract MarkerDao markerDao();
+@Database(entities = {POIMarker.class}, version = 1, exportSchema = false)
+public abstract class POIMarkerRoomDatabase extends RoomDatabase {
+    public abstract POIMarkerDAO markerDao();
 
-    private static MarkerRoomDatabase INSTANCE;
+    private static POIMarkerRoomDatabase INSTANCE;
     private static final int NUMBER_OF_THREADS = 4;
     static final ExecutorService databaseWriteExecutor = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
 
-    static MarkerRoomDatabase getDatabase(final Context context) {
+    static POIMarkerRoomDatabase getDatabase(final Context context) {
         if (INSTANCE == null) {
-            synchronized (MarkerRoomDatabase.class) {
+            synchronized (POIMarkerRoomDatabase.class) {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
-                            MarkerRoomDatabase.class, "marker_database")
+                            POIMarkerRoomDatabase.class, "marker_database")
                             .addCallback(sRoomDatabaseCallback) // aggiunto per riempire il database
                             .build();
                 }
@@ -48,19 +54,21 @@ public abstract class MarkerRoomDatabase extends RoomDatabase {
 
             // eseguito al primo avvio
             databaseWriteExecutor.execute(() -> {
-                MarkerDao dao = INSTANCE.markerDao();
+                POIMarkerDAO dao = INSTANCE.markerDao();
                 dao.deleteAll();
 
-                Marker test = new Marker(Marker.MarkerType.trashbin_organico, 43.72837379284841, 10.3999767226582, "Casa fede");
-                dao.insert(test);
-                test = new Marker(Marker.MarkerType.recyclingdepot, 43.7238295805434, 10.417441278744134, "Centro GEOFOR La Fontina");
-                dao.insert(test);
-                test = new Marker(Marker.MarkerType.trashbin_olio, 43.72803527270394, 10.40780072366369, "Casa abu");
-                dao.insert(test);
-                test = new Marker(Marker.MarkerType.trashbin_carta, 43.69250697637072, 10.480910501919539, "");
-                dao.insert(test);
-                test = new Marker(Marker.MarkerType.trashbin_indifferenziato, 43.72258331949242, 10.436463139204944, "");
-                dao.insert(test);
+                AsyncTask<String,String, List<POIMarker>> a = new MarkerImport().execute(OSM_IMPORT_STRING);
+                try {
+                    List<POIMarker> l = a.get();
+                    Log.d("ISTANZA", "applicazione dati al database...");
+                    for(POIMarker p : l) {
+                        dao.insert(p);
+                    }
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             });
         }
     };
