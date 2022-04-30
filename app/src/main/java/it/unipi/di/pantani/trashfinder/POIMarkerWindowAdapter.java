@@ -55,6 +55,7 @@ public class POIMarkerWindowAdapter implements GoogleMap.InfoWindowAdapter {
             infoWindowTip.setTextColor(Color.GREEN);
         } else {
             infoWindowTip.setText(view.getResources().getString(R.string.infowindow_tipclickcompass));
+            infoWindowTip.setTextColor(Color.BLACK);
         }
     }
 

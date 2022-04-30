@@ -3,8 +3,6 @@ package it.unipi.di.pantani.trashfinder.data;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.google.android.material.snackbar.Snackbar;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;

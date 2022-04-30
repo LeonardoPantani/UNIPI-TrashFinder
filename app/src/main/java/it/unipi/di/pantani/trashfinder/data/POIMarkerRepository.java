@@ -15,8 +15,8 @@ import java.util.List;
  * In the most common example, the Repository implements the logic for deciding whether to fetch data from a network or use results cached in a local database.
  */
 public class POIMarkerRepository {
-    private POIMarkerDAO mPOIMarkerDAO;
-    private LiveData<List<POIMarker>> mMarkerList;
+    private final POIMarkerDAO mPOIMarkerDAO;
+    private final LiveData<List<POIMarker>> mMarkerList;
 
     public POIMarkerRepository(Application application) {
         POIMarkerRoomDatabase db = POIMarkerRoomDatabase.getDatabase(application);

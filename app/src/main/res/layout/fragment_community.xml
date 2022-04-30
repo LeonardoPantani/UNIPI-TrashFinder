@@ -1,16 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/community"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/community"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="top|center"
     android:orientation="vertical">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <!--
+            Impossibile applicare un margin minore alle cardview senza avere problemi
+            secondari come ombre tagliate o touch non funzionante, pertanto ho applicato
+            solo in questo caso un margin negativo per rattoppare il problema dei doppi
+            margini (top e bottom) di ogni card, tranne l'ultima.
+        -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -19,6 +25,7 @@
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="-20dp"
                 card_view:cardBackgroundColor="?attr/colorSurface"
                 card_view:contentPaddingBottom="10dp"
                 card_view:cardCornerRadius="10dp"
@@ -40,38 +47,68 @@
                         android:contentDescription="@string/community_yourcontribute_description"
                         android:scaleType="centerCrop" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="bottom"
-                        android:layout_margin="10dp"
-                        android:text="@string/community_yourcontribute_title"
-                        android:textSize="24sp"
-                        android:textStyle="bold" />
-                    <TextView
-                        android:id="@+id/community_yourcontribute_proposedchanges"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="bottom"
-                        android:layout_marginBottom="5dp"
-                        android:layout_marginStart="10dp"
-                        android:text="@string/loading" />
-                    <TextView
-                        android:id="@+id/community_yourcontribute_evaluatedchanges"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="bottom"
-                        android:layout_marginBottom="5dp"
-                        android:layout_marginStart="10dp"
-                        android:text="@string/loading" />
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="10dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:text="@string/community_yourcontribute_title"
+                            android:textSize="24sp"
+                            android:textStyle="bold" />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal"
+                            android:weightSum="2">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="bottom"
+                                android:layout_weight="1"
+                                android:text="@string/community_yourcontribute_proposedchanges" />
+                            <TextView
+                                android:id="@+id/community_yourcontribute_proposedchanges"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:textAlignment="textEnd"
+                                android:text="@string/loading" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal"
+                            android:weightSum="2">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="bottom"
+                                android:layout_weight="1"
+                                android:text="@string/community_yourcontribute_evaluatedchanges" />
+                            <TextView
+                                android:id="@+id/community_yourcontribute_evaluatedechanges"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:textAlignment="textEnd"
+                                android:text="@string/loading" />
+                        </LinearLayout>
+                    </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                card_view:contentPaddingBottom="10dp"
+                android:layout_marginBottom="-20dp"
                 card_view:cardBackgroundColor="?attr/colorSurface"
+                card_view:contentPaddingBottom="10dp"
                 card_view:cardCornerRadius="10dp"
                 card_view:cardElevation="10dp"
                 card_view:cardMaxElevation="12dp"
@@ -91,39 +128,68 @@
                         android:contentDescription="@string/community_generalstats_description"
                         android:scaleType="centerCrop" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="bottom"
-                        android:layout_margin="10dp"
-                        android:text="@string/community_generalstats_title"
-                        android:textSize="24sp"
-                        android:textStyle="bold" />
-                    <TextView
-                        android:id="@+id/community_generalstats_numbertrashbins"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="bottom"
-                        android:layout_marginBottom="5dp"
-                        android:layout_marginStart="10dp"
-                        android:text="@string/loading" />
-                    <TextView
-                        android:id="@+id/community_generalstats_numberchanges"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="bottom"
-                        android:layout_marginBottom="5dp"
-                        android:layout_marginStart="10dp"
-                        android:text="@string/loading" />
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="10dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:text="@string/community_generalstats_title"
+                            android:textSize="24sp"
+                            android:textStyle="bold" />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal"
+                            android:weightSum="2">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="bottom"
+                                android:layout_weight="1"
+                                android:text="@string/community_generalstats_numbertrashbins" />
+                            <TextView
+                                android:id="@+id/community_generalstats_numbertrashbins"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:textAlignment="textEnd"
+                                android:text="@string/loading" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal"
+                            android:weightSum="2">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="bottom"
+                                android:layout_weight="1"
+                                android:text="@string/community_generalstats_numberchanges" />
+                            <TextView
+                                android:id="@+id/community_generalstats_numberchanges"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:textAlignment="textEnd"
+                                android:text="@string/loading" />
+                        </LinearLayout>
+                    </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/community_card_openmapeditor"
+                android:id="@+id/communiy_card_openmapeditor"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                card_view:contentPaddingBottom="10dp"
                 card_view:cardBackgroundColor="?attr/colorSurface"
+                card_view:contentPaddingBottom="10dp"
                 card_view:cardCornerRadius="10dp"
                 card_view:cardElevation="10dp"
                 card_view:cardMaxElevation="12dp"
@@ -139,26 +205,30 @@
                         android:layout_width="match_parent"
                         android:layout_height="75dp"
                         android:alpha="0.85"
-                        android:src="@drawable/community_cardheader_gotomapeditor"
                         android:contentDescription="@string/community_gotomapeditor_description"
-                        android:scaleType="centerCrop" />
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/community_cardheader_gotomapeditor"
+                        tools:ignore="ImageContrastCheck" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="bottom"
-                        android:layout_margin="10dp"
-                        android:text="@string/community_gotomapeditor_title"
-                        android:textSize="24sp"
-                        android:textStyle="bold" />
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="10dp">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="bottom"
-                        android:layout_marginBottom="5dp"
-                        android:layout_marginStart="10dp"
-                        android:text="@string/community_gotomapeditor_desc" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:text="@string/community_gotomapeditor_title"
+                            android:textSize="24sp"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:text="@string/community_gotomapeditor_desc" />
+                    </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
         </LinearLayout>

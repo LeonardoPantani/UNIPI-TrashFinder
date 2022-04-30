@@ -7,6 +7,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.hardware.SensorManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -35,13 +36,13 @@ import com.google.android.material.tabs.TabLayout;
 import it.unipi.di.pantani.trashfinder.Utils;
 import it.unipi.di.pantani.trashfinder.data.POIMarker;
 import trashfinder.R;
+import trashfinder.databinding.FragmentCommunityBinding;
+import trashfinder.databinding.FragmentCompassBinding;
 
 public class CompassFragment extends Fragment {
     SharedPreferences sp;
-    private ImageView compass_icon;
     private float azim = 0f;
     private float currentAzimuth = 0f;
-    private TextView compass_text_distance;
     private Location current_location = new Location("A");
     private final Location target = new Location("B");
     private LocationManager locationManager;
@@ -55,7 +56,6 @@ public class CompassFragment extends Fragment {
     int location_refresh_time;
     int LOCATION_REFRESH_DISTANCE = 0;
 
-    private View view;
     private Snackbar warning_notif = null;
 
     private Compass compass;
@@ -64,27 +64,25 @@ public class CompassFragment extends Fragment {
     private boolean activateCompass;
 
     private CompassViewModel mCompassViewModel;
+    
+    private FragmentCompassBinding binding;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        view = inflater.inflate(R.layout.fragment_compass, container, false);
-
         sp = PreferenceManager.getDefaultSharedPreferences(context);
-
-        compass_icon = view.findViewById(R.id.compass_icon);
-        compass_text_distance = view.findViewById(R.id.compass_text_difference_distance);
+        binding = FragmentCompassBinding.inflate(inflater, container, false);
+        View root = binding.getRoot();
 
         locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-
         compass = new Compass(context);
         setupCompass();
 
         // view model
         mCompassViewModel = new ViewModelProvider(this).get(CompassViewModel.class);
 
-        return view;
+        return root;
     }
 
     private void setupCompass() {
@@ -94,77 +92,111 @@ public class CompassFragment extends Fragment {
     }
 
     public void onLocationChanged(Location location) {
-        current_location = location;
+        if(location.getAccuracy() != 0f) {
+            current_location = location;
+            binding.compassTextAccuracyGps.setText(getActivity().getResources().getString(R.string.accuracy_high));
+        } else {
+            binding.compassTextDifferenceDistance.setText(getActivity().getResources().getString(R.string.waiting_for_gps));
+            binding.compassTextAccuracyGps.setText(getActivity().getResources().getString(R.string.accuracy_low));
+        }
     }
 
     public double bearing(double startLat, double startLng, double endLat, double endLng){
         double latitude1 = Math.toRadians(startLat);
         double latitude2 = Math.toRadians(endLat);
-        double longDiff= Math.toRadians(endLng - startLng);
-        double y= Math.sin(longDiff)*Math.cos(latitude2);
-        double x=Math.cos(latitude1)*Math.sin(latitude2)-Math.sin(latitude1)*Math.cos(latitude2)*Math.cos(longDiff);
+        double longDiff = Math.toRadians(endLng - startLng);
+        double y = Math.sin(longDiff)*Math.cos(latitude2);
+        double x = Math.cos(latitude1)*Math.sin(latitude2)-Math.sin(latitude1)*Math.cos(latitude2)*Math.cos(longDiff);
 
         return (Math.toDegrees(Math.atan2(y, x))+360)%360;
     }
 
     boolean isTipShown = false;
     Snackbar mySnackbar;
+
     private Compass.CompassListener getCompassListener() {
-        return azimuth -> ((Activity) context).runOnUiThread(() -> {
-            if(current_location.getAccuracy() == 0f || !activateCompass) return;
+        return new Compass.CompassListener() {
+            public void onNewAzimuth(float azimuth) {
+                ((Activity) context).runOnUiThread(() -> {
+                    if (current_location.getAccuracy() == 0f) {
+                        Log.d("ISTANZA", "posizione non accurata");
+                        return;
+                    } else {
+                        Log.d("ISTANZA", "posizione accurata");
+                    }
 
-            float dist = current_location.distanceTo(target);
-            if(measureUnitCode == 1) {
-                dist *= 3.281;
-            }
+                    if (!activateCompass) {
+                        Log.d("ISTANZA", "compass non attivo");
+                        return;
+                    }
 
-            azim = (float) (azimuth - bearing(current_location.getLatitude(), current_location.getLongitude(), target.getLatitude(), target.getLongitude()));
+                    float dist = current_location.distanceTo(target);
+                    if (measureUnitCode == 1) {
+                        dist *= 3.281;
+                    }
 
-            if(dist < 1000) {
-                compass_text_distance.setText(context.getResources().getString(R.string.distance_difference, dist, measureUnit_low));
+                    azim = (float) (azimuth - CompassFragment.this.bearing(current_location.getLatitude(), current_location.getLongitude(), target.getLatitude(), target.getLongitude()));
 
-                if(showTip) {
-                    if((dist < 10 && measureUnitCode == 0) || (dist < 32 && measureUnitCode == 1)) {
-                        if(!isTipShown) {
-                            mySnackbar = Snackbar.make(view.findViewById(R.id.compass), getResources().getString(R.string.compass_tipswitchtomap_title), Snackbar.LENGTH_INDEFINITE);
-                            mySnackbar.setAction(R.string.compass_tipswitchtomap_button, view -> {
-                                TabLayout tabs = view.getRootView().findViewById(R.id.tabs);
-                                // per evitare warning
-                                TabLayout.Tab toSelect = tabs.getTabAt(0);
-                                if(toSelect != null)
-                                    toSelect.select();
-                            });
-                            isTipShown = true;
-                            mySnackbar.show();
+                    if (dist < 1000) {
+                        binding.compassTextDifferenceDistance.setText(context.getResources().getString(R.string.distance_difference, dist, measureUnit_low));
+
+                        if (showTip) {
+                            if ((dist < 10 && measureUnitCode == 0) || (dist < 32 && measureUnitCode == 1)) {
+                                if (!isTipShown) {
+                                    mySnackbar = Snackbar.make(getActivity().findViewById(android.R.id.content), CompassFragment.this.getResources().getString(R.string.compass_tipswitchtomap_title), Snackbar.LENGTH_INDEFINITE);
+                                    mySnackbar.setAction(R.string.compass_tipswitchtomap_button, view -> {
+                                        TabLayout tabs = binding.getRoot().findViewById(R.id.tabs);
+                                        // per evitare warning
+                                        TabLayout.Tab toSelect = tabs.getTabAt(0);
+                                        if (toSelect != null)
+                                            toSelect.select();
+                                    });
+                                    isTipShown = true;
+                                    mySnackbar.show();
+                                }
+                            } else {
+                                if (isTipShown) {
+                                    isTipShown = false;
+                                    mySnackbar.dismiss();
+                                }
+                            }
                         }
                     } else {
-                        if(isTipShown) {
-                            isTipShown = false;
-                            mySnackbar.dismiss();
+                        if (measureUnitCode == 0) {
+                            dist /= 1000;
+                        } else {
+                            dist /= 5280;
                         }
+                        binding.compassTextDifferenceDistance.setText(context.getResources().getString(R.string.distance_difference, dist, measureUnit_high));
                     }
-                }
-            } else {
-                if(measureUnitCode == 0) {
-                    dist /= 1000;
-                } else {
-                    dist /= 5280;
-                }
-                compass_text_distance.setText(context.getResources().getString(R.string.distance_difference, dist, measureUnit_high));
+
+                    Animation an = new RotateAnimation(-currentAzimuth, -azim,
+                            Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
+                            0.5f);
+                    currentAzimuth = azim;
+
+                    an.setDuration(500);
+                    an.setRepeatCount(0);
+                    an.setFillAfter(true);
+
+                    binding.compassIcon.startAnimation(an);
+                });
             }
 
-            Animation an = new RotateAnimation(-currentAzimuth, -azim,
-                    Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
-                    0.5f);
-            currentAzimuth = azim;
-
-            an.setDuration(500);
-            an.setRepeatCount(0);
-            an.setFillAfter(true);
-
-            compass_icon.startAnimation(an);
-        });
+            @Override
+            public void onSensorAccuracyChanged(float accuracy) {
+                Log.d("ISTANZA", "acc: " + accuracy);
+                if(accuracy != SensorManager.SENSOR_STATUS_ACCURACY_MEDIUM && accuracy != SensorManager.SENSOR_STATUS_ACCURACY_HIGH) {
+                    binding.compassTextDifferenceDistance.setText(getResources().getString(R.string.waiting_for_sensors));
+                    binding.compassTextAccuracyAccelerometer.setText(getResources().getString(R.string.accuracy_low));
+                } else {
+                    binding.compassTextAccuracyAccelerometer.setText(getResources().getString(R.string.accuracy_high));
+                }
+            }
+        };
     }
+
+
 
     @SuppressLint("MissingPermission")
     @Override
@@ -187,19 +219,16 @@ public class CompassFragment extends Fragment {
         }
 
         if(!checkPerms(context)) {
-            warning_notif = Snackbar.make(getActivity().findViewById(R.id.compass), getResources().getString(R.string.warning_noperms, getResources().getString(R.string.app_name)), Snackbar.LENGTH_INDEFINITE);
+            warning_notif = Snackbar.make(getActivity().findViewById(android.R.id.content), getResources().getString(R.string.warning_noperms, getResources().getString(R.string.app_name)), Snackbar.LENGTH_INDEFINITE);
             View a = warning_notif.getView();
             a.setBackgroundColor(ContextCompat.getColor(context, R.color.red));
             warning_notif.show();
 
-            compass_text_distance.setText("{{{(>_<)}}}");
+            binding.compassTextDifferenceDistance.setText("{{{(>_<)}}}");
         }
 
-        compass.start();
-
         if (checkPerms(context)) {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, location_refresh_time,
-                    LOCATION_REFRESH_DISTANCE, this::onLocationChanged);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, location_refresh_time, LOCATION_REFRESH_DISTANCE, this::onLocationChanged);
         }
 
         isTipShown = false;
@@ -213,9 +242,12 @@ public class CompassFragment extends Fragment {
                     target.setLongitude(targetMarker.getLongitude());
                 });
             }
+            compass.start();
             activateCompass = true;
             warning_notif = null;
+            binding.compassTextDifferenceDistance.setText(getResources().getString(R.string.waiting_for_sensors));
         } else {
+            compass.stop();
             activateCompass = false;
             if(warning_notif == null) {
                 warning_notif = Snackbar.make(getActivity().findViewById(android.R.id.content), getResources().getString(R.string.compass_tipchoosetargetfirst), Snackbar.LENGTH_INDEFINITE);
@@ -223,7 +255,7 @@ public class CompassFragment extends Fragment {
                 a.setBackgroundColor(ContextCompat.getColor(context, R.color.darkyellow));
                 warning_notif.show();
             }
-            compass_text_distance.setText("{{{(>_<)}}}");
+            binding.compassTextDifferenceDistance.setText("{{{(>_<)}}}");
         }
         Log.d("ISTANZA", "compassFragment -> onResume");
     }

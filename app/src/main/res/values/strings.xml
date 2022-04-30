@@ -8,6 +8,9 @@
     <string name="waiting_for_sensors">Waiting for sensors…</string>
     <string name="waiting_for_gps">Waiting for GPS…</string>
     <string name="credits">App developed by Leonardo Pantani as SAM course Project\\n All Rights Reserved©</string>
+    <string name="accuracy_high">High</string>
+    <string name="accuracy_low">Low</string>
+
     <string name="section_home">Home</string>
     <string name="section_maps">Map</string>
     <string name="section_compass">Compass</string>
@@ -97,6 +100,9 @@
     <string name="sotw_backright">back right</string>
     <string name="sotw_backleft">back left</string>
 
+    <string name="compass_accuracy_gps">GPS Accuracy:</string>
+    <string name="compass_accuracy_accelerometer">Accelerometer Accuracy:</string>
+
     <!-- MAP EDITOR -->
     <string name="marker">Marker</string>
 
@@ -123,13 +129,13 @@
 
     <!-- COMMUNITY -->
     <string name="community_yourcontribute_title">Your contribution:</string>
-    <string name="community_yourcontribute_proposedchanges">Proposed changes → %1$d</string>
-    <string name="community_yourcontribute_evaluatedchanges">Evaluated changes → %1$d</string>
+    <string name="community_yourcontribute_proposedchanges">Proposed changes:</string>
+    <string name="community_yourcontribute_evaluatedchanges">Evaluated changes (coming soon):</string>
     <string name="community_yourcontribute_description">Your contribution image</string>
 
     <string name="community_generalstats_title">General stats:</string>
-    <string name="community_generalstats_numbertrashbins">Number of bins → %1$d</string>
-    <string name="community_generalstats_numberchanges">Total changes made → %1$d</string>
+    <string name="community_generalstats_numbertrashbins">Number of bins:</string>
+    <string name="community_generalstats_numberchanges">Total changes made:</string>
     <string name="community_generalstats_description">General stats image</string>
 
     <string name="community_gotomapeditor_title">Open map editor</string>

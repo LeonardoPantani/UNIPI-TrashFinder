@@ -31,11 +31,11 @@ public class POIMarker {
     @NonNull
     public Set<MarkerType> types;
 
-    private double latitude;
+    private final double latitude;
 
-    private double longitude;
+    private final double longitude;
 
-    private String notes;
+    private final String notes;
 
     public POIMarker(@NonNull Set<MarkerType> types, double latitude, double longitude, String notes) {
         this.types = types;

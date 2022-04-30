@@ -12,7 +12,7 @@ import it.unipi.di.pantani.trashfinder.data.POIMarker;
 import it.unipi.di.pantani.trashfinder.data.POIMarkerRepository;
 
 public class MapsViewModel extends AndroidViewModel {
-    private POIMarkerRepository mRepository;
+    private final POIMarkerRepository mRepository;
 
     private final LiveData<List<POIMarker>> mNearMarkers;
 

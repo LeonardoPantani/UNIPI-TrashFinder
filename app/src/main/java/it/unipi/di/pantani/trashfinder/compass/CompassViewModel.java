@@ -10,7 +10,7 @@ import it.unipi.di.pantani.trashfinder.data.POIMarker;
 import it.unipi.di.pantani.trashfinder.data.POIMarkerRepository;
 
 public class CompassViewModel extends AndroidViewModel {
-    private POIMarkerRepository mRepository;
+    private final POIMarkerRepository mRepository;
 
     public CompassViewModel(@NonNull Application application) {
         super(application);

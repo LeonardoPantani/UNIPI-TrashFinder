@@ -5,10 +5,12 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.util.Log;
 
 class Compass implements SensorEventListener {
     public interface CompassListener {
         void onNewAzimuth(float azimuth);
+        void onSensorAccuracyChanged(float accuracy);
     }
 
     private CompassListener listener;
@@ -52,7 +54,10 @@ class Compass implements SensorEventListener {
 
         // se l'accuratezza dei dati non è media/alta ignoro
         if(event.accuracy != SensorManager.SENSOR_STATUS_ACCURACY_MEDIUM && event.accuracy != SensorManager.SENSOR_STATUS_ACCURACY_HIGH) {
+            Log.d("ISTANZA", "accuratezza bassa: " + event.accuracy);
             return;
+        } else {
+            Log.d("ISTANZA", "accuratezza: " + event.accuracy);
         }
 
         synchronized (this) {
@@ -89,5 +94,8 @@ class Compass implements SensorEventListener {
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
+        if(listener != null) {
+            listener.onSensorAccuracyChanged(accuracy);
+        }
     }
 }

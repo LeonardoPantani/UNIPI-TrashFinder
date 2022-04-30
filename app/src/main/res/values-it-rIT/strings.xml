@@ -89,12 +89,12 @@
     <string name="section_home">Home</string>
     <string name="section_community">Community</string>
     <string name="community_yourcontribute_title">I tuoi contributi:</string>
-    <string name="community_yourcontribute_proposedchanges">Modifiche proposte → %1$d</string>
-    <string name="community_yourcontribute_evaluatedchanges">Modifiche valutate → %1$d</string>
+    <string name="community_yourcontribute_proposedchanges">Modifiche proposte:</string>
+    <string name="community_yourcontribute_evaluatedchanges">Modifiche valutate (prossimamente):</string>
     <string name="community_yourcontribute_description">Immagine I tuoi contributi</string>
     <string name="community_generalstats_title">Statistiche generali:</string>
-    <string name="community_generalstats_numbertrashbins">Numero di cestini → %1$d</string>
-    <string name="community_generalstats_numberchanges">Modifiche totali fatte → %1$d</string>
+    <string name="community_generalstats_numbertrashbins">Numero di cestini:</string>
+    <string name="community_generalstats_numberchanges">Modifiche totali fatte:</string>
     <string name="community_generalstats_description">Immagine Statistiche generali</string>
     <string name="community_gotomapeditor_title">Apri editor mappa</string>
     <string name="community_gotomapeditor_desc">Apri l\'Editor Mappa dal menu che apparirà. Una volta aperto, potrai proporre nuove posizioni per cestini e modificare quelle già esistenti.</string>
@@ -132,4 +132,8 @@
     <string name="infowindow_tipitemselected">Questo elemento è attualmente selezionato.</string>
     <string name="markertype_clothes">vestiti</string>
     <string name="loading_complete">Caricamento completato!</string>
+    <string name="compass_accuracy_accelerometer">Precisione Accelerometro:</string>
+    <string name="compass_accuracy_gps">Precisione GPS:</string>
+    <string name="accuracy_high">Alta</string>
+    <string name="accuracy_low">Bassa</string>
 </resources>
