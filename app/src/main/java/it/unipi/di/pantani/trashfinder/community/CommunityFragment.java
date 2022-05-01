@@ -1,6 +1,5 @@
 package it.unipi.di.pantani.trashfinder.community;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,9 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import trashfinder.R;
 import trashfinder.databinding.FragmentCommunityBinding;
@@ -43,16 +41,11 @@ public class CommunityFragment extends Fragment {
 
     /**
      * Funzione che viene chiamata appena la card "apri editor mappa" è premuta
-     * @param notUsed la view cliccata (non usata in questo caso)
+     * @param view la view cliccata
      */
-    private void onClickOpen(View notUsed) {
-        Activity mainactivity = getActivity();
-        DrawerLayout navDrawer;
-        if(mainactivity != null) {
-            navDrawer = mainactivity.findViewById(R.id.drawer_layout);
-            if(!navDrawer.isDrawerOpen(GravityCompat.START))
-                navDrawer.openDrawer(GravityCompat.START);
-        }
+    public void onClickOpen(View view) {
+        Navigation.findNavController(view).popBackStack(R.id.nav_maps, false); // primo
+        Navigation.findNavController(view).navigate(R.id.nav_mapeditor);
     }
 
     // --------- METODI ATTACH, DETACH, RESUME, PAUSE ---------

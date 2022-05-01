@@ -5,7 +5,6 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.util.Log;
 
 class Compass implements SensorEventListener {
     public interface CompassListener {
@@ -51,14 +50,6 @@ class Compass implements SensorEventListener {
     @Override
     public void onSensorChanged(SensorEvent event) {
         final float alpha = 0.97f;
-
-        // se l'accuratezza dei dati non è media/alta ignoro
-        if(event.accuracy != SensorManager.SENSOR_STATUS_ACCURACY_MEDIUM && event.accuracy != SensorManager.SENSOR_STATUS_ACCURACY_HIGH) {
-            Log.d("ISTANZA", "accuratezza bassa: " + event.accuracy);
-            return;
-        } else {
-            Log.d("ISTANZA", "accuratezza: " + event.accuracy);
-        }
 
         synchronized (this) {
             if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {

@@ -44,7 +44,7 @@ public class MapEditorFragment extends Fragment implements OnMapReadyCallback {
         sp = PreferenceManager.getDefaultSharedPreferences(context);
 
         // inizializzazione fragment mappa
-        SupportMapFragment supportMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.google_map_editor);
+        SupportMapFragment supportMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.google_map);
 
         if(supportMapFragment == null) return root; // in caso di problemi
 

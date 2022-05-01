@@ -10,6 +10,7 @@
     <string name="credits">App developed by Leonardo Pantani as SAM course Project\\n All Rights Reserved©</string>
     <string name="accuracy_high">High</string>
     <string name="accuracy_low">Low</string>
+    <string name="fab_description">Open compass view</string>
 
     <string name="section_home">Home</string>
     <string name="section_maps">Map</string>
@@ -19,7 +20,7 @@
     <string name="section_mapeditor">Map Editor</string>
 
     <string name="dialog_nolocationperm_title">Unable to get location</string>
-    <string name="dialog_nolocationperm_desc">If you do not give %1$s location access, some app functionalities may not work correctly.</string>
+    <string name="dialog_nolocationperm_desc">You have not granted the location permission.</string>
     <string name="dialog_nolocationperm_button_ok">Oh no! Anyway</string>
     <string name="dialog_nolocationperm_button_grantperms">Grant permissions</string>
 
@@ -76,10 +77,6 @@
     <string name="setting_compass_measureunit_feet">feet</string>
     <string name="setting_compass_measureunit_miles">miles</string>
 
-    <!-- TABS -->
-    <string name="tab_name_maps">Map</string>
-    <string name="tab_name_compass">Compass</string>
-
     <!-- COMPASS -->
     <string name="distance_difference">%1$.2f %2$s away</string>
     <plurals name="update_interval_info_box">
@@ -89,7 +86,7 @@
     <string name="compass_icon_description">Compass icon</string>
     <string name="compass_tipswitchtomap_title">You are close to the target.</string>
     <string name="compass_tipswitchtomap_button">Switch to map</string>
-    <string name="compass_tipchoosetargetfirst">Please select a target on the map before using this feature.</string>
+    <string name="compass_tipchoosetargetfirst">Select a marker on the map.</string>
 
     <string name="sotw_front">front</string>
     <string name="sotw_right">right</string>
@@ -169,4 +166,7 @@
     <string name="markertype_oil">oil</string>
     <string name="markertype_clothes">clothes</string>
     <string name="markertype_recyclingdepot">recycling depot</string>
+
+    <!-- MAP -->
+
 </resources>

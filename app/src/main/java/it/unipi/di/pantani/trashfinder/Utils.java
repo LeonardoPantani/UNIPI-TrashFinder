@@ -28,7 +28,7 @@ import trashfinder.R;
 
 public abstract class Utils {
     public static final int default_location_refresh_time = 3; // in seconds
-    public static final int[] TAB_TITLES = new int[]{R.string.tab_name_maps, R.string.tab_name_compass};
+    public static final String SAD_EMOJI = "{{{(>_<)}}}";
     public static final String FEEDBACK_MAIL = "l.pantani5@studenti.unipi.it";
     // codice pisa: 3600042527 | codice italia: 3600365331 | codice toscana: 3600041977
     public static final String OSM_IMPORT_STRING = "https://www.overpass-api.de/api/interpreter?data=[out:json];area(id:3600041977)-%3E.searchArea;(node[%22amenity%22=%22waste_basket%22](area.searchArea);node[%22amenity%22=%22waste_disposal%22](area.searchArea);node[%22amenity%22=%22recycling%22](area.searchArea););out%20body;%3E;out%20skel%20qt;";
@@ -37,7 +37,7 @@ public abstract class Utils {
     public static final double DEFAULT_LOCATION_LON = 12.496366;
 
     public static final int DEFAULT_ZOOM = 5;
-    public static final int LOCATION_ZOOM = 16;
+    public static final int LOCATION_ZOOM = 18;
     public static final int MARKER_ZOOM = 19;
 
     public static final int REQUIRE_PERMISSION_CODE_INTRO = 1;
@@ -92,20 +92,20 @@ public abstract class Utils {
                         .target(new LatLng(location.getLatitude(), location.getLongitude()))
                         .zoom(LOCATION_ZOOM)
                         .build();
-                gmap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                gmap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
             } else {
                 CameraPosition cameraPosition = new CameraPosition.Builder()
                         .target(new LatLng(DEFAULT_LOCATION_LAT, DEFAULT_LOCATION_LON))
                         .zoom(DEFAULT_ZOOM)
                         .build();
-                gmap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                gmap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
             }
         } else {
             CameraPosition cameraPosition = new CameraPosition.Builder()
                     .target(new LatLng(DEFAULT_LOCATION_LAT, DEFAULT_LOCATION_LON))
                     .zoom(DEFAULT_ZOOM)
                     .build();
-            gmap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+            gmap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
         }
     }
 
@@ -200,49 +200,16 @@ public abstract class Utils {
     }
 
     public static float getMarkerColorByType(POIMarker m) {
-        float ret = BitmapDescriptorFactory.HUE_RED;
-        //Log.d("ISTANZA", "marcatore tipi: " + m.getType());
+        float ret;
 
-        switch(m.getType().iterator().next()) { // mette come colore il primo
-            case trashbin_plastica: {
-                ret = BitmapDescriptorFactory.HUE_AZURE;
-                break;
-            }
-            case trashbin_alluminio: {
-                ret = BitmapDescriptorFactory.HUE_BLUE;
-                break;
-            }
-            case trashbin_carta: {
-                ret = BitmapDescriptorFactory.HUE_GREEN;
-                break;
-            }
-            case trashbin_organico: {
-                ret = BitmapDescriptorFactory.HUE_ORANGE;
-                break;
-            }
-            case trashbin_farmaci: {
-                ret = BitmapDescriptorFactory.HUE_VIOLET;
-                break;
-            }
-            case trashbin_pile: {
-                ret = BitmapDescriptorFactory.HUE_YELLOW;
-                break;
-            }
-            case trashbin_olio: {
-                ret = BitmapDescriptorFactory.HUE_ROSE;
-                break;
-            }
-            case recyclingdepot: {
-                ret = BitmapDescriptorFactory.HUE_MAGENTA;
-                break;
-            }
-            case trashbin_vestiti: { // TODO avere più colori
-                ret = BitmapDescriptorFactory.HUE_GREEN;
-                break;
-            }
+        if (m.getType().iterator().next() == POIMarker.MarkerType.recyclingdepot) {
+            ret = BitmapDescriptorFactory.HUE_BLUE;
+        } else {
+            ret = BitmapDescriptorFactory.HUE_RED;
         }
         return ret;
     }
+
 
     static Marker compassSelectedMarker;
     public static void setCompassSelectedMarker(Marker m) {

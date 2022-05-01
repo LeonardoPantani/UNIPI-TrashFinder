@@ -1,4 +1,4 @@
-package it.unipi.di.pantani.trashfinder.home;
+package it.unipi.di.pantani.trashfinder.maps;
 
 import android.app.Application;
 

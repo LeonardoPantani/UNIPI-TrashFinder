@@ -14,7 +14,9 @@ import androidx.annotation.Nullable;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Marker;
+import com.google.gson.Gson;
 
+import it.unipi.di.pantani.trashfinder.data.POIMarker;
 import trashfinder.R;
 
 public class POIMarkerWindowAdapter implements GoogleMap.InfoWindowAdapter {
@@ -36,7 +38,6 @@ public class POIMarkerWindowAdapter implements GoogleMap.InfoWindowAdapter {
         TextView infoWindowSnippet = view.findViewById(R.id.infowindow_snippet);
         TextView infoWindowTip = view.findViewById(R.id.infowindow_selectedlement);
 
-
         // modifica titolo della infowindow
         if(markerTitle != null && !markerTitle.equals("")) {
             infoWindowTitle.setText(markerTitle.substring(markerTitle.indexOf(' ')+1));
@@ -44,9 +45,13 @@ public class POIMarkerWindowAdapter implements GoogleMap.InfoWindowAdapter {
         }
 
         // modifica descrizione della infowindow
-        if(markerSnippet != null && !markerSnippet.equals("")) {
+        // nota: le note contengono il json che identifica il poimarker
+        // questo succede perché ClusterItem non implementa il sistema di tag dove prima veniva
+        // messo l'oggetto POIMarker
+        String notes = new Gson().fromJson(markerSnippet, POIMarker.class).getNotes();
+        if(!notes.equals("")) {
             view.findViewById(R.id.infowindow_section_notes).setVisibility(View.VISIBLE);
-            infoWindowSnippet.setText(markerSnippet);
+            infoWindowSnippet.setText(notes);
         }
 
         // modifica consiglio della infowindow

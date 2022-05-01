@@ -6,6 +6,7 @@ import static it.unipi.di.pantani.trashfinder.Utils.setPreference;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -20,11 +21,14 @@ import android.widget.Toast;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.view.menu.MenuBuilder;
+import androidx.core.view.GravityCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
+import androidx.navigation.NavDestination;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
@@ -39,24 +43,25 @@ import it.unipi.di.pantani.trashfinder.settings.SettingsActivity;
 import trashfinder.R;
 import trashfinder.databinding.ActivityMainBinding;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements FragmentManager.OnBackStackChangedListener, NavController.OnDestinationChangedListener {
+    private SharedPreferences sp;
     private ActivityMainBinding binding;
     private AppBarConfiguration mAppBarConfiguration;
-    private SharedPreferences sp;
+
+    private DrawerLayout drawer;
+    Activity a;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        sp = PreferenceManager.getDefaultSharedPreferences(this);
         super.onCreate(savedInstanceState);
 
-        sp = PreferenceManager.getDefaultSharedPreferences(this);
         if(!sp.getBoolean("setting_show_intro_at_startup", true)) {
             startApp(null);
         } else {
             startIntro();
         }
     }
-
-
 
     public void startApp(View view) {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
@@ -67,17 +72,27 @@ public class MainActivity extends AppCompatActivity {
             getSupportActionBar().show();
         }
 
-        DrawerLayout drawer = binding.drawerLayout;
+        drawer = binding.drawerLayout;
         NavigationView navigationView = binding.navView;
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_map, R.id.nav_compass, R.id.nav_community, R.id.nav_map_editor)
+                R.id.nav_maps, R.id.nav_compass, R.id.nav_community, R.id.nav_mapeditor)
                 .setOpenableLayout(drawer)
                 .build();
         NavController navController = getNavController();
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+        navigationView.setNavigationItemSelectedListener(this::onNavigationItemSelected);
+        navController.addOnDestinationChangedListener(this);
+
+        binding.appBarMain.fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getNavController().popBackStack(R.id.mobile_navigation, false); // primo
+                getNavController().navigate(R.id.nav_compass);
+            }
+        });
 
         if (!checkPerms(getBaseContext())) {
             showPermissionWarningDialog();
@@ -115,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
 
         AlertDialog alertDialog = new AlertDialog.Builder(this).create();
         alertDialog.setTitle(getResources().getString(R.string.dialog_nolocationperm_title));
-        alertDialog.setMessage(getResources().getString(R.string.dialog_nolocationperm_desc, getResources().getString(R.string.app_name)));
+        alertDialog.setMessage(getResources().getString(R.string.dialog_nolocationperm_desc));
         alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, getResources().getString(R.string.dialog_nolocationperm_button_ok),
                 (dialog, which) -> dialog.dismiss());
         alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getResources().getString(R.string.dialog_nolocationperm_button_grantperms),
@@ -174,8 +189,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onSupportNavigateUp() {
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
-        return NavigationUI.navigateUp(navController, mAppBarConfiguration) || super.onSupportNavigateUp();
+        return NavigationUI.navigateUp(getNavController(), mAppBarConfiguration) || super.onSupportNavigateUp();
     }
 
     @NonNull
@@ -185,5 +199,37 @@ public class MainActivity extends AppCompatActivity {
             throw new IllegalStateException("Activity " + this + " does not have a NavHostFragment");
         }
         return ((NavHostFragment) fragment).getNavController();
+    }
+
+    @Override
+    public void onDestinationChanged(@NonNull NavController navController, @NonNull NavDestination navDestination, @Nullable Bundle bundle) {
+        if(getNavController().getCurrentBackStackEntry().getDestination().getDisplayName().equals("it.unipi.di.pantani.trashfinder:id/nav_compass")) {
+            binding.appBarMain.fab.hide();
+        } else {
+            binding.appBarMain.fab.show();
+        }
+        getSupportActionBar().setTitle(getResources().getString(R.string.app_name) + " - " + getSupportActionBar().getTitle());
+    }
+
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        if(!item.isChecked()) {
+            /*
+            if (item.getItemId() == R.id.nav_maps) {
+                getNavController().popBackStack(R.id.mobile_navigation, false);
+            } else {
+                getNavController().popBackStack(R.id.nav_maps, false);
+            }
+             */
+            getNavController().popBackStack(R.id.mobile_navigation, false);
+            getNavController().navigate(item.getItemId());
+        }
+
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+    @Override
+    public void onBackStackChanged() {
+        // non usato
     }
 }

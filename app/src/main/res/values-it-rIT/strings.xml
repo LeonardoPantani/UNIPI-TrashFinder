@@ -9,8 +9,6 @@
     <string name="general_settings">Generali</string>
     <string name="map_settings">Mappa</string>
     <string name="setting_map_theme">Tema</string>
-    <string name="tab_name_maps">Mappa</string>
-    <string name="tab_name_compass">Bussola</string>
     <string name="compass_settings">Bussola</string>
     <string name="setting_compass_update_interval">Intervallo Aggiornamento (secondi)</string>
     <string name="distance_difference">%1$.2f %2$s di distanza</string>
@@ -51,7 +49,7 @@
     <string name="waiting_for_gps">In attesa del GPS…</string>
     <string name="marker">Marcatore</string>
     <string name="dialog_nolocationperm_title">Impossibile ottenere posizione</string>
-    <string name="dialog_nolocationperm_desc">Se non fornisci a %1$s l\'accesso alla posizione, alcune funzionalità dell\'app non funzioneranno correttamente.</string>
+    <string name="dialog_nolocationperm_desc">Non hai fornito il permesso per accedere alla posizione.</string>
     <string name="dialog_nolocationperm_button_ok">Oh no! Che peccato</string>
     <string name="dialog_nolocationperm_button_grantperms">Dai permessi</string>
     <string name="intro_location_permissiongranted">Grazie! Goditi tutte le funzionalità di %1$s.</string>
@@ -127,7 +125,7 @@
     <string name="infowindow_notesnotfound">Nessuna nota per questo elemento.</string>
     <string name="infowindow_tipclickcompass">Clicca su questa finestra per selezionare l\'elemento come bersaglio per la bussola.</string>
     <string name="infowindow_setcompass">Bersaglio impostato nella vista Bussola.</string>
-    <string name="compass_tipchoosetargetfirst">Per favore seleziona un bersaglio sulla mappa prima di usare questa funzione.</string>
+    <string name="compass_tipchoosetargetfirst">Seleziona un bersaglio sulla mappa.</string>
     <string name="generic_error">Errore interno all\'app!</string>
     <string name="infowindow_tipitemselected">Questo elemento è attualmente selezionato.</string>
     <string name="markertype_clothes">vestiti</string>
@@ -136,4 +134,5 @@
     <string name="compass_accuracy_gps">Precisione GPS:</string>
     <string name="accuracy_high">Alta</string>
     <string name="accuracy_low">Bassa</string>
+    <string name="fab_description">Apri vista bussola</string>
 </resources>

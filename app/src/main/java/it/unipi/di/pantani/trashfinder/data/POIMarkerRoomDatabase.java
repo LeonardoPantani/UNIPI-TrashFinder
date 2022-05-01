@@ -60,10 +60,12 @@ public abstract class POIMarkerRoomDatabase extends RoomDatabase {
                 AsyncTask<String,String, List<POIMarker>> a = new MarkerImport().execute(OSM_IMPORT_STRING);
                 try {
                     List<POIMarker> l = a.get();
-                    Log.d("ISTANZA", "applicazione dati al database...");
+                    long time = System.currentTimeMillis();
+                    Log.d("ISTANZA", "DB> Inserimento dati nel database locale...");
                     for(POIMarker p : l) {
                         dao.insert(p);
                     }
+                    Log.d("ISTANZA", "DB> Inserimento completato (" + (System.currentTimeMillis()-time) + "ms).");
                 } catch (ExecutionException e) {
                     e.printStackTrace();
                 } catch (InterruptedException e) {

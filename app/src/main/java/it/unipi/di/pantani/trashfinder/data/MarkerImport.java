@@ -43,11 +43,11 @@ public class MarkerImport extends AsyncTask<String, String, List<POIMarker>> {
             StringBuilder buffer = new StringBuilder();
             String line;
 
-            Log.d("ISTANZA", "in attesa dei dati...");
+            Log.d("ISTANZA", "DB> In attesa dei dati...");
+            long time = System.currentTimeMillis();
             while ((line = reader.readLine()) != null) {
                 buffer.append(line).append("\n");
             }
-            Log.d("ISTANZA", "Dati elaborati in stringa!");
             try {
                 JSONObject response = new JSONObject(buffer.toString());
                 JSONArray responseArr = response.getJSONArray("elements");
@@ -119,7 +119,7 @@ public class MarkerImport extends AsyncTask<String, String, List<POIMarker>> {
                 e.printStackTrace();
             }
 
-            Log.d("ISTANZA", "Lista dei POI pronta!");
+            Log.d("ISTANZA", "DB> Dati salvati e lista dei POI pronta (" + (System.currentTimeMillis()-time) + "ms).");
             return res;
 
 
