@@ -20,8 +20,8 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 
-import trashfinder.R;
-import trashfinder.databinding.FragmentMapEditorBinding;
+import it.unipi.di.pantani.trashfinder.R;
+import it.unipi.di.pantani.trashfinder.databinding.FragmentMapEditorBinding;
 
 public class MapEditorFragment extends Fragment implements OnMapReadyCallback {
     private GoogleMap mMap;

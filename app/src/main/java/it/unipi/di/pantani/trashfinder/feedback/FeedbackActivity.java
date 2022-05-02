@@ -12,9 +12,9 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import it.unipi.di.pantani.trashfinder.R;
 import it.unipi.di.pantani.trashfinder.Utils;
-import trashfinder.R;
-import trashfinder.databinding.ActivityFeedbackBinding;
+import it.unipi.di.pantani.trashfinder.databinding.ActivityFeedbackBinding;
 
 public class FeedbackActivity extends AppCompatActivity {
     private ActivityFeedbackBinding binding;

@@ -15,7 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.viewpager.widget.PagerAdapter;
 
-import trashfinder.R;
+import it.unipi.di.pantani.trashfinder.R;
 import pl.droidsonroids.gif.GifImageView;
 
 public class SliderAdapter extends PagerAdapter {

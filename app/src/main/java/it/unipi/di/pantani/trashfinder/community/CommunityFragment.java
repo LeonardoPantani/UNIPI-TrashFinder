@@ -11,8 +11,8 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
-import trashfinder.R;
-import trashfinder.databinding.FragmentCommunityBinding;
+import it.unipi.di.pantani.trashfinder.R;
+import it.unipi.di.pantani.trashfinder.databinding.FragmentCommunityBinding;
 
 public class CommunityFragment extends Fragment {
     private FragmentCommunityBinding binding;

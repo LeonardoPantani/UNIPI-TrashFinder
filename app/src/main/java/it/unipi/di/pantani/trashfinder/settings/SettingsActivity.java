@@ -12,9 +12,8 @@ import androidx.preference.PreferenceManager;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import it.unipi.di.pantani.trashfinder.R;
 import it.unipi.di.pantani.trashfinder.Utils;
-import trashfinder.R;
-
 
 public class SettingsActivity extends AppCompatActivity {
     Context context;

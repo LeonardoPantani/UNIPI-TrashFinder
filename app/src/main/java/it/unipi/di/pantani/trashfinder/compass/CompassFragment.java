@@ -31,10 +31,10 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 
+import it.unipi.di.pantani.trashfinder.R;
 import it.unipi.di.pantani.trashfinder.Utils;
 import it.unipi.di.pantani.trashfinder.data.POIMarker;
-import trashfinder.R;
-import trashfinder.databinding.FragmentCompassBinding;
+import it.unipi.di.pantani.trashfinder.databinding.FragmentCompassBinding;
 
 public class CompassFragment extends Fragment {
     SharedPreferences sp;

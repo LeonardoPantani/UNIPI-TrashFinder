@@ -6,50 +6,44 @@ import static it.unipi.di.pantani.trashfinder.Utils.setPreference;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Menu;
 import android.widget.Toast;
-
-import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.MenuBuilder;
-import androidx.core.view.GravityCompat;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
 import androidx.navigation.NavDestination;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
 import androidx.viewpager.widget.ViewPager;
 
+import com.google.android.material.navigation.NavigationView;
+
+import it.unipi.di.pantani.trashfinder.databinding.ActivityMainBinding;
 import it.unipi.di.pantani.trashfinder.feedback.FeedbackActivity;
 import it.unipi.di.pantani.trashfinder.intro.SliderAdapter;
 import it.unipi.di.pantani.trashfinder.settings.SettingsActivity;
-import trashfinder.R;
-import trashfinder.databinding.ActivityMainBinding;
 
-public class MainActivity extends AppCompatActivity implements FragmentManager.OnBackStackChangedListener, NavController.OnDestinationChangedListener {
+public class MainActivity extends AppCompatActivity implements NavController.OnDestinationChangedListener {
     private SharedPreferences sp;
     private ActivityMainBinding binding;
     private AppBarConfiguration mAppBarConfiguration;
 
-    private DrawerLayout drawer;
-    Activity a;
+    private NavController navController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,29 +62,31 @@ public class MainActivity extends AppCompatActivity implements FragmentManager.O
         setContentView(binding.getRoot());
 
         setSupportActionBar(binding.appBarMain.toolbar);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().show();
-        }
 
-        drawer = binding.drawerLayout;
         NavigationView navigationView = binding.navView;
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.nav_maps, R.id.nav_compass, R.id.nav_community, R.id.nav_mapeditor)
-                .setOpenableLayout(drawer)
+                .setOpenableLayout(binding.drawerLayout)
                 .build();
-        NavController navController = getNavController();
+
+        // ottengo il navController
+        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_content_main);
+        if(navHostFragment == null) { // non dovrebbe mai verificarsi!
+            Log.d("ISTANZA", "navHostFragment null!");
+            return;
+        }
+        navController = navHostFragment.getNavController();
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
-        navigationView.setNavigationItemSelectedListener(this::onNavigationItemSelected);
         navController.addOnDestinationChangedListener(this);
 
         binding.appBarMain.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getNavController().popBackStack(R.id.mobile_navigation, false); // primo
-                getNavController().navigate(R.id.nav_compass);
+                navController.popBackStack(R.id.maps, false); // primo
+                navController.navigate(R.id.nav_compass);
             }
         });
 
@@ -103,9 +99,6 @@ public class MainActivity extends AppCompatActivity implements FragmentManager.O
 
     ViewPager viewPagerTutorial;
     public void startIntro() {
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().hide();
-        }
         setContentView(R.layout.activity_main_intro);
 
         viewPagerTutorial = findViewById(R.id.viewpager);
@@ -189,47 +182,16 @@ public class MainActivity extends AppCompatActivity implements FragmentManager.O
 
     @Override
     public boolean onSupportNavigateUp() {
-        return NavigationUI.navigateUp(getNavController(), mAppBarConfiguration) || super.onSupportNavigateUp();
-    }
-
-    @NonNull
-    private NavController getNavController() {
-        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_content_main);
-        if (!(fragment instanceof NavHostFragment)) {
-            throw new IllegalStateException("Activity " + this + " does not have a NavHostFragment");
-        }
-        return ((NavHostFragment) fragment).getNavController();
+        return NavigationUI.navigateUp(navController, mAppBarConfiguration) || super.onSupportNavigateUp();
     }
 
     @Override
     public void onDestinationChanged(@NonNull NavController navController, @NonNull NavDestination navDestination, @Nullable Bundle bundle) {
-        if(getNavController().getCurrentBackStackEntry().getDestination().getDisplayName().equals("it.unipi.di.pantani.trashfinder:id/nav_compass")) {
+        if(navController.getCurrentBackStackEntry().getDestination().getDisplayName().equals("it.unipi.di.pantani.trashfinder:id/nav_compass")) {
             binding.appBarMain.fab.hide();
         } else {
             binding.appBarMain.fab.show();
         }
         getSupportActionBar().setTitle(getResources().getString(R.string.app_name) + " - " + getSupportActionBar().getTitle());
-    }
-
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        if(!item.isChecked()) {
-            /*
-            if (item.getItemId() == R.id.nav_maps) {
-                getNavController().popBackStack(R.id.mobile_navigation, false);
-            } else {
-                getNavController().popBackStack(R.id.nav_maps, false);
-            }
-             */
-            getNavController().popBackStack(R.id.mobile_navigation, false);
-            getNavController().navigate(item.getItemId());
-        }
-
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
-
-    @Override
-    public void onBackStackChanged() {
-        // non usato
     }
 }

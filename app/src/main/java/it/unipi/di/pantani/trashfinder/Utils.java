@@ -24,7 +24,6 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 
 import it.unipi.di.pantani.trashfinder.data.POIMarker;
-import trashfinder.R;
 
 public abstract class Utils {
     public static final int default_location_refresh_time = 3; // in seconds

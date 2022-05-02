@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -21,11 +20,6 @@ import java.util.List;
 import java.util.Set;
 
 public class MarkerImport extends AsyncTask<String, String, List<POIMarker>> {
-    @Override
-    protected void onPreExecute() {
-        super.onPreExecute();
-    }
-
     protected List<POIMarker> doInBackground(String... params) {
         HttpURLConnection connection = null;
         BufferedReader reader = null;
@@ -113,7 +107,6 @@ public class MarkerImport extends AsyncTask<String, String, List<POIMarker>> {
                     } else {
                         types.add(POIMarker.MarkerType.trashbin_indifferenziato);
                     }
-
                     res.add(new POIMarker(types, elementObj.getDouble("lat"), elementObj.getDouble("lon"), ""));
                 }
             } catch (JSONException e) {
@@ -122,10 +115,6 @@ public class MarkerImport extends AsyncTask<String, String, List<POIMarker>> {
 
             Log.d("ISTANZA", "DB> Dati salvati e lista dei POI pronta (" + (System.currentTimeMillis()-time) + "ms).");
             return res;
-
-
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -141,10 +130,5 @@ public class MarkerImport extends AsyncTask<String, String, List<POIMarker>> {
             }
         }
         return null;
-    }
-
-    @Override
-    protected void onPostExecute(List<POIMarker> result) {
-        super.onPostExecute(result);
     }
 }

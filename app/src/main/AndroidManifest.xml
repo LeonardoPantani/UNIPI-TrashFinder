@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="trashfinder">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="it.unipi.di.pantani.trashfinder">
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -13,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TrashFinder">
         <activity
-            android:name="it.unipi.di.pantani.trashfinder.MainActivity"
+            android:name=".MainActivity"
             android:exported="true"
             android:theme="@style/Theme.TrashFinder.NoActionBar">
             <intent-filter>
@@ -25,13 +25,13 @@
 
         <!-- Activity Settings -->
         <activity
-            android:name="it.unipi.di.pantani.trashfinder.settings.SettingsActivity"
+            android:name=".settings.SettingsActivity"
             android:label="@string/label_settings">
         </activity>
 
         <!-- Activity Feedback -->
         <activity
-            android:name="it.unipi.di.pantani.trashfinder.feedback.FeedbackActivity"
+            android:name=".feedback.FeedbackActivity"
             android:label="@string/label_feedback">
         </activity>
 

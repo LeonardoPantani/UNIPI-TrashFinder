@@ -17,7 +17,6 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.gson.Gson;
 
 import it.unipi.di.pantani.trashfinder.data.POIMarker;
-import trashfinder.R;
 
 public class POIMarkerWindowAdapter implements GoogleMap.InfoWindowAdapter {
     private final View mWindow;

@@ -38,10 +38,9 @@ import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.collections.MarkerManager;
 
 import it.unipi.di.pantani.trashfinder.POIMarkerWindowAdapter;
+import it.unipi.di.pantani.trashfinder.R;
 import it.unipi.di.pantani.trashfinder.data.MyItemOnMap;
 import it.unipi.di.pantani.trashfinder.data.POIMarker;
-import trashfinder.R;
-
 
 public class MapsFragment extends Fragment implements OnMapReadyCallback {
     private GoogleMap mMap;
@@ -56,6 +55,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
         sp = PreferenceManager.getDefaultSharedPreferences(context);
         // inizializzazione view
         View view = inflater.inflate(R.layout.fragment_maps, container, false);
@@ -90,10 +90,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         markerCollection.setOnMarkerClickListener(this::onMarkerClick);
         markerCollection.setOnInfoWindowClickListener(this::onInfoWindowClick);
 
-        // imposto l'adapter delle infowindow su quello mio custom e attivo i listener
-        //mMap.setInfoWindowAdapter(new POIMarkerWindowAdapter(context));
-        //mMap.setOnMarkerClickListener(this::onMarkerClick);
-        //mMap.setOnInfoWindowClickListener(this::onInfoWindowClick);
         // attivo la modalità location enabled
         if(checkPerms(context))
             mMap.setMyLocationEnabled(true);
@@ -108,12 +104,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         }
 
         // aggiungo marker alla mappa
-        clusterManager.clearItems();
         mMapViewModel.getNearMarkers().observe(getViewLifecycleOwner(), markers -> {
             for(POIMarker m : markers) {
                 clusterManager.addItem(new MyItemOnMap(m.getLatitude(), m.getLongitude(), getTitleFromMarker(context, m), new Gson().toJson(m)));
             }
-            clusterManager.cluster();
 
             if(markers.size() != 0) {
                 pb.setVisibility(View.INVISIBLE);
