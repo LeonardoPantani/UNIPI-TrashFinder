@@ -63,6 +63,9 @@ public class CompassFragment extends Fragment {
 
     private FragmentCompassBinding binding;
 
+
+    // TODO rendere il layout della bussola non constraint
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -78,6 +81,7 @@ public class CompassFragment extends Fragment {
         // view model
         mCompassViewModel = new ViewModelProvider(this).get(CompassViewModel.class);
 
+        Log.d("ISTANZA", "compass -> onCreateView");
         return root;
     }
 
@@ -234,7 +238,7 @@ public class CompassFragment extends Fragment {
             binding.compassCardviewWarning.setVisibility(View.VISIBLE);
             binding.compassTextWarning.setText(getResources().getString(R.string.compass_tipchoosetargetfirst));
         }
-        Log.d("ISTANZA", "compassFragment -> onResume");
+        Log.d("ISTANZA", "compass -> onResume");
     }
 
     @Override
@@ -246,7 +250,7 @@ public class CompassFragment extends Fragment {
             tipCloseToTarget.dismiss();
             tipCloseToTarget = null;
         }
-        Log.d("ISTANZA", "compassFragment -> onPause");
+        Log.d("ISTANZA", "compass -> onPause");
     }
 
     @Override
