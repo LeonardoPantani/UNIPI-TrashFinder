@@ -82,7 +82,7 @@ public class FeedbackActivity extends AppCompatActivity {
         } catch(ActivityNotFoundException e) {
             Toast.makeText(FeedbackActivity.this, R.string.feedback_chooser_error, Toast.LENGTH_LONG).show();
         }
-        finish();
+        //finish();
     }
 
     // ---------------

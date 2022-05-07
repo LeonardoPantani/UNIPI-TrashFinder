@@ -29,4 +29,10 @@ public interface POIMarkerDAO {
 
     @Query("SELECT * FROM marker_table WHERE (latitude BETWEEN latitude-1 AND latitude+1) AND (longitude BETWEEN longitude-1 AND latitude+1)")
     LiveData<List<POIMarker>> getNearMarkers();
+
+    @Query("SELECT COUNT(*) FROM marker_table")
+    LiveData<Integer> getMarkerNumber();
+
+    @Query("UPDATE marker_table SET types = :newTypes, latitude = :newLatitude, longitude = :newLongitude, notes = :newNotes WHERE id = :id")
+    void update(int id, String newTypes, double newLatitude, double newLongitude, String newNotes);
 }

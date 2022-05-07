@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import it.unipi.di.pantani.trashfinder.R;
@@ -16,6 +17,7 @@ import it.unipi.di.pantani.trashfinder.databinding.FragmentCommunityBinding;
 
 public class CommunityFragment extends Fragment {
     private FragmentCommunityBinding binding;
+    private CommunityViewModel mCommunityViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
@@ -29,6 +31,9 @@ public class CommunityFragment extends Fragment {
 
         // applico il listener alla card "apri editor mappa"
         binding.communiyCardOpenmapeditor.setOnClickListener(this::onClickOpen);
+
+        // view model
+        mCommunityViewModel = new ViewModelProvider(this).get(CommunityViewModel.class);
 
         return root;
     }
@@ -65,6 +70,10 @@ public class CommunityFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        // mostro dati
+        mCommunityViewModel.getMarkerNumber().observe(getViewLifecycleOwner(), numberOfBins -> {
+            binding.communityGeneralstatsNumbertrashbins.setText(String.valueOf(numberOfBins));
+        });
         Log.d("ISTANZA", "community -> onResume");
     }
 

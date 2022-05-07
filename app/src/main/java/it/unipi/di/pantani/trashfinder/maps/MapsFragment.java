@@ -10,10 +10,14 @@ import static it.unipi.di.pantani.trashfinder.Utils.updateMapStyleByPreference;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.preference.PreferenceManager;
 
 import android.util.Log;
@@ -21,7 +25,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -33,7 +36,10 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
+import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.collections.MarkerManager;
 
@@ -47,14 +53,13 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     private Context context;
     private SharedPreferences sp;
     private MapsViewModel mMapViewModel;
+    private ProgressBar progressBar;
 
-    private Bundle bundle;
-
-    // Declare a variable for the cluster manager.
     private ClusterManager<MyItemOnMap> clusterManager;
+    private MarkerManager.Collection markerCollection;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         sp = PreferenceManager.getDefaultSharedPreferences(context);
         // inizializzazione view
@@ -64,10 +69,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         if(supportMapFragment == null) return view;
         // mappa asincrona
         supportMapFragment.getMapAsync(this);
+        // barra di caricamento
+        progressBar = view.findViewById(R.id.progressbar);
         // view model
         mMapViewModel = new ViewModelProvider(this).get(MapsViewModel.class);
-        // mi salvo il bundle
-        bundle = savedInstanceState;
         // return della view
         return view;
     }
@@ -75,20 +80,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     @SuppressLint("MissingPermission")
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
-        ProgressBar pb = getActivity().findViewById(R.id.progressbar);
-        pb.setVisibility(View.VISIBLE);
-
         Log.d("ISTANZA", "maps -> onMapReady");
         mMap = googleMap;
-
-        // Initialize the manager with the context and the map.
-        // (Activity extends context, so we can pass 'this' in the constructor.)
-        clusterManager = new ClusterManager<>(context, mMap);
-        MarkerManager.Collection markerCollection = clusterManager.getMarkerCollection();
-        mMap.setOnCameraIdleListener(clusterManager);
-        markerCollection.setInfoWindowAdapter(new POIMarkerWindowAdapter(context));
-        markerCollection.setOnMarkerClickListener(this::onMarkerClick);
-        markerCollection.setOnInfoWindowClickListener(this::onInfoWindowClick);
 
         // attivo la modalità location enabled
         if(checkPerms(context))
@@ -103,16 +96,41 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
             pointLocation(context, mMap);
         }
 
+        initializeClusterSystem();
+    }
+
+    public void initializeClusterSystem() {
+        if(clusterManager != null) return;
+        progressBar.setVisibility(View.VISIBLE);
+
+        clusterManager = new ClusterManager<>(context, mMap);
+        markerCollection = clusterManager.getMarkerCollection();
+        mMap.setOnCameraIdleListener(clusterManager);
+        mMap.setOnInfoWindowCloseListener(this::onInfoWindowClose);
+        clusterManager.setOnClusterClickListener(this::onClusterClick);
+        markerCollection.setInfoWindowAdapter(new POIMarkerWindowAdapter(context, 0));
+        markerCollection.setOnMarkerClickListener(this::onMarkerClick);
+        markerCollection.setOnInfoWindowClickListener(this::onInfoWindowClick);
+
         // aggiungo marker alla mappa
         mMapViewModel.getNearMarkers().observe(getViewLifecycleOwner(), markers -> {
+            Log.d("ISTANZA", "maps -> inizializzazione sistema cluster");
             for(POIMarker m : markers) {
                 clusterManager.addItem(new MyItemOnMap(m.getLatitude(), m.getLongitude(), getTitleFromMarker(context, m), new Gson().toJson(m)));
             }
+            clusterManager.cluster();
 
             if(markers.size() != 0) {
-                pb.setVisibility(View.INVISIBLE);
+                progressBar.setVisibility(View.INVISIBLE);
             }
         });
+    }
+
+    private void onInfoWindowClose(Marker marker) {
+        if(getCompassSelectedMarker() == null && getActivity() != null) {
+            ExtendedFloatingActionButton a = getActivity().findViewById(R.id.fab);
+            a.hide();
+        }
     }
 
     private boolean onMarkerClick(Marker marker) {
@@ -122,17 +140,53 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                 .build();
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
         marker.showInfoWindow();
+
+        // mostro il pulsante per la navigazione
+        LatLng selectedMarkerCoordinates = marker.getPosition();
+        Uri gmmIntentUri = Uri.parse("google.navigation:q=" + selectedMarkerCoordinates.latitude + "," + selectedMarkerCoordinates.longitude + "&mode=w");
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+        mapIntent.setPackage("com.google.android.apps.maps");
+
+        // mostro il pulsante "naviga" solo se c'è un app che supporta l'intent di navigazione
+        if(mapIntent.resolveActivity(context.getPackageManager()) != null && getActivity() != null) {
+            ExtendedFloatingActionButton a = getActivity().findViewById(R.id.fab);
+            a.setOnClickListener(view -> {
+                startActivity(mapIntent);
+            });
+            a.show();
+        }
+
         return true;
     }
 
     private void onInfoWindowClick(Marker marker) {
         if(!marker.equals(getCompassSelectedMarker())) {
             setCompassSelectedMarker(marker);
-            Toast.makeText(context, getResources().getString(R.string.infowindow_setcompass), Toast.LENGTH_LONG).show();
-            marker.hideInfoWindow();
+
+            Snackbar mySnackbar = Snackbar.make(getActivity().findViewById(R.id.maps), getResources().getString(R.string.infowindow_setcompass), Snackbar.LENGTH_LONG);
+            mySnackbar.setAction(R.string.button_open, view -> {
+                // ottengo il navController
+                NavHostFragment navHostFragment = (NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_content_main);
+                if(navHostFragment == null) { // non dovrebbe mai verificarsi!
+                    Log.d("ISTANZA", "navHostFragment null (fragment)!");
+                    return;
+                }
+                NavController navController = navHostFragment.getNavController();
+                navController.popBackStack(R.id.nav_maps, false);
+                navController.navigate(R.id.nav_compass);
+            });
+            mySnackbar.show();
+        } else {
+            setCompassSelectedMarker(null);
+            Snackbar mySnackbar = Snackbar.make(getActivity().findViewById(R.id.maps), getResources().getString(R.string.infowindow_unsetcompass), Snackbar.LENGTH_SHORT);
+            mySnackbar.show();
         }
+        marker.hideInfoWindow();
     }
 
+    private boolean onClusterClick(Cluster<MyItemOnMap> item) {
+        return true;
+    }
 
     // -------------
 

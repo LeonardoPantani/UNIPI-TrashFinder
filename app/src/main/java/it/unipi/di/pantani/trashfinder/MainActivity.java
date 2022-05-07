@@ -20,9 +20,12 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.MenuBuilder;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.navigation.NavBackStackEntry;
 import androidx.navigation.NavController;
 import androidx.navigation.NavDestination;
 import androidx.navigation.fragment.NavHostFragment;
@@ -57,20 +60,20 @@ public class MainActivity extends AppCompatActivity implements NavController.OnD
         }
     }
 
-    public void startApp(View view) {
+    public void startApp(View notUsed) {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         setSupportActionBar(binding.appBarMain.toolbar);
 
         NavigationView navigationView = binding.navView;
+        DrawerLayout drawer = binding.drawerLayout;
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.nav_maps, R.id.nav_compass, R.id.nav_community, R.id.nav_mapeditor)
-                .setOpenableLayout(binding.drawerLayout)
+                .setOpenableLayout(drawer)
                 .build();
-
         // ottengo il navController
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_content_main);
         if(navHostFragment == null) { // non dovrebbe mai verificarsi!
@@ -81,14 +84,6 @@ public class MainActivity extends AppCompatActivity implements NavController.OnD
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
         navController.addOnDestinationChangedListener(this);
-
-        binding.appBarMain.fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                navController.popBackStack(R.id.maps, false); // primo
-                navController.navigate(R.id.nav_compass);
-            }
-        });
 
         if (!checkPerms(getBaseContext())) {
             showPermissionWarningDialog();
@@ -142,7 +137,7 @@ public class MainActivity extends AppCompatActivity implements NavController.OnD
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == REQUIRE_PERMISSION_CODE_INTRO) {// tutorial
+        if (requestCode == REQUIRE_PERMISSION_CODE_INTRO) { // tutorial
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(getApplicationContext(), getResources().getString(R.string.intro_location_permissiongranted, getResources().getString(R.string.app_name)), Toast.LENGTH_LONG).show();
             } else {
@@ -159,7 +154,6 @@ public class MainActivity extends AppCompatActivity implements NavController.OnD
     @SuppressLint("RestrictedApi")
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         if (menu instanceof MenuBuilder) {
             ((MenuBuilder) menu).setOptionalIconsVisible(true);
@@ -187,11 +181,18 @@ public class MainActivity extends AppCompatActivity implements NavController.OnD
 
     @Override
     public void onDestinationChanged(@NonNull NavController navController, @NonNull NavDestination navDestination, @Nullable Bundle bundle) {
-        if(navController.getCurrentBackStackEntry().getDestination().getDisplayName().equals("it.unipi.di.pantani.trashfinder:id/nav_compass")) {
+        if(navDestination.getId() != R.id.nav_maps) {
             binding.appBarMain.fab.hide();
-        } else {
-            binding.appBarMain.fab.show();
         }
-        getSupportActionBar().setTitle(getResources().getString(R.string.app_name) + " - " + getSupportActionBar().getTitle());
+
+        ActionBar ab = getSupportActionBar();
+        if(ab != null)
+            ab.setTitle(getResources().getString(R.string.app_name) + " - " + ab.getTitle());
+
+        // debug
+        Log.d("ISTANZA2", "> " + navDestination.getDisplayName());
+        for(NavBackStackEntry a : navController.getBackQueue()) {
+            Log.d("ISTANZA2", "Backstack -> " + a.getDestination().getDisplayName());
+        }
     }
 }

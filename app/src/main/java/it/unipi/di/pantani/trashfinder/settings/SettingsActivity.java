@@ -3,10 +3,17 @@ package it.unipi.di.pantani.trashfinder.settings;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.ListPreference;
+import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 
@@ -38,9 +45,36 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     public static class SettingsFragment extends PreferenceFragmentCompat {
+        ListPreference setting_map_type;
+        ListPreference setting_map_theme;
+
+        @NonNull
+        @Override
+        public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+            return super.onCreateView(inflater, container, savedInstanceState);
+        }
+
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             setPreferencesFromResource(R.xml.root_preferences, rootKey);
+
+            setting_map_type = findPreference("setting_map_type");
+            setting_map_theme = findPreference("setting_map_theme");
+
+            if(!setting_map_type.getValue().equals("roads")) {
+                setting_map_theme.setEnabled(false);
+            }
+
+            setting_map_type.setOnPreferenceChangeListener(this::onMapTypeChange);
+        }
+
+        public boolean onMapTypeChange(Preference preference, Object newValue) {
+            if(newValue.equals("roads")) {
+                setting_map_theme.setEnabled(true);
+            } else {
+                setting_map_theme.setEnabled(false);
+            }
+            return true;
         }
     }
 

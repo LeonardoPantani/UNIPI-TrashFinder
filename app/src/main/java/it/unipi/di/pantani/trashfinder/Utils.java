@@ -2,6 +2,7 @@ package it.unipi.di.pantani.trashfinder;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -11,17 +12,19 @@ import android.content.res.Configuration;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import androidx.core.app.ActivityCompat;
 import androidx.preference.PreferenceManager;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
+import com.google.gson.Gson;
 
 import it.unipi.di.pantani.trashfinder.data.POIMarker;
 
@@ -30,7 +33,7 @@ public abstract class Utils {
     public static final String SAD_EMOJI = "{{{(>_<)}}}";
     public static final String FEEDBACK_MAIL = "l.pantani5@studenti.unipi.it";
     // codice pisa: 3600042527 | codice italia: 3600365331 | codice toscana: 3600041977
-    public static final String OSM_IMPORT_STRING = "https://www.overpass-api.de/api/interpreter?data=[out:json];area(id:3600041977)-%3E.searchArea;(node[%22amenity%22=%22waste_basket%22](area.searchArea);node[%22amenity%22=%22waste_disposal%22](area.searchArea);node[%22amenity%22=%22recycling%22](area.searchArea););out%20body;%3E;out%20skel%20qt;";
+    public static final String OSM_IMPORT_STRING = "https://www.overpass-api.de/api/interpreter?data=[out:json];area(id:3600042527)-%3E.searchArea;(node[%22amenity%22=%22waste_basket%22](area.searchArea);node[%22amenity%22=%22waste_disposal%22](area.searchArea);node[%22amenity%22=%22recycling%22](area.searchArea););out%20body;%3E;out%20skel%20qt;";
 
     public static final double DEFAULT_LOCATION_LAT = 41.902782;
     public static final double DEFAULT_LOCATION_LON = 12.496366;
@@ -139,76 +142,13 @@ public abstract class Utils {
 
     // MARCATORE
     public static String getTitleFromMarker(Context context, POIMarker marker) {
-        String trashbin_type = "";
-
-        for(POIMarker.MarkerType a : marker.getType()) {
-            switch(a) {
-                case trashbin_plastica: {
-                    trashbin_type += context.getString(R.string.markertype_plastic) + " / ";
-                    break;
-                }
-                case trashbin_alluminio: {
-                    trashbin_type += context.getString(R.string.markertype_aluminium) + " / ";
-                    break;
-                }
-                case trashbin_carta: {
-                    trashbin_type += context.getString(R.string.markertype_paper) + " / ";
-                    break;
-                }
-                case trashbin_organico: {
-                    trashbin_type += context.getString(R.string.markertype_organic) + " / ";
-                    break;
-                }
-                case trashbin_farmaci: {
-                    trashbin_type += context.getString(R.string.markertype_medication) + " / ";
-                    break;
-                }
-                case trashbin_pile: {
-                    trashbin_type += context.getString(R.string.markertype_batteries) + " / ";
-                    break;
-                }
-                case trashbin_olio: {
-                    trashbin_type += context.getString(R.string.markertype_oil) + " / ";
-                    break;
-                }
-                case trashbin_vestiti: {
-                    trashbin_type += context.getString(R.string.markertype_clothes) + " / ";
-                    break;
-                }
-                case recyclingdepot: {
-                    trashbin_type += context.getString(R.string.markertype_recyclingdepot) + " / ";
-                    break;
-                }
-                case trashbin_indifferenziato: {
-                    trashbin_type += context.getString(R.string.markertype_undifferentiated) + " / ";
-                    break;
-                }
-                default: {
-
-                }
-            }
-        }
-
-        if(trashbin_type.equals("")) {
-            trashbin_type = context.getString(R.string.markertype_undefined);
+        //Log.d("ISTANZA", "tipi: " + marker.getType().toString());
+        if(marker.getType().contains(POIMarker.MarkerType.recyclingdepot)) {
+            return context.getString(R.string.markertype_recyclingdepot);
         } else {
-            trashbin_type = trashbin_type.substring(0, trashbin_type.length()-3);
+            return context.getString(R.string.markertype_generic);
         }
-
-        return "#" + marker.getId() + " " + context.getString(R.string.markertype_main, trashbin_type);
     }
-
-    public static float getMarkerColorByType(POIMarker m) {
-        float ret;
-
-        if (m.getType().iterator().next() == POIMarker.MarkerType.recyclingdepot) {
-            ret = BitmapDescriptorFactory.HUE_BLUE;
-        } else {
-            ret = BitmapDescriptorFactory.HUE_RED;
-        }
-        return ret;
-    }
-
 
     static Marker compassSelectedMarker;
     public static void setCompassSelectedMarker(Marker m) {
@@ -216,5 +156,27 @@ public abstract class Utils {
     }
     public static Marker getCompassSelectedMarker() {
         return compassSelectedMarker;
+    }
+
+    static Marker editorSelectedMarker;
+    public static Marker getEditorSelectedMarker() {
+        return editorSelectedMarker;
+    }
+    public static void setEditorSelectedMarker(Marker editorSelectedMarker) {
+        Utils.editorSelectedMarker = editorSelectedMarker;
+    }
+
+    public static POIMarker getPOIMarkerByMarker(Marker marker) {
+        return new Gson().fromJson(marker.getSnippet(), POIMarker.class);
+    }
+
+    // CHIUDI TASTIERA
+    public static void closeKeyboard(Activity a) {
+        // Check if no view has focus:
+        View view = a.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager)a.getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 }

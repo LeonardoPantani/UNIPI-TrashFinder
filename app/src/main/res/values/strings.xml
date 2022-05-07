@@ -10,7 +10,12 @@
     <string name="credits">App developed by Leonardo Pantani as SAM course Project\\n All Rights Reserved©</string>
     <string name="accuracy_high">High</string>
     <string name="accuracy_low">Low</string>
-    <string name="fab_description">Open compass view</string>
+    <string name="fab_description">Navigate button</string>
+    <string name="button_cancel">Cancel</string>
+    <string name="button_ok">OK</string>
+    <string name="button_delete">Delete</string>
+    <string name="button_navigate">Navigate</string>
+    <string name="button_open">Open</string>
 
     <string name="section_home">Home</string>
     <string name="section_maps">Map</string>
@@ -100,9 +105,6 @@
     <string name="compass_accuracy_gps">GPS Accuracy:</string>
     <string name="compass_accuracy_accelerometer">Accelerometer Accuracy:</string>
 
-    <!-- MAP EDITOR -->
-    <string name="marker">Marker</string>
-
     <!-- DRAWER -->
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -136,22 +138,35 @@
     <string name="community_generalstats_description">General stats image</string>
 
     <string name="community_gotomapeditor_title">Open map editor</string>
-    <string name="community_gotomapeditor_desc">Select "Map Editor" from the menu that will popup. Then you are going to be able to propose new trash bin locations and edit already existing ones.</string>
+    <string name="community_gotomapeditor_desc">Click to propose new trash bin locations and edit already existing ones.</string>
     <string name="community_gotomapeditor_description">Go to map editor image</string>
 
     <!-- MAP EDITOR -->
-    <string name="mapeditor_youareineditingmode">You are in Editing Mode</string>
+    <string name="mapeditor_youareineditingmode">You are in Editor Mode. Tap to add a new trash bin. To edit one click on it.</string>
+    <string name="mapeditor_notes">Notes</string>
+    <string name="mapeditor_markertype">Trash bin type</string>
+    <string name="mapeditor_editingmarker">You are editing the selected trash bin.</string>
+    <string name="mapeditor_delete">Delete trash bin</string>
+    <string name="mapeditor_save">Save changes</string>
+    <string name="mapeditor_suredelete">Are you sure?</string>
+    <string name="mapeditor_suredelete_desc">The selected trash bin is going to be deleted. You will not be able to recover this edit once done.</string>
+    <string name="mapeditor_save_new">Create trash bin</string>
+    <string name="mapeditor_marker_new_description">Trash bin icon</string>
+    <string name="mapeditor_creatingmarker">You are creating a new trash bin. Move the map to overlap the selector with the location of the trash bin. Afterwards edit the details of the trash bin. When you have finished press on \"Create\".</string>
+    <string name="map_nodata">No data</string>
 
     <!-- MARKERS -->
     <string name="infowindow_defaultbintitle">Generic element</string>
     <string name="infowindow_defaultid">#id</string>
+    <string name="infowindow_id">#%1$d</string>
     <string name="infowindow_notestitle">Notes:</string>
     <string name="infowindow_notesnotfound">No notes for this element.</string>
-    <string name="infowindow_tipclickcompass">Click on this window to select this element as target for the compass.</string>
-    <string name="infowindow_tipitemselected">This item is currently selected.</string>
-    <string name="infowindow_setcompass">Compass target set in the Compass View.</string>
-    <string name="markertype_main">%1$s waste</string>
-    <string name="markertype_undefined">undefined</string>
+    <string name="infowindow_tipclickcompass">Click on this window to select this trash bin as target for the compass.</string>
+    <string name="infowindow_tipitemselected">This trash bin is currently selected. Tap to unselect.</string>
+    <string name="infowindow_setcompass">Compass target set.</string>
+    <string name="infowindow_unsetcompass">Compass target removed.</string>
+
+    <string name="infowindow_tipedit">Click on this window to select this element for editing.</string>
 
     <string name="markertype_undifferentiated">undifferentiated</string>
     <string name="markertype_plastic">plastic</string>
@@ -161,12 +176,11 @@
     <string name="markertype_organic">organic</string>
     <string name="markertype_bulky">bulky</string>
     <string name="markertype_electrical">electrical</string>
-    <string name="markertype_medication">medication</string>
     <string name="markertype_batteries">batteries</string>
     <string name="markertype_oil">oil</string>
     <string name="markertype_clothes">clothes</string>
+    <string name="markertype_drugs">expired drugs</string>
     <string name="markertype_recyclingdepot">recycling depot</string>
 
-    <!-- MAP -->
-
+    <string name="markertype_generic">trash bin</string>
 </resources>

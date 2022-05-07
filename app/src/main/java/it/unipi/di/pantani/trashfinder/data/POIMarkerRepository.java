@@ -5,6 +5,7 @@ import android.app.Application;
 import androidx.lifecycle.LiveData;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * A Repository class abstracts access to multiple data sources.
@@ -17,11 +18,13 @@ import java.util.List;
 public class POIMarkerRepository {
     private final POIMarkerDAO mPOIMarkerDAO;
     private final LiveData<List<POIMarker>> mMarkerList;
+    private final LiveData<Integer> markersNumber;
 
     public POIMarkerRepository(Application application) {
         POIMarkerRoomDatabase db = POIMarkerRoomDatabase.getDatabase(application);
         mPOIMarkerDAO = db.markerDao();
         mMarkerList = mPOIMarkerDAO.getNearMarkers();
+        markersNumber = mPOIMarkerDAO.getMarkerNumber();
     }
 
     public LiveData<List<POIMarker>> getMarkerList() {
@@ -34,5 +37,17 @@ public class POIMarkerRepository {
 
     public void insert(POIMarker marker) {
         POIMarkerRoomDatabase.databaseWriteExecutor.execute(() -> mPOIMarkerDAO.insert(marker));
+    }
+
+    public void delete(POIMarker marker) {
+        POIMarkerRoomDatabase.databaseWriteExecutor.execute(() -> mPOIMarkerDAO.delete(marker));
+    }
+
+    public void update(int id, Set<POIMarker.MarkerType> newTypes, double newLatitude, double newLongitude, String newNotes) {
+        POIMarkerRoomDatabase.databaseWriteExecutor.execute(() -> mPOIMarkerDAO.update(id, ListConverter.markersToString(newTypes), newLatitude, newLongitude, newNotes));
+    }
+
+    public LiveData<Integer> getNumberMarker() {
+        return markersNumber;
     }
 }

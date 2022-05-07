@@ -16,18 +16,18 @@
         app:title="@string/map_settings"
         app:icon="@drawable/ic_baseline_map_24">
         <ListPreference
-            app:defaultValue="auto"
-            app:entries="@array/setting_map_theme_entries"
-            app:entryValues="@array/setting_map_theme_values"
-            app:key="setting_map_theme"
-            app:title="@string/setting_map_theme"
-            app:useSimpleSummaryProvider="true" />
-        <ListPreference
             app:defaultValue="roads"
             app:entries="@array/setting_map_type_entries"
             app:entryValues="@array/setting_map_type_values"
             app:key="setting_map_type"
             app:title="@string/setting_map_type"
+            app:useSimpleSummaryProvider="true" />
+        <ListPreference
+            app:defaultValue="auto"
+            app:entries="@array/setting_map_theme_entries"
+            app:entryValues="@array/setting_map_theme_values"
+            app:key="setting_map_theme"
+            app:title="@string/setting_map_theme"
             app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
 

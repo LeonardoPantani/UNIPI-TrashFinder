@@ -13,6 +13,8 @@ import android.location.LocationManager;
 import android.os.Bundle;
 
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.preference.PreferenceManager;
 
 import android.util.Log;
@@ -21,7 +23,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -37,34 +38,32 @@ import it.unipi.di.pantani.trashfinder.data.POIMarker;
 import it.unipi.di.pantani.trashfinder.databinding.FragmentCompassBinding;
 
 public class CompassFragment extends Fragment {
-    SharedPreferences sp;
+    private SharedPreferences sp;
+    private Context context;
+    private CompassViewModel mCompassViewModel;
+    private FragmentCompassBinding binding;
+
     private float azim = 0f;
     private float currentAzimuth = 0f;
-    private Location current_location = new Location("A");
+    private Location currentLocation = new Location("A");
     private final Location target = new Location("B");
     private LocationManager locationManager;
-    Snackbar tipCloseToTarget;
+
+    private boolean showTip;
+    private Snackbar tipCloseToTarget;
 
     private String measureUnit_low;
     private String measureUnit_high;
     private int measureUnitCode;
 
-    private Context context;
-
     int location_refresh_time;
-    int LOCATION_REFRESH_DISTANCE = 0;
 
     private Compass compass;
-    private boolean showTip;
 
-    private boolean activateCompass = false;
+    private boolean readyLocation;
+    private boolean readySensor;
 
-    private CompassViewModel mCompassViewModel;
-
-    private FragmentCompassBinding binding;
-
-
-    // TODO rendere il layout della bussola non constraint
+    Marker selectedMarker;
 
     @Nullable
     @Override
@@ -73,15 +72,12 @@ public class CompassFragment extends Fragment {
         sp = PreferenceManager.getDefaultSharedPreferences(context);
         binding = FragmentCompassBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-
+        // preparo la bussola
         setupCompass();
-
+        // preparo il manager della posizione
         locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-
         // view model
         mCompassViewModel = new ViewModelProvider(this).get(CompassViewModel.class);
-
-        Log.d("ISTANZA", "compass -> onCreateView");
         return root;
     }
 
@@ -89,6 +85,9 @@ public class CompassFragment extends Fragment {
         compass = new Compass(context);
         Compass.CompassListener cl = getCompassListener();
         compass.setListener(cl);
+
+        readyLocation = false;
+        readySensor = false;
     }
 
     public void onLocationChanged(Location location) {
@@ -97,10 +96,11 @@ public class CompassFragment extends Fragment {
         }
 
         if(location.getAccuracy() != 0f) {
-            current_location = location;
+            readyLocation = true;
+            currentLocation = location;
             binding.compassTextAccuracyGps.setText(getResources().getString(R.string.accuracy_high));
         } else {
-            binding.compassTextDifferenceDistance.setText(getActivity().getResources().getString(R.string.waiting_for_gps));
+            readyLocation = false;
             binding.compassTextAccuracyGps.setText(getResources().getString(R.string.accuracy_low));
         }
     }
@@ -109,25 +109,32 @@ public class CompassFragment extends Fragment {
         return new Compass.CompassListener() {
             public void onNewAzimuth(float azimuth) {
                 ((Activity) context).runOnUiThread(() -> {
-                    if (!activateCompass) {
-                        return;
-                    }
+                    if(!isCompassReady()) return;
 
-                    float dist = current_location.distanceTo(target);
+                    float dist = currentLocation.distanceTo(target);
                     if (measureUnitCode == 1) {
                         dist *= 3.281;
                     }
 
-                    azim = (float) (azimuth - CompassFragment.this.bearing(current_location.getLatitude(), current_location.getLongitude(), target.getLatitude(), target.getLongitude()));
+                    azim = (float) (azimuth - CompassFragment.this.bearing(currentLocation.getLatitude(), currentLocation.getLongitude(), target.getLatitude(), target.getLongitude()));
 
                     if (dist < 1000) {
                         binding.compassTextDifferenceDistance.setText(context.getResources().getString(R.string.distance_difference, dist, measureUnit_low));
 
                         if (showTip) {
-                            if ((dist < 10 && measureUnitCode == 0) || (dist < 32 && measureUnitCode == 1)) {
-                                if (tipCloseToTarget == null) {
+                            if ((dist < 50 && measureUnitCode == 0) || (dist < 164 && measureUnitCode == 1)) {
+                                if (tipCloseToTarget == null && getActivity() != null) {
                                     tipCloseToTarget = Snackbar.make(getActivity().findViewById(android.R.id.content), CompassFragment.this.getResources().getString(R.string.compass_tipswitchtomap_title), Snackbar.LENGTH_INDEFINITE);
-                                    tipCloseToTarget.setAction(R.string.compass_tipswitchtomap_button, view -> Toast.makeText(context, R.string.app_name, Toast.LENGTH_SHORT).show());
+                                    tipCloseToTarget.setAction(R.string.compass_tipswitchtomap_button, view -> {
+                                        // ottengo il navController
+                                        NavHostFragment navHostFragment = (NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_content_main);
+                                        if(navHostFragment == null) { // non dovrebbe mai verificarsi!
+                                            Log.d("ISTANZA", "navHostFragment null (fragment)!");
+                                            return;
+                                        }
+                                        NavController navController = navHostFragment.getNavController();
+                                        navController.popBackStack();
+                                    });
                                     tipCloseToTarget.show();
                                 }
                             } else {
@@ -160,11 +167,12 @@ public class CompassFragment extends Fragment {
 
             @Override
             public void onSensorAccuracyChanged(float accuracy) {
-                if(accuracy != SensorManager.SENSOR_STATUS_ACCURACY_MEDIUM && accuracy != SensorManager.SENSOR_STATUS_ACCURACY_HIGH) {
-                    binding.compassTextDifferenceDistance.setText(getResources().getString(R.string.waiting_for_sensors));
-                    binding.compassTextAccuracyAccelerometer.setText(getResources().getString(R.string.accuracy_low));
-                } else {
+                if(accuracy == SensorManager.SENSOR_STATUS_ACCURACY_MEDIUM || accuracy == SensorManager.SENSOR_STATUS_ACCURACY_HIGH) {
+                    readySensor = true;
                     binding.compassTextAccuracyAccelerometer.setText(getResources().getString(R.string.accuracy_high));
+                } else {
+                    readySensor = false;
+                    binding.compassTextAccuracyAccelerometer.setText(getResources().getString(R.string.accuracy_low));
                 }
             }
         };
@@ -191,54 +199,64 @@ public class CompassFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
-        location_refresh_time = sp.getInt("setting_compass_update_interval", Utils.default_location_refresh_time);
-        location_refresh_time *= 1000;
+        // aggiorno le variabili con le preferenze
+        location_refresh_time = sp.getInt("setting_compass_update_interval", Utils.default_location_refresh_time)*1000;
         showTip = sp.getBoolean("setting_compass_show_tip_switchtomap", true);
         if(sp.getString("setting_compass_measureunit", "meters").equals("meters")) {
+            measureUnitCode = 0;
             measureUnit_low = context.getResources().getString(R.string.setting_compass_measureunit_meters);
             measureUnit_high = context.getResources().getString(R.string.setting_compass_measureunit_kilometers);
-            measureUnitCode = 0;
         } else {
+            measureUnitCode = 1;
             measureUnit_low = context.getResources().getString(R.string.setting_compass_measureunit_feet);
             measureUnit_high = context.getResources().getString(R.string.setting_compass_measureunit_miles);
-            measureUnitCode = 1;
         }
 
-
+        // mostro un avviso in caso di mancanza di permessi
         if(!checkPerms(context)) {
             binding.compassCardviewWarning.setVisibility(View.VISIBLE);
             binding.compassTextWarning.setText(getResources().getString(R.string.dialog_nolocationperm_desc));
-            return;
         } else {
             binding.compassCardviewWarning.setVisibility(View.GONE);
         }
 
-        Marker selectedMarker = getCompassSelectedMarker();
+        selectedMarker = getCompassSelectedMarker();
         if(selectedMarker != null) { // se c'è un elemento selezionato
+            // mostro la sezione della precisione e imposto i testi su LOW, tanto saranno aggiornati da altri metodi
+            binding.compassSectionAccuracy.setVisibility(View.VISIBLE);
+            binding.compassTextAccuracyGps.setText(getResources().getString(R.string.accuracy_low));
+            binding.compassTextAccuracyAccelerometer.setText(getResources().getString(R.string.accuracy_low));
+
             if (checkPerms(context)) {
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, location_refresh_time, LOCATION_REFRESH_DISTANCE, this::onLocationChanged);
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, location_refresh_time, 0, this::onLocationChanged);
             }
 
-            POIMarker tmarker = new Gson().fromJson(selectedMarker.getSnippet(), POIMarker.class);
-            if(tmarker != null) {
-                mCompassViewModel.getMarkerId(tmarker.getId()).observe(getViewLifecycleOwner(), targetMarker -> {
-                    target.setLatitude(targetMarker.getLatitude());
-                    target.setLongitude(targetMarker.getLongitude());
-                }) ;
+            POIMarker targetMarker = new Gson().fromJson(selectedMarker.getSnippet(), POIMarker.class);
+            if(targetMarker != null) {
+                target.setLatitude(targetMarker.getLatitude());
+                target.setLongitude(targetMarker.getLongitude());
             }
             compass.start();
-            activateCompass = true;
-            binding.compassTextDifferenceDistance.setText(getResources().getString(R.string.waiting_for_sensors));
         } else {
             compass.stop();
-            activateCompass = false;
             binding.compassTextDifferenceDistance.setText(Utils.SAD_EMOJI);
 
             binding.compassCardviewWarning.setVisibility(View.VISIBLE);
             binding.compassTextWarning.setText(getResources().getString(R.string.compass_tipchoosetargetfirst));
         }
         Log.d("ISTANZA", "compass -> onResume");
+    }
+
+    private boolean isCompassReady() {
+        if(!readyLocation) {
+            binding.compassTextDifferenceDistance.setText(getResources().getString(R.string.waiting_for_gps));
+            return false;
+        }
+        if(!readySensor) {
+            binding.compassTextDifferenceDistance.setText(getResources().getString(R.string.waiting_for_sensors));
+            return false;
+        }
+        return true;
     }
 
     @Override
