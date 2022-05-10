@@ -1,9 +1,8 @@
-package it.unipi.di.pantani.trashfinder.data;
+package it.unipi.di.pantani.trashfinder.data.marker;
 
 import static it.unipi.di.pantani.trashfinder.Utils.OSM_IMPORT_STRING;
 
 import android.content.Context;
-import android.os.AsyncTask;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -40,7 +39,7 @@ import java.util.concurrent.Executors;
 public abstract class POIMarkerRoomDatabase extends RoomDatabase {
     public abstract POIMarkerDAO markerDao();
 
-    private static POIMarkerRoomDatabase INSTANCE;
+    private static volatile POIMarkerRoomDatabase INSTANCE;
     private static final int NUMBER_OF_THREADS = 4;
     static final ExecutorService databaseWriteExecutor = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
 
@@ -73,7 +72,7 @@ public abstract class POIMarkerRoomDatabase extends RoomDatabase {
                     facendo una richiesta alle API di OpenStreetMap. Se il collegamento all'API
                     esterna non va a buon fine carico (pochi) dati di prova.
                  */
-                AsyncTask.execute(() -> {
+                Executors.newSingleThreadExecutor().execute(() -> {
                     HttpURLConnection connection = null;
                     BufferedReader reader = null;
 
@@ -98,11 +97,8 @@ public abstract class POIMarkerRoomDatabase extends RoomDatabase {
                             JSONObject response = new JSONObject(buffer.toString());
                             JSONArray responseArr = response.getJSONArray("elements");
 
-                            //for each element item in json array
                             for (int i = 0; i < responseArr.length(); i++) {
-                                //convert element to string of contents
                                 String elementStr = responseArr.getString(i);
-                                //create individual element object from (whole) element string
                                 JSONObject elementObj = new JSONObject(elementStr);
 
                                 Set<POIMarker.MarkerType> types = new HashSet<>();
@@ -201,13 +197,12 @@ public abstract class POIMarkerRoomDatabase extends RoomDatabase {
     };
 
     private static void manualAdd() {
-        Set<POIMarker.MarkerType> types = new HashSet<>();
-
         // eseguito al primo avvio
         POIMarkerDAO dao = INSTANCE.markerDao();
         dao.deleteAll();
 
-        types.add(POIMarker.MarkerType.recyclingdepot);
-        dao.insert(new POIMarker(types, 43.72363829574406, 10.417132187214595, "Centro GEOFOR"));
+        dao.insert(new POIMarker(Set.of(POIMarker.MarkerType.recyclingdepot), 43.72363829574406, 10.417132187214595, "Centro GEOFOR"));
+        dao.insert(new POIMarker(Set.of(POIMarker.MarkerType.trashbin_indifferenziato, POIMarker.MarkerType.trashbin_plastica, POIMarker.MarkerType.trashbin_carta), 43.721768389743055, 10.408047122841685, ""));
+        dao.insert(new POIMarker(Set.of(POIMarker.MarkerType.trashbin_indifferenziato), 43.72276671037211, 10.436552726467875, ""));
     }
 }

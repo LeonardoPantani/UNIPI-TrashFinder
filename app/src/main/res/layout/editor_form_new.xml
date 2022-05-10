@@ -12,11 +12,33 @@
         android:text="@string/mapeditor_creatingmarker"
         android:textSize="16sp" />
 
-    <Button
-        android:id="@+id/mapeditor_types_new"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/mapeditor_markertype" />
+        android:weightSum="1"
+        android:orientation="horizontal"
+        android:layout_marginHorizontal="5dp">
+
+        <Button
+            android:id="@+id/mapeditor_types_new"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:text="@string/mapeditor_markertype"
+            android:layout_marginEnd="10dp"
+            android:layout_weight="0.5"
+            tools:ignore="ButtonStyle" />
+
+        <Button
+            android:id="@+id/mapeditor_photo_new"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:text="@string/mapeditor_photo_new"
+            android:layout_marginStart="10dp"
+            android:layout_weight="0.5"
+            tools:ignore="ButtonStyle" />
+    </LinearLayout>
+
+
 
     <EditText
         android:id="@+id/mapeditor_notes_new"
@@ -39,6 +61,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:text="@string/button_cancel"
+            android:layout_marginEnd="10dp"
             android:layout_weight="0.5"
             style="?android:attr/buttonBarButtonStyle" />
 
@@ -47,6 +70,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:text="@string/mapeditor_save_new"
+            android:layout_marginStart="10dp"
             android:layout_weight="0.5"
             tools:ignore="ButtonStyle" />
     </LinearLayout>

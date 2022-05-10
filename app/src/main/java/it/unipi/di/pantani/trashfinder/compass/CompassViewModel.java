@@ -6,8 +6,8 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
-import it.unipi.di.pantani.trashfinder.data.POIMarker;
-import it.unipi.di.pantani.trashfinder.data.POIMarkerRepository;
+import it.unipi.di.pantani.trashfinder.data.marker.POIMarker;
+import it.unipi.di.pantani.trashfinder.data.marker.POIMarkerRepository;
 
 public class CompassViewModel extends AndroidViewModel {
     private final POIMarkerRepository mRepository;

@@ -2,6 +2,8 @@ package it.unipi.di.pantani.trashfinder.compass;
 
 import static it.unipi.di.pantani.trashfinder.Utils.checkPerms;
 import static it.unipi.di.pantani.trashfinder.Utils.getCompassSelectedMarker;
+import static it.unipi.di.pantani.trashfinder.Utils.getTitleFromMarker;
+import static it.unipi.di.pantani.trashfinder.data.marker.POIMarker.getMarkerTypeName;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -14,6 +16,7 @@ import android.os.Bundle;
 
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.preference.PreferenceManager;
 
@@ -32,9 +35,11 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 
+import java.util.stream.Collectors;
+
 import it.unipi.di.pantani.trashfinder.R;
 import it.unipi.di.pantani.trashfinder.Utils;
-import it.unipi.di.pantani.trashfinder.data.POIMarker;
+import it.unipi.di.pantani.trashfinder.data.marker.POIMarker;
 import it.unipi.di.pantani.trashfinder.databinding.FragmentCompassBinding;
 
 public class CompassFragment extends Fragment {
@@ -78,6 +83,8 @@ public class CompassFragment extends Fragment {
         locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         // view model
         mCompassViewModel = new ViewModelProvider(this).get(CompassViewModel.class);
+        // onClick su cardview
+        binding.compassCardviewMain.setOnClickListener(this::onClickCardView);
         return root;
     }
 
@@ -195,10 +202,16 @@ public class CompassFragment extends Fragment {
         return (Math.toDegrees(Math.atan2(y, x))+360)%360;
     }
 
+    private void onClickCardView(View view) {
+        Navigation.findNavController(view).popBackStack(R.id.nav_maps, false); // primo
+    }
+
     @SuppressLint("MissingPermission")
     @Override
     public void onResume() {
         super.onResume();
+        Log.d("ISTANZA", "compass -> onResume");
+
         // aggiorno le variabili con le preferenze
         location_refresh_time = sp.getInt("setting_compass_update_interval", Utils.default_location_refresh_time)*1000;
         showTip = sp.getBoolean("setting_compass_show_tip_switchtomap", true);
@@ -214,37 +227,63 @@ public class CompassFragment extends Fragment {
 
         // mostro un avviso in caso di mancanza di permessi
         if(!checkPerms(context)) {
-            binding.compassCardviewWarning.setVisibility(View.VISIBLE);
-            binding.compassTextWarning.setText(getResources().getString(R.string.dialog_nolocationperm_desc));
-        } else {
-            binding.compassCardviewWarning.setVisibility(View.GONE);
+            binding.compassCardviewHeaderimage.setImageResource(R.drawable.compass_cardheader_noselected);
+            binding.compassCardviewTitle.setText(getResources().getString(R.string.generic_error));
+            binding.compassCardviewDesc.setText(getResources().getString(R.string.dialog_nolocationperm_desc));
+
+            binding.compassCardviewMain.setVisibility(View.VISIBLE);
+
+            return;
         }
 
         selectedMarker = getCompassSelectedMarker();
         if(selectedMarker != null) { // se c'è un elemento selezionato
+            POIMarker targetMarker = new Gson().fromJson(selectedMarker.getSnippet(), POIMarker.class);
+            if(targetMarker == null) throw new IllegalStateException();
+
+            // se non contiene recylingdepot mostro "cestino", altrimenti mostro "isola ecologica"
+            if(!targetMarker.getTypes().contains(POIMarker.MarkerType.recyclingdepot)) {
+                binding.compassCardviewHeaderimage.setImageResource(R.drawable.compass_cardheader_binselected);
+            } else {
+                binding.compassCardviewHeaderimage.setImageResource(R.drawable.compass_cardheader_rdselected);
+            }
+
+            binding.compassCardviewTitle.setText(getTitleFromMarker(context, targetMarker));
+
+            String s = targetMarker.getTypes().stream()
+                            .map(t -> getMarkerTypeName(context, t))
+                            .collect(Collectors.joining(", "));
+            binding.compassCardviewDesc.setText(s);
+
             // mostro la sezione della precisione e imposto i testi su LOW, tanto saranno aggiornati da altri metodi
+            binding.compassIcon.setVisibility(View.VISIBLE);
+            binding.compassTextDifferenceDistance.setVisibility(View.VISIBLE);
+
             binding.compassSectionAccuracy.setVisibility(View.VISIBLE);
             binding.compassTextAccuracyGps.setText(getResources().getString(R.string.accuracy_low));
             binding.compassTextAccuracyAccelerometer.setText(getResources().getString(R.string.accuracy_low));
 
-            if (checkPerms(context)) {
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, location_refresh_time, 0, this::onLocationChanged);
-            }
+            // non dà warning perché se non ho i permessi faccio return prima
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, location_refresh_time, 0, this::onLocationChanged);
 
-            POIMarker targetMarker = new Gson().fromJson(selectedMarker.getSnippet(), POIMarker.class);
-            if(targetMarker != null) {
-                target.setLatitude(targetMarker.getLatitude());
-                target.setLongitude(targetMarker.getLongitude());
-            }
+            // imposto latitudine e longitudine del bersaglio
+            target.setLatitude(targetMarker.getLatitude());
+            target.setLongitude(targetMarker.getLongitude());
+
             compass.start();
         } else {
             compass.stop();
-            binding.compassTextDifferenceDistance.setText(Utils.SAD_EMOJI);
+            binding.compassTextDifferenceDistance.setText("");
 
-            binding.compassCardviewWarning.setVisibility(View.VISIBLE);
-            binding.compassTextWarning.setText(getResources().getString(R.string.compass_tipchoosetargetfirst));
+            binding.compassIcon.setVisibility(View.GONE);
+            binding.compassTextDifferenceDistance.setVisibility(View.GONE);
+
+            binding.compassCardviewHeaderimage.setImageResource(R.drawable.compass_cardheader_noselected);
+            binding.compassCardviewTitle.setText(getResources().getString(R.string.compass_selecteditem_noitem_title));
+            binding.compassCardviewDesc.setText(getResources().getString(R.string.compass_selecteditem_noitem_desc));
+
+            binding.compassCardviewMain.setVisibility(View.VISIBLE);
         }
-        Log.d("ISTANZA", "compass -> onResume");
     }
 
     private boolean isCompassReady() {

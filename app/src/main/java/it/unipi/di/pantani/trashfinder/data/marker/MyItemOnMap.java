@@ -1,4 +1,4 @@
-package it.unipi.di.pantani.trashfinder.data;
+package it.unipi.di.pantani.trashfinder.data.marker;
 
 import androidx.annotation.NonNull;
 

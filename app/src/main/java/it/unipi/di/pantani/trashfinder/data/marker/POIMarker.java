@@ -1,4 +1,4 @@
-package it.unipi.di.pantani.trashfinder.data;
+package it.unipi.di.pantani.trashfinder.data.marker;
 
 import android.content.Context;
 
@@ -15,7 +15,7 @@ import it.unipi.di.pantani.trashfinder.R;
 @TypeConverters(ListConverter.class)
 public class POIMarker {
     @PrimaryKey(autoGenerate = true)
-    protected int id;
+    private int id;
 
     public enum MarkerType {
         // vari tipi di cestini
@@ -75,7 +75,7 @@ public class POIMarker {
     }
 
     @NonNull
-    public Set<MarkerType> types;
+    private Set<MarkerType> types;
 
     private final double latitude;
 
@@ -95,7 +95,7 @@ public class POIMarker {
     }
 
     @NonNull
-    public Set<MarkerType> getType() {
+    public Set<MarkerType> getTypes() {
         return types;
     }
 
@@ -109,5 +109,9 @@ public class POIMarker {
 
     public String getNotes() {
         return notes;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

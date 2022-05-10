@@ -9,8 +9,8 @@ import androidx.lifecycle.LiveData;
 import java.util.List;
 import java.util.Set;
 
-import it.unipi.di.pantani.trashfinder.data.POIMarker;
-import it.unipi.di.pantani.trashfinder.data.POIMarkerRepository;
+import it.unipi.di.pantani.trashfinder.data.marker.POIMarker;
+import it.unipi.di.pantani.trashfinder.data.marker.POIMarkerRepository;
 
 public class MapsViewModel extends AndroidViewModel {
     private final POIMarkerRepository mRepository;

@@ -50,8 +50,8 @@ import java.util.Set;
 import it.unipi.di.pantani.trashfinder.POIMarkerWindowAdapter;
 import it.unipi.di.pantani.trashfinder.R;
 import it.unipi.di.pantani.trashfinder.Utils;
-import it.unipi.di.pantani.trashfinder.data.MyItemOnMap;
-import it.unipi.di.pantani.trashfinder.data.POIMarker;
+import it.unipi.di.pantani.trashfinder.data.marker.MyItemOnMap;
+import it.unipi.di.pantani.trashfinder.data.marker.POIMarker;
 import it.unipi.di.pantani.trashfinder.maps.MapsViewModel;
 
 public class MapEditorFragment extends Fragment implements OnMapReadyCallback {
@@ -76,6 +76,7 @@ public class MapEditorFragment extends Fragment implements OnMapReadyCallback {
     private Button mapeditor_leave_new;
     private Button mapeditor_save_new;
     private Button mapeditor_types_new;
+    private Button mapeditor_photo_new;
     private EditText mapeditor_notes_new;
     private ImageView mapeditor_markericon;
 
@@ -123,6 +124,8 @@ public class MapEditorFragment extends Fragment implements OnMapReadyCallback {
         mapeditor_save = view.findViewById(R.id.mapeditor_save);
         // button create new
         mapeditor_save_new = view.findViewById(R.id.mapeditor_save_new);
+        // button photo new
+        mapeditor_photo_new = view.findViewById(R.id.mapeditor_photo_new);
         // image marker icon add
         mapeditor_markericon = view.findViewById(R.id.mapeditor_markericon);
         // leave
@@ -139,8 +142,21 @@ public class MapEditorFragment extends Fragment implements OnMapReadyCallback {
         mapeditor_save_new.setOnClickListener(this::onClickCreateNew);
         // button types new
         mapeditor_types_new.setOnClickListener(this::onClickMarkerTypesNew);
+        // button photo new
+        mapeditor_photo_new.setOnClickListener(this::onClickPhotoNew);
         // preparo markerTypes
         markerTypes = new HashSet<>();
+
+        // foto
+        /*
+        ImageCapture imageCapture =
+                new ImageCapture.Builder()
+                        .setTargetRotation(view.getDisplay().getRotation())
+                        .build();
+        cameraProvider.bindToLifecycle(lifecycleOwner, cameraSelector, imageCapture, imageAnalysis, preview);
+
+         */
+
         // return della view
         return view;
     }
@@ -221,7 +237,7 @@ public class MapEditorFragment extends Fragment implements OnMapReadyCallback {
         mapeditor_types.setTag(m);
         mapeditor_notes.setText(m.getNotes(), TextView.BufferType.EDITABLE);
 
-        markerTypes.addAll(m.getType());
+        markerTypes.addAll(m.getTypes());
 
         mMap.getUiSettings().setScrollGesturesEnabled(false);
         mMap.getUiSettings().setZoomGesturesEnabled(false);
@@ -346,7 +362,7 @@ public class MapEditorFragment extends Fragment implements OnMapReadyCallback {
 
         AlertDialog alertDialog = new AlertDialog.Builder(view.getContext()).create();
         alertDialog.setTitle(getResources().getString(R.string.mapeditor_suredelete));
-        alertDialog.setMessage(getResources().getString(R.string.mapeditor_suredelete_desc, poiMarkerSelected.getId()));
+        alertDialog.setMessage(getResources().getString(R.string.mapeditor_suredelete_desc));
         alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, getResources().getString(R.string.button_cancel),
                 (dialog, which) -> dialog.dismiss());
         alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getResources().getString(R.string.button_ok),
@@ -366,6 +382,26 @@ public class MapEditorFragment extends Fragment implements OnMapReadyCallback {
         mMapViewModel.update(poiMarkerSelected.getId(), markerTypes, poiMarkerSelected.getLatitude(), poiMarkerSelected.getLongitude(), mapeditor_notes.getText().toString());
 
         disableEditingMode();
+    }
+
+    public void onClickPhotoNew(View view) {
+        /*
+        ImageCapture.OutputFileOptions outputFileOptions =
+                new ImageCapture.OutputFileOptions.Builder(new File(...)).build();
+        imageCapture.takePicture(outputFileOptions, cameraExecutor,
+                new ImageCapture.OnImageSavedCallback() {
+                    @Override
+                    public void onImageSaved(ImageCapture.OutputFileResults outputFileResults) {
+                        // insert your code here.
+                    }
+                    @Override
+                    public void onError(ImageCaptureException error) {
+                        // insert your code here.
+                    }
+                }
+        );
+
+         */
     }
 
     // -------------

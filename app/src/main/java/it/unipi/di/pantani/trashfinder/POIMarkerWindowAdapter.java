@@ -5,7 +5,6 @@ import static it.unipi.di.pantani.trashfinder.Utils.getEditorSelectedMarker;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
@@ -17,7 +16,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Marker;
 import com.google.gson.Gson;
 
-import it.unipi.di.pantani.trashfinder.data.POIMarker;
+import it.unipi.di.pantani.trashfinder.data.marker.POIMarker;
 
 public class POIMarkerWindowAdapter implements GoogleMap.InfoWindowAdapter {
     private final View mWindow;
@@ -52,7 +51,7 @@ public class POIMarkerWindowAdapter implements GoogleMap.InfoWindowAdapter {
         infoWindowId.setText(view.getResources().getString(R.string.infowindow_id, m.getId())); // id
         // tipi cestino
         StringBuilder content = new StringBuilder();
-        for(POIMarker.MarkerType t : m.getType()) {
+        for(POIMarker.MarkerType t : m.getTypes()) {
             if(t != POIMarker.MarkerType.recyclingdepot)
                 content.append(POIMarker.getMarkerTypeName(view.getContext(), t)).append("\n");
         }
@@ -75,19 +74,15 @@ public class POIMarkerWindowAdapter implements GoogleMap.InfoWindowAdapter {
             // modifica consiglio della infowindow
             if(marker.equals(getCompassSelectedMarker())) {
                 infoWindowTip.setText(view.getResources().getString(R.string.infowindow_tipitemselected));
-                infoWindowTip.setTextColor(Color.GREEN);
             } else {
                 infoWindowTip.setText(view.getResources().getString(R.string.infowindow_tipclickcompass));
-                infoWindowTip.setTextColor(Color.BLACK);
             }
         } else {
             // modifica consiglio della infowindow
             if(marker.equals(getEditorSelectedMarker())) {
                 infoWindowTip.setText(view.getResources().getString(R.string.infowindow_tipitemselected));
-                infoWindowTip.setTextColor(Color.GREEN);
             } else {
                 infoWindowTip.setText(view.getResources().getString(R.string.infowindow_tipedit));
-                infoWindowTip.setTextColor(Color.BLACK);
             }
         }
     }

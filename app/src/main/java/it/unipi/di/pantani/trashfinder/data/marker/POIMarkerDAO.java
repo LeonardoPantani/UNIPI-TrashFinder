@@ -1,4 +1,4 @@
-package it.unipi.di.pantani.trashfinder.data;
+package it.unipi.di.pantani.trashfinder.data.marker;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
@@ -15,11 +15,11 @@ import java.util.List;
  */
 @Dao
 public interface POIMarkerDAO {
-    @Insert
-    void insert(POIMarker marker);
-
     @Query("SELECT * FROM marker_table WHERE id = :id")
     LiveData<POIMarker> getById(int id);
+
+    @Insert
+    void insert(POIMarker marker);
 
     @Delete
     void delete(POIMarker marker);

@@ -45,8 +45,8 @@ import com.google.maps.android.collections.MarkerManager;
 
 import it.unipi.di.pantani.trashfinder.POIMarkerWindowAdapter;
 import it.unipi.di.pantani.trashfinder.R;
-import it.unipi.di.pantani.trashfinder.data.MyItemOnMap;
-import it.unipi.di.pantani.trashfinder.data.POIMarker;
+import it.unipi.di.pantani.trashfinder.data.marker.MyItemOnMap;
+import it.unipi.di.pantani.trashfinder.data.marker.POIMarker;
 
 public class MapsFragment extends Fragment implements OnMapReadyCallback {
     private GoogleMap mMap;
@@ -90,17 +90,13 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         // aggiorno lo stile di mappa
         updateMapStyleByPreference(context, sp, mMap);
 
-        // se è la prima volta che apro la mappa (sono alle coordinate 0.0, 0)
-        // nota: per un problema di maps, la latitudine al primo avvio dell'app non è 0.0 preciso
-        if(mMap.getCameraPosition().target.longitude == 0 && (mMap.getCameraPosition().target.latitude == 0.06392038032682339) || (mMap.getCameraPosition().target.latitude == 0.0f)) {
-            pointLocation(context, mMap);
-        }
-
         initializeClusterSystem();
     }
 
     public void initializeClusterSystem() {
         if(clusterManager != null) return;
+        pointLocation(context, mMap);
+
         progressBar.setVisibility(View.VISIBLE);
 
         clusterManager = new ClusterManager<>(context, mMap);
@@ -150,9 +146,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         // mostro il pulsante "naviga" solo se c'è un app che supporta l'intent di navigazione
         if(mapIntent.resolveActivity(context.getPackageManager()) != null && getActivity() != null) {
             ExtendedFloatingActionButton a = getActivity().findViewById(R.id.fab);
-            a.setOnClickListener(view -> {
-                startActivity(mapIntent);
-            });
+            a.setOnClickListener(view -> startActivity(mapIntent));
             a.show();
         }
 
@@ -160,6 +154,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void onInfoWindowClick(Marker marker) {
+        if(getActivity() == null) return; // per rimuovere un warning
+
         if(!marker.equals(getCompassSelectedMarker())) {
             setCompassSelectedMarker(marker);
 

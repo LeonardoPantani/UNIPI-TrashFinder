@@ -6,7 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
-import it.unipi.di.pantani.trashfinder.data.POIMarkerRepository;
+import it.unipi.di.pantani.trashfinder.data.marker.POIMarkerRepository;
 
 public class CommunityViewModel extends AndroidViewModel {
     private final POIMarkerRepository mRepository;

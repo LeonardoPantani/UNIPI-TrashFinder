@@ -71,9 +71,7 @@ public class CommunityFragment extends Fragment {
     public void onResume() {
         super.onResume();
         // mostro dati
-        mCommunityViewModel.getMarkerNumber().observe(getViewLifecycleOwner(), numberOfBins -> {
-            binding.communityGeneralstatsNumbertrashbins.setText(String.valueOf(numberOfBins));
-        });
+        mCommunityViewModel.getMarkerNumber().observe(getViewLifecycleOwner(), numberOfBins -> binding.communityGeneralstatsNumbertrashbins.setText(String.valueOf(numberOfBins)));
         Log.d("ISTANZA", "community -> onResume");
     }
 

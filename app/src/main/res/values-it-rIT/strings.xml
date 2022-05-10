@@ -122,7 +122,7 @@
     <string name="infowindow_tipclickcompass">Clicca su questa finestra per selezionare il cestino come bersaglio per la bussola.</string>
     <string name="infowindow_setcompass">Bersaglio impostato nella vista Bussola.</string>
     <string name="compass_tipchoosetargetfirst">Seleziona un bersaglio sulla mappa.</string>
-    <string name="generic_error">Errore interno all\'app!</string>
+    <string name="generic_error">Errore</string>
     <string name="infowindow_tipitemselected">Questo cestino è attualmente selezionato. Premi per rimuovere la selezione.</string>
     <string name="markertype_clothes">vestiti</string>
     <string name="loading_complete">Caricamento completato!</string>
@@ -152,4 +152,8 @@
     <string name="button_delete">Elimina</string>
     <string name="button_navigate">Naviga</string>
     <string name="button_open">Apri</string>
+    <string name="mapeditor_photo_new">Foto</string>
+    <string name="compass_selecteditem_imgdesc">Immagine oggetto selezionato</string>
+    <string name="compass_selecteditem_noitem_title">Seleziona un cestino da seguire</string>
+    <string name="compass_selecteditem_noitem_desc">Tocca per selezionare un cestino sulla mappa. Una freccia che punta la sua direzione apparirà qui sopra.</string>
 </resources>

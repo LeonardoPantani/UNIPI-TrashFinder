@@ -26,11 +26,10 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.gson.Gson;
 
-import it.unipi.di.pantani.trashfinder.data.POIMarker;
+import it.unipi.di.pantani.trashfinder.data.marker.POIMarker;
 
 public abstract class Utils {
     public static final int default_location_refresh_time = 3; // in seconds
-    public static final String SAD_EMOJI = "{{{(>_<)}}}";
     public static final String FEEDBACK_MAIL = "l.pantani5@studenti.unipi.it";
     // codice pisa: 3600042527 | codice italia: 3600365331 | codice toscana: 3600041977
     public static final String OSM_IMPORT_STRING = "https://www.overpass-api.de/api/interpreter?data=[out:json];area(id:3600042527)-%3E.searchArea;(node[%22amenity%22=%22waste_basket%22](area.searchArea);node[%22amenity%22=%22waste_disposal%22](area.searchArea);node[%22amenity%22=%22recycling%22](area.searchArea););out%20body;%3E;out%20skel%20qt;";
@@ -143,7 +142,7 @@ public abstract class Utils {
     // MARCATORE
     public static String getTitleFromMarker(Context context, POIMarker marker) {
         //Log.d("ISTANZA", "tipi: " + marker.getType().toString());
-        if(marker.getType().contains(POIMarker.MarkerType.recyclingdepot)) {
+        if(marker.getTypes().contains(POIMarker.MarkerType.recyclingdepot)) {
             return context.getString(R.string.markertype_recyclingdepot);
         } else {
             return context.getString(R.string.markertype_generic);
