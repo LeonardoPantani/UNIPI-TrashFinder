@@ -5,6 +5,7 @@
     android:layout_height="132dp"
     android:background="@drawable/side_nav_bar"
     android:gravity="bottom"
+    android:onClick="onClickNavLogin"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
     <ImageView

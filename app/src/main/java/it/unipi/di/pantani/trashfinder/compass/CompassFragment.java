@@ -2,8 +2,8 @@ package it.unipi.di.pantani.trashfinder.compass;
 
 import static it.unipi.di.pantani.trashfinder.Utils.checkPerms;
 import static it.unipi.di.pantani.trashfinder.Utils.getCompassSelectedMarker;
-import static it.unipi.di.pantani.trashfinder.Utils.getTitleFromMarker;
 import static it.unipi.di.pantani.trashfinder.data.marker.POIMarker.getMarkerTypeName;
+import static it.unipi.di.pantani.trashfinder.data.marker.POIMarker.getTitleFromMarker;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -38,7 +38,6 @@ import com.google.gson.Gson;
 import java.util.stream.Collectors;
 
 import it.unipi.di.pantani.trashfinder.R;
-import it.unipi.di.pantani.trashfinder.Utils;
 import it.unipi.di.pantani.trashfinder.data.marker.POIMarker;
 import it.unipi.di.pantani.trashfinder.databinding.FragmentCompassBinding;
 
@@ -213,7 +212,7 @@ public class CompassFragment extends Fragment {
         Log.d("ISTANZA", "compass -> onResume");
 
         // aggiorno le variabili con le preferenze
-        location_refresh_time = sp.getInt("setting_compass_update_interval", Utils.default_location_refresh_time)*1000;
+        location_refresh_time = sp.getInt("setting_compass_update_interval", 1)*1000;
         showTip = sp.getBoolean("setting_compass_show_tip_switchtomap", true);
         if(sp.getString("setting_compass_measureunit", "meters").equals("meters")) {
             measureUnitCode = 0;
@@ -253,7 +252,10 @@ public class CompassFragment extends Fragment {
             String s = targetMarker.getTypes().stream()
                             .map(t -> getMarkerTypeName(context, t))
                             .collect(Collectors.joining(", "));
-            binding.compassCardviewDesc.setText(s);
+            if(!s.equals(""))
+                binding.compassCardviewDesc.setText(s);
+            else
+                binding.compassCardviewDesc.setText(getResources().getString(R.string.compass_cardview_notype));
 
             // mostro la sezione della precisione e imposto i testi su LOW, tanto saranno aggiornati da altri metodi
             binding.compassIcon.setVisibility(View.VISIBLE);

@@ -66,8 +66,8 @@
     <string name="compass_tipswitchtomap_button">Passa alla mappa</string>
     <string name="navigation_drawer_open">Apri drawer navigazione</string>
     <string name="navigation_drawer_close">Chiudi drawer navigazione</string>
-    <string name="nav_header_title">Titolo Drawer</string>
-    <string name="nav_header_subtitle">Sottotitolo Drawer</string>
+    <string name="nav_header_title">Utente Ospite</string>
+    <string name="nav_header_subtitle">Tocca per accedere.</string>
     <string name="nav_header_desc">Header navigazione</string>
     <string name="feedback_title">Cosa vorresti farci sapere?</string>
     <string name="feedback_type_error">Errore</string>
@@ -146,7 +146,7 @@
     <string name="mapeditor_suredelete">Confermi?</string>
     <string name="mapeditor_suredelete_desc">Il cestino selezionato sarà eliminato. Non potrai recuperare questa modifica una volta confermata.</string>
     <string name="mapeditor_save_new">Crea il cestino</string>
-    <string name="mapeditor_marker_new_description">Icona cesino</string>
+    <string name="mapeditor_marker_new_description">Icona cestino</string>
     <string name="mapeditor_creatingmarker">Stai creando un nuovo cestino. Muovi la mappa in modo da sovrapporre il selettore con la posizione del cestino. In seguito modifica i dettagli del cestino e premi su \"Crea\" quando hai finito.</string>
     <string name="map_nodata">Nessun dato</string>
     <string name="button_delete">Elimina</string>
@@ -155,5 +155,7 @@
     <string name="mapeditor_photo_new">Foto</string>
     <string name="compass_selecteditem_imgdesc">Immagine oggetto selezionato</string>
     <string name="compass_selecteditem_noitem_title">Seleziona un cestino da seguire</string>
-    <string name="compass_selecteditem_noitem_desc">Tocca per selezionare un cestino sulla mappa. Una freccia che punta la sua direzione apparirà qui sopra.</string>
+    <string name="compass_selecteditem_noitem_desc">Tocca per selezionare un cestino sulla mappa. Una freccia che punta la sua direzione apparirà qui sotto.</string>
+    <string name="section_login">Login</string>
+    <string name="compass_cardview_notype">Questo cestino non ha un tipo specificato, ci dispiace!</string>
 </resources>

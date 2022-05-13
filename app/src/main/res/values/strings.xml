@@ -24,6 +24,7 @@
     <string name="section_community">Community</string>
     <string name="section_contributions">Contributions</string>
     <string name="section_mapeditor">Map Editor</string>
+    <string name="section_login">Login</string>
 
     <string name="dialog_nolocationperm_title">Unable to get location</string>
     <string name="dialog_nolocationperm_desc">You have not granted the location permission.</string>
@@ -108,13 +109,14 @@
 
     <string name="compass_selecteditem_imgdesc">Selected item image</string>
     <string name="compass_selecteditem_noitem_title">Choose a bin to track</string>
-    <string name="compass_selecteditem_noitem_desc">Tap here to select a bin on the map. An arrow pointing its direction will appear above this card.</string>
+    <string name="compass_selecteditem_noitem_desc">Tap here to select a bin on the map. An arrow pointing its direction will appear under this card.</string>
+    <string name="compass_cardview_notype">This bin does not have any types set, sorry!</string>
 
     <!-- DRAWER -->
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Drawer Title</string>
-    <string name="nav_header_subtitle">Drawer SubTitle</string>
+    <string name="nav_header_title">Guest User</string>
+    <string name="nav_header_subtitle">Tap here to log in.</string>
     <string name="nav_header_desc">Navigation header</string>
 
     <!-- FEEDBACK -->

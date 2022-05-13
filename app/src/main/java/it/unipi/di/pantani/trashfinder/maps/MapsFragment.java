@@ -3,10 +3,10 @@ package it.unipi.di.pantani.trashfinder.maps;
 import static it.unipi.di.pantani.trashfinder.Utils.MARKER_ZOOM;
 import static it.unipi.di.pantani.trashfinder.Utils.checkPerms;
 import static it.unipi.di.pantani.trashfinder.Utils.getCompassSelectedMarker;
-import static it.unipi.di.pantani.trashfinder.Utils.getTitleFromMarker;
 import static it.unipi.di.pantani.trashfinder.Utils.pointLocation;
 import static it.unipi.di.pantani.trashfinder.Utils.setCompassSelectedMarker;
 import static it.unipi.di.pantani.trashfinder.Utils.updateMapStyleByPreference;
+import static it.unipi.di.pantani.trashfinder.data.marker.POIMarker.getTitleFromMarker;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -39,11 +39,9 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
-import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.collections.MarkerManager;
 
-import it.unipi.di.pantani.trashfinder.POIMarkerWindowAdapter;
 import it.unipi.di.pantani.trashfinder.R;
 import it.unipi.di.pantani.trashfinder.data.marker.MyItemOnMap;
 import it.unipi.di.pantani.trashfinder.data.marker.POIMarker;
@@ -88,7 +86,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
             mMap.setMyLocationEnabled(true);
 
         // aggiorno lo stile di mappa
-        updateMapStyleByPreference(context, sp, mMap);
+        updateMapStyleByPreference(context, mMap);
 
         initializeClusterSystem();
     }
@@ -103,7 +101,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         markerCollection = clusterManager.getMarkerCollection();
         mMap.setOnCameraIdleListener(clusterManager);
         mMap.setOnInfoWindowCloseListener(this::onInfoWindowClose);
-        clusterManager.setOnClusterClickListener(this::onClusterClick);
         markerCollection.setInfoWindowAdapter(new POIMarkerWindowAdapter(context, 0));
         markerCollection.setOnMarkerClickListener(this::onMarkerClick);
         markerCollection.setOnInfoWindowClickListener(this::onInfoWindowClick);
@@ -180,9 +177,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         marker.hideInfoWindow();
     }
 
-    private boolean onClusterClick(Cluster<MyItemOnMap> item) {
-        return true;
-    }
+
 
     // -------------
 
@@ -203,7 +198,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onResume() {
         super.onResume();
-        updateMapStyleByPreference(context, sp, mMap);
+        updateMapStyleByPreference(context, mMap);
         Log.d("ISTANZA", "maps -> onResume");
     }
 

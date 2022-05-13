@@ -7,6 +7,9 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
+import com.google.android.gms.maps.model.Marker;
+import com.google.gson.Gson;
+
 import java.util.Set;
 
 import it.unipi.di.pantani.trashfinder.R;
@@ -75,7 +78,7 @@ public class POIMarker {
     }
 
     @NonNull
-    private Set<MarkerType> types;
+    private final Set<MarkerType> types;
 
     private final double latitude;
 
@@ -90,6 +93,7 @@ public class POIMarker {
         this.notes = notes;
     }
 
+    // GETTERS E SETTERS
     public int getId() {
         return id;
     }
@@ -113,5 +117,19 @@ public class POIMarker {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+
+    // METODI STATICI DI UTILITA' RELATIVI AI MARCATORI
+    public static String getTitleFromMarker(Context context, POIMarker marker) {
+        if(marker.getTypes().contains(POIMarker.MarkerType.recyclingdepot)) {
+            return context.getString(R.string.markertype_recyclingdepot);
+        } else {
+            return context.getString(R.string.markertype_generic);
+        }
+    }
+
+    public static POIMarker getPOIMarkerByMarker(Marker marker) {
+        return new Gson().fromJson(marker.getSnippet(), POIMarker.class);
     }
 }

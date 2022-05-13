@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mapeditor"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -53,79 +52,13 @@
         app:layout_constraintGuide_percent="0.5" />
 
     <LinearLayout
+        android:id="@+id/mapeditor_section_form"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:gravity="center"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/google_map">
-
-        <!-- vuoto -->
-        <LinearLayout
-            android:id="@+id/mapeditor_section_form_empty"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:visibility="visible"
-            android:orientation="vertical"
-            android:layout_marginHorizontal="15dp">
-
-            <androidx.constraintlayout.utils.widget.ImageFilterView
-                android:src="@drawable/ic_baseline_add_circle_24"
-                android:layout_width="50dp"
-                android:layout_height="50dp"/>
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/mapeditor_youareineditingmode"
-                android:textAlignment="center"
-                android:textSize="20sp" />
-        </LinearLayout>
-
-        <!-- form update marker -->
-        <LinearLayout
-            android:id="@+id/mapeditor_section_form_form"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone">
-            <!-- nel caso di orientamento orizzontale serve perché il
-                 form è troppo grande per alcuni dispositivi
-                 ho deciso di usare nestedscrollview invece di scrollview
-                 perché quest'ultima tagliava i pulsanti in basso, nonostante
-                 vari tentativi di modifiche al layout -->
-            <androidx.core.widget.NestedScrollView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:fillViewport="true"
-                tools:ignore="UselessParent">
-
-                <include layout="@layout/editor_form" />
-            </androidx.core.widget.NestedScrollView>
-
-        </LinearLayout>
-
-        <!-- form new marker -->
-        <LinearLayout
-            android:id="@+id/mapeditor_section_form_new"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone">
-            <!-- nel caso di orientamento orizzontale serve perché il
-                 form è troppo grande per alcuni dispositivi
-                 ho deciso di usare nestedscrollview invece di scrollview
-                 perché quest'ultima tagliava i pulsanti in basso, nonostante
-                 vari tentativi di modifiche al layout -->
-            <androidx.core.widget.NestedScrollView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:fillViewport="true"
-                tools:ignore="UselessParent">
-
-                <include layout="@layout/editor_form_new" />
-            </androidx.core.widget.NestedScrollView>
-        </LinearLayout>
-    </LinearLayout>
+        app:layout_constraintTop_toBottomOf="@+id/google_map" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

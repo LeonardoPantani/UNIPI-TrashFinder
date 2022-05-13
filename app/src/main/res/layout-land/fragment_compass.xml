@@ -14,11 +14,10 @@
         android:layout_marginStart="201dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.967"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toEndOf="@+id/compass_icon"
         app:layout_constraintStart_toStartOf="@+id/compass_section_accuracy"
-        app:layout_constraintTop_toBottomOf="@+id/compass_section_accuracy"
-        app:layout_constraintVertical_bias="0.228"
+        app:layout_constraintTop_toTopOf="parent"
         card_view:cardBackgroundColor="?attr/colorSurface"
         card_view:cardCornerRadius="10dp"
         card_view:cardElevation="10dp"
@@ -76,10 +75,9 @@
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.113"
+        app:layout_constraintHorizontal_bias="0.119"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.497"
         app:srcCompat="?attr/icon_compass" />
 
     <TextView
@@ -92,10 +90,10 @@
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.032"
+        app:layout_constraintHorizontal_bias="0.064"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/compass_icon"
-        app:layout_constraintVertical_bias="0.297" />
+        app:layout_constraintVertical_bias="0.141" />
 
     <LinearLayout
         android:id="@+id/compass_section_accuracy"
@@ -106,13 +104,12 @@
         android:orientation="horizontal"
         android:visibility="invisible"
         android:weightSum="1"
-        app:layout_constraintBottom_toTopOf="@+id/compass_icon"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.476"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.005">
-
+        app:layout_constraintVertical_bias="0.997">
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"

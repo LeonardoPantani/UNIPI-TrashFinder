@@ -1,4 +1,4 @@
-package it.unipi.di.pantani.trashfinder;
+package it.unipi.di.pantani.trashfinder.maps;
 
 import static it.unipi.di.pantani.trashfinder.Utils.getCompassSelectedMarker;
 import static it.unipi.di.pantani.trashfinder.Utils.getEditorSelectedMarker;
@@ -16,6 +16,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Marker;
 import com.google.gson.Gson;
 
+import it.unipi.di.pantani.trashfinder.R;
 import it.unipi.di.pantani.trashfinder.data.marker.POIMarker;
 
 public class POIMarkerWindowAdapter implements GoogleMap.InfoWindowAdapter {

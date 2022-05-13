@@ -69,11 +69,7 @@ public class SettingsActivity extends AppCompatActivity {
         }
 
         public boolean onMapTypeChange(Preference preference, Object newValue) {
-            if(newValue.equals("roads")) {
-                setting_map_theme.setEnabled(true);
-            } else {
-                setting_map_theme.setEnabled(false);
-            }
+            setting_map_theme.setEnabled(newValue.equals("roads"));
             return true;
         }
     }

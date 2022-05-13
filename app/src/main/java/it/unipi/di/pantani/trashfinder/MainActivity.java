@@ -47,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements NavController.OnD
     private AppBarConfiguration mAppBarConfiguration;
 
     private NavController navController;
+    private DrawerLayout drawer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements NavController.OnD
         setSupportActionBar(binding.appBarMain.toolbar);
 
         NavigationView navigationView = binding.navView;
-        DrawerLayout drawer = binding.drawerLayout;
+        drawer = binding.drawerLayout;
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
@@ -84,6 +85,7 @@ public class MainActivity extends AppCompatActivity implements NavController.OnD
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
         navController.addOnDestinationChangedListener(this);
+
 
         if (!checkPerms(getBaseContext())) {
             showPermissionWarningDialog();
@@ -194,5 +196,11 @@ public class MainActivity extends AppCompatActivity implements NavController.OnD
         for(NavBackStackEntry a : navController.getBackQueue()) {
             Log.d("ISTANZA2", "Backstack -> " + a.getDestination().getDisplayName());
         }
+    }
+
+    public void onClickNavLogin(View view) {
+        Toast.makeText(getApplicationContext(), getResources().getString(R.string.coming_soon), Toast.LENGTH_SHORT).show();
+
+        drawer.close();
     }
 }
