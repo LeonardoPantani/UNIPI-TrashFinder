@@ -2,6 +2,7 @@ package it.unipi.di.pantani.trashfinder.compass;
 
 import static it.unipi.di.pantani.trashfinder.Utils.checkPerms;
 import static it.unipi.di.pantani.trashfinder.Utils.getCompassSelectedMarker;
+import static it.unipi.di.pantani.trashfinder.Utils.setCompassSelectedMarker;
 import static it.unipi.di.pantani.trashfinder.data.marker.POIMarker.getMarkerTypeName;
 import static it.unipi.di.pantani.trashfinder.data.marker.POIMarker.getTitleFromMarker;
 
@@ -14,7 +15,6 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 
-import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
@@ -35,6 +35,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import it.unipi.di.pantani.trashfinder.R;
@@ -44,7 +45,6 @@ import it.unipi.di.pantani.trashfinder.databinding.FragmentCompassBinding;
 public class CompassFragment extends Fragment {
     private SharedPreferences sp;
     private Context context;
-    private CompassViewModel mCompassViewModel;
     private FragmentCompassBinding binding;
 
     private float azim = 0f;
@@ -80,10 +80,10 @@ public class CompassFragment extends Fragment {
         setupCompass();
         // preparo il manager della posizione
         locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-        // view model
-        mCompassViewModel = new ViewModelProvider(this).get(CompassViewModel.class);
         // onClick su cardview
         binding.compassCardviewMain.setOnClickListener(this::onClickCardView);
+        // onClick su button
+        binding.compassCardviewDeselectButton.setOnClickListener(this::onClickDeselectButton);
         return root;
     }
 
@@ -94,21 +94,6 @@ public class CompassFragment extends Fragment {
 
         readyLocation = false;
         readySensor = false;
-    }
-
-    public void onLocationChanged(Location location) {
-        if(getActivity() == null) {
-            return;
-        }
-
-        if(location.getAccuracy() != 0f) {
-            readyLocation = true;
-            currentLocation = location;
-            binding.compassTextAccuracyGps.setText(getResources().getString(R.string.accuracy_high));
-        } else {
-            readyLocation = false;
-            binding.compassTextAccuracyGps.setText(getResources().getString(R.string.accuracy_low));
-        }
     }
 
     private Compass.CompassListener getCompassListener() {
@@ -192,7 +177,7 @@ public class CompassFragment extends Fragment {
      * @param endLng longitudine finale
      * @return angolo
      */
-    public double bearing(double startLat, double startLng, double endLat, double endLng){
+    private double bearing(double startLat, double startLng, double endLat, double endLng){
         double latitude1 = Math.toRadians(startLat);
         double latitude2 = Math.toRadians(endLat);
         double longDiff = Math.toRadians(endLng - startLng);
@@ -205,7 +190,11 @@ public class CompassFragment extends Fragment {
         Navigation.findNavController(view).popBackStack(R.id.nav_maps, false); // primo
     }
 
-    @SuppressLint("MissingPermission")
+    private void onClickDeselectButton(View view) {
+        setCompassSelectedMarker(null);
+        updateCardView();
+    }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -229,12 +218,15 @@ public class CompassFragment extends Fragment {
             binding.compassCardviewHeaderimage.setImageResource(R.drawable.compass_cardheader_noselected);
             binding.compassCardviewTitle.setText(getResources().getString(R.string.generic_error));
             binding.compassCardviewDesc.setText(getResources().getString(R.string.dialog_nolocationperm_desc));
-
-            binding.compassCardviewMain.setVisibility(View.VISIBLE);
-
+            binding.compassCardviewDeselectButton.setVisibility(View.GONE);
             return;
         }
 
+        updateCardView();
+    }
+
+    @SuppressLint("MissingPermission")
+    private void updateCardView() {
         selectedMarker = getCompassSelectedMarker();
         if(selectedMarker != null) { // se c'è un elemento selezionato
             POIMarker targetMarker = new Gson().fromJson(selectedMarker.getSnippet(), POIMarker.class);
@@ -247,11 +239,20 @@ public class CompassFragment extends Fragment {
                 binding.compassCardviewHeaderimage.setImageResource(R.drawable.compass_cardheader_rdselected);
             }
 
-            binding.compassCardviewTitle.setText(getTitleFromMarker(context, targetMarker));
+            // imposto latitudine e longitudine del bersaglio
+            target.setLatitude(targetMarker.getLatitude());
+            target.setLongitude(targetMarker.getLongitude());
+            compass.start();
 
-            String s = targetMarker.getTypes().stream()
-                            .map(t -> getMarkerTypeName(context, t))
-                            .collect(Collectors.joining(", "));
+            binding.compassCardviewTitle.setText(getTitleFromMarker(context, targetMarker));
+            binding.compassCardviewDeselectButton.setVisibility(View.VISIBLE);
+
+            Set<POIMarker.MarkerType> types = targetMarker.getTypes();
+            types.remove(POIMarker.MarkerType.recyclingdepot);
+
+            String s = types.stream()
+                    .map(t -> getMarkerTypeName(context, t))
+                    .collect(Collectors.joining(", "));
             if(!s.equals(""))
                 binding.compassCardviewDesc.setText(s);
             else
@@ -261,30 +262,44 @@ public class CompassFragment extends Fragment {
             binding.compassIcon.setVisibility(View.VISIBLE);
             binding.compassTextDifferenceDistance.setVisibility(View.VISIBLE);
 
-            binding.compassSectionAccuracy.setVisibility(View.VISIBLE);
             binding.compassTextAccuracyGps.setText(getResources().getString(R.string.accuracy_low));
             binding.compassTextAccuracyAccelerometer.setText(getResources().getString(R.string.accuracy_low));
+            binding.compassSectionAccuracy.setVisibility(View.VISIBLE);
 
-            // non dà warning perché se non ho i permessi faccio return prima
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, location_refresh_time, 0, this::onLocationChanged);
-
-            // imposto latitudine e longitudine del bersaglio
-            target.setLatitude(targetMarker.getLatitude());
-            target.setLongitude(targetMarker.getLongitude());
-
-            compass.start();
+            if(checkPerms(context)) {
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, location_refresh_time, 0, this::onLocationChanged);
+            }
         } else {
+            if(tipCloseToTarget != null) tipCloseToTarget.dismiss();
+
             compass.stop();
             binding.compassTextDifferenceDistance.setText("");
 
+            binding.compassIcon.clearAnimation();
             binding.compassIcon.setVisibility(View.GONE);
             binding.compassTextDifferenceDistance.setVisibility(View.GONE);
 
             binding.compassCardviewHeaderimage.setImageResource(R.drawable.compass_cardheader_noselected);
             binding.compassCardviewTitle.setText(getResources().getString(R.string.compass_selecteditem_noitem_title));
             binding.compassCardviewDesc.setText(getResources().getString(R.string.compass_selecteditem_noitem_desc));
+            binding.compassCardviewDeselectButton.setVisibility(View.GONE);
 
-            binding.compassCardviewMain.setVisibility(View.VISIBLE);
+            binding.compassSectionAccuracy.setVisibility(View.GONE);
+        }
+    }
+
+    public void onLocationChanged(Location location) {
+        if(getActivity() == null) {
+            return;
+        }
+
+        if(location.getAccuracy() != 0f) {
+            readyLocation = true;
+            currentLocation = location;
+            binding.compassTextAccuracyGps.setText(getResources().getString(R.string.accuracy_high));
+        } else {
+            readyLocation = false;
+            binding.compassTextAccuracyGps.setText(getResources().getString(R.string.accuracy_low));
         }
     }
 

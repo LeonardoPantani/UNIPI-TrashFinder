@@ -7,6 +7,7 @@ import static it.unipi.di.pantani.trashfinder.Utils.pointLocation;
 import static it.unipi.di.pantani.trashfinder.Utils.setCompassSelectedMarker;
 import static it.unipi.di.pantani.trashfinder.Utils.updateMapStyleByPreference;
 import static it.unipi.di.pantani.trashfinder.data.marker.POIMarker.getTitleFromMarker;
+import static it.unipi.di.pantani.trashfinder.maps.POIMarkerWindowAdapter.areMarkersEqual;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -52,9 +53,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     private SharedPreferences sp;
     private MapsViewModel mMapViewModel;
     private ProgressBar progressBar;
-
     private ClusterManager<MyItemOnMap> clusterManager;
-    private MarkerManager.Collection markerCollection;
+    private Bundle bundle;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -71,6 +71,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         progressBar = view.findViewById(R.id.progressbar);
         // view model
         mMapViewModel = new ViewModelProvider(this).get(MapsViewModel.class);
+        // salvo il bundle
+        bundle = savedInstanceState;
         // return della view
         return view;
     }
@@ -93,12 +95,17 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
     public void initializeClusterSystem() {
         if(clusterManager != null) return;
-        pointLocation(context, mMap);
+
+        if(bundle != null) {
+            mMap.moveCamera(CameraUpdateFactory.newCameraPosition((CameraPosition) bundle.getParcelable("cp")));
+        } else {
+            pointLocation(context, mMap);
+        }
 
         progressBar.setVisibility(View.VISIBLE);
 
         clusterManager = new ClusterManager<>(context, mMap);
-        markerCollection = clusterManager.getMarkerCollection();
+        MarkerManager.Collection markerCollection = clusterManager.getMarkerCollection();
         mMap.setOnCameraIdleListener(clusterManager);
         mMap.setOnInfoWindowCloseListener(this::onInfoWindowClose);
         markerCollection.setInfoWindowAdapter(new POIMarkerWindowAdapter(context, 0));
@@ -128,8 +135,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
     private boolean onMarkerClick(Marker marker) {
         CameraPosition cameraPosition = new CameraPosition.Builder()
-                .target(new LatLng(marker.getPosition().latitude, marker.getPosition().longitude))
+                .target(new LatLng((marker.getPosition().latitude+0.00025), marker.getPosition().longitude))
                 .zoom(MARKER_ZOOM)
+                .bearing(0)
                 .build();
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
         marker.showInfoWindow();
@@ -153,7 +161,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     private void onInfoWindowClick(Marker marker) {
         if(getActivity() == null) return; // per rimuovere un warning
 
-        if(!marker.equals(getCompassSelectedMarker())) {
+        if(!areMarkersEqual(marker, getCompassSelectedMarker())) {
             setCompassSelectedMarker(marker);
 
             Snackbar mySnackbar = Snackbar.make(getActivity().findViewById(R.id.maps), getResources().getString(R.string.infowindow_setcompass), Snackbar.LENGTH_LONG);
@@ -176,8 +184,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         }
         marker.hideInfoWindow();
     }
-
-
 
     // -------------
 
@@ -211,6 +217,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
+        if(mMap != null) outState.putParcelable("cp", mMap.getCameraPosition());
         Log.d("ISTANZA", "maps -> onSaveIstanceState");
     }
 }

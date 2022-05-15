@@ -117,13 +117,12 @@
     <string name="markertype_recyclingdepot">isola ecologica</string>
     <string name="infowindow_defaultbintitle">Elemento generico</string>
     <string name="infowindow_defaultid">#id</string>
-    <string name="infowindow_notestitle">Note:</string>
     <string name="infowindow_notesnotfound">Nessuna nota per questo elemento.</string>
     <string name="infowindow_tipclickcompass">Clicca su questa finestra per selezionare il cestino come bersaglio per la bussola.</string>
     <string name="infowindow_setcompass">Bersaglio impostato nella vista Bussola.</string>
     <string name="compass_tipchoosetargetfirst">Seleziona un bersaglio sulla mappa.</string>
     <string name="generic_error">Errore</string>
-    <string name="infowindow_tipitemselected">Questo cestino è attualmente selezionato. Premi per rimuovere la selezione.</string>
+    <string name="infowindow_tipitemselected">Questo cestino è selezionato. Clicca su questa finestra per deselezionarlo.</string>
     <string name="markertype_clothes">vestiti</string>
     <string name="loading_complete">Caricamento completato!</string>
     <string name="compass_accuracy_accelerometer">Precisione Accelerometro:</string>
@@ -158,4 +157,7 @@
     <string name="compass_selecteditem_noitem_desc">Tocca per selezionare un cestino sulla mappa. Una freccia che punta la sua direzione apparirà qui sotto.</string>
     <string name="section_login">Login</string>
     <string name="compass_cardview_notype">Questo cestino non ha un tipo specificato, ci dispiace!</string>
+    <string name="placeholder">Questa sezione sarà sostituita con qualcos\'altro. Chissà con che cosa</string>
+    <string name="compass_deselect">Deseleziona</string>
+    <string name="placeholder2">Questa\nsezione\nsarà\nsostituita\ncon\nqualcos\'altro.\nChissà\ncon\nche\ncosa</string>
 </resources>

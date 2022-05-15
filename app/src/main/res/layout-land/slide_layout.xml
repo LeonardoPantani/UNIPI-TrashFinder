@@ -7,31 +7,35 @@
     android:gravity="center">
 
     <!-- Contiene il testo che consiglia all'utente di fare swipe per continuare -->
+
+    <!-- Gif della pagina -->
+
+    <!-- Titolo della pagina -->
+
     <TextView
         android:id="@+id/txtSwipe"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="28dp"
         android:text="@string/swipe_right"
         android:textColor="#fff"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.619"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/arrow_next"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/txtDescription"
+        app:layout_constraintVertical_bias="1.0" />
 
-    <!-- Gif della pagina -->
     <pl.droidsonroids.gif.GifImageView
         android:id="@+id/slideimg"
         android:layout_width="128dp"
         android:layout_height="123dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.499"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.1" />
+        app:layout_constraintVertical_bias="0.077" />
 
-    <!-- Titolo della pagina -->
     <TextView
         android:id="@+id/txtTitle"
         android:layout_width="wrap_content"
@@ -68,7 +72,6 @@
         android:id="@+id/button_require_permissions"
         android:layout_width="wrap_content"
         android:layout_height="48dp"
-        android:onClick="requirePermissionsIntro"
         android:visibility="gone"
         android:text="@string/require_permissions"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -95,15 +98,15 @@
     <!-- Mostra l'icona swipe -->
     <ImageView
         android:id="@+id/arrow_next"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="16dp"
         android:contentDescription="@string/swipe_icon"
         android:src="@drawable/ic_baseline_swipe_24"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.499"
+        app:layout_constraintHorizontal_bias="0.45"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtDescription"
-        app:layout_constraintVertical_bias="0.232" />
+        app:layout_constraintTop_toBottomOf="@+id/txtDescription" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

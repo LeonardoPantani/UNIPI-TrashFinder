@@ -71,6 +71,8 @@ public class MapEditorFragment extends Fragment implements OnMapReadyCallback {
     private Marker markerSelected;
     private Set<POIMarker.MarkerType> markerTypes;
 
+    private Bundle bundle;
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
@@ -115,6 +117,9 @@ public class MapEditorFragment extends Fragment implements OnMapReadyCallback {
         binding_form_new.mapeditorTypesNew.setOnClickListener(this::saveEditMarkerType);
         binding_form_new.mapeditorPhotoNew.setOnClickListener(this::onClickPhotoNew);
 
+        // salvo il bundle
+        bundle = savedInstanceState;
+
         // return della view
         return root;
     }
@@ -140,6 +145,12 @@ public class MapEditorFragment extends Fragment implements OnMapReadyCallback {
     }
 
     public void initializeClusterSystem() {
+        if(bundle != null) {
+            mMap.moveCamera(CameraUpdateFactory.newCameraPosition((CameraPosition) bundle.getParcelable("cp")));
+        } else {
+            pointLocation(context, mMap);
+        }
+
         binding.progressbar.setVisibility(View.VISIBLE);
 
         // inizializzo cluster manager
@@ -382,6 +393,7 @@ public class MapEditorFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
+        if(mMap != null) outState.putParcelable("cp", mMap.getCameraPosition());
         Log.d("ISTANZA", "mapeditor -> onSaveIstanceState");
     }
 }

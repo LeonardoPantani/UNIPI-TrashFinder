@@ -16,6 +16,8 @@
     <string name="button_delete">Delete</string>
     <string name="button_navigate">Navigate</string>
     <string name="button_open">Open</string>
+    <string name="placeholder">This section is going to be replaced with something else. Who knows what</string>
+    <string name="placeholder2">This\\nsection\\nis\\ngoing\\nto\\nbe\\nreplaced\\nwith\\nsomething\\nelse.\\nWho\\nknows\\nwhat</string>
 
 
     <string name="section_home">Home</string>
@@ -111,6 +113,7 @@
     <string name="compass_selecteditem_noitem_title">Choose a bin to track</string>
     <string name="compass_selecteditem_noitem_desc">Tap here to select a bin on the map. An arrow pointing its direction will appear under this card.</string>
     <string name="compass_cardview_notype">This bin does not have any types set, sorry!</string>
+    <string name="compass_deselect">Deselect</string>
 
     <!-- DRAWER -->
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -167,7 +170,6 @@
     <string name="infowindow_defaultbintitle">Generic element</string>
     <string name="infowindow_defaultid">#id</string>
     <string name="infowindow_id">#%1$d</string>
-    <string name="infowindow_notestitle">Notes:</string>
     <string name="infowindow_notesnotfound">No notes for this element.</string>
     <string name="infowindow_tipclickcompass">Click on this window to select this trash bin as target for the compass.</string>
     <string name="infowindow_tipitemselected">This trash bin is currently selected. Tap to unselect.</string>

@@ -119,7 +119,6 @@ public class POIMarker {
         this.id = id;
     }
 
-
     // METODI STATICI DI UTILITA' RELATIVI AI MARCATORI
     public static String getTitleFromMarker(Context context, POIMarker marker) {
         if(marker.getTypes().contains(POIMarker.MarkerType.recyclingdepot)) {

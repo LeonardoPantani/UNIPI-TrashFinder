@@ -11,4 +11,13 @@
     <color name="darkyellow">#f0ba32</color>
     <color name="dark_red">#AE0000</color>
     <color name="green">#006600</color>
+    <color name="darkgray">#4F4F4F</color>
+
+    <color name="green_100">#66ff66</color>
+    <color name="green_200">#228b22</color>
+    <color name="green_500">#008000</color>
+    <color name="green_700">#006400</color>
+
+    <color name="beige_200">#c8ad7f</color>
+    <color name="beige_700">#a67b5b</color>
 </resources>

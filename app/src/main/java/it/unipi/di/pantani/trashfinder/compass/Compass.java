@@ -1,10 +1,14 @@
 package it.unipi.di.pantani.trashfinder.compass;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.view.Display;
+import android.view.Surface;
+import android.view.WindowManager;
 
 class Compass implements SensorEventListener {
     public interface CompassListener {
@@ -15,6 +19,7 @@ class Compass implements SensorEventListener {
     private CompassListener listener;
 
     private final SensorManager sensorManager;
+    private final Display display;
     private final Sensor gsensor;
     private final Sensor msensor;
 
@@ -23,13 +28,13 @@ class Compass implements SensorEventListener {
     private final float[] R = new float[9];
     private final float[] I = new float[9];
 
-    private float azimuth;
-
     public Compass(Context context) {
         sensorManager = (SensorManager) context
                 .getSystemService(Context.SENSOR_SERVICE);
         gsensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         msensor = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+
+        display = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
     }
 
     public void start() {
@@ -47,6 +52,7 @@ class Compass implements SensorEventListener {
         listener = l;
     }
 
+    @SuppressLint("SwitchIntDef")
     @Override
     public void onSensorChanged(SensorEvent event) {
         final float alpha = 0.97f;
@@ -74,8 +80,19 @@ class Compass implements SensorEventListener {
             if (success) {
                 float[] orientation = new float[3];
                 SensorManager.getOrientation(R, orientation);
-                azimuth = (float) Math.toDegrees(orientation[0]); // orientation
+                float azimuth = (float) Math.toDegrees(orientation[0]);
                 azimuth = (azimuth + 360) % 360;
+
+                // correggo l'azimuth in base alla rotazione del dispositivo
+                switch (display.getRotation()) {
+                    case Surface.ROTATION_90: // a sinistra
+                        azimuth += 90;
+                        break;
+                    case Surface.ROTATION_270: // a destra
+                        azimuth -= 90;
+                        break;
+                }
+
                 if (listener != null) {
                     listener.onNewAzimuth(azimuth);
                 }

@@ -13,7 +13,10 @@ import android.content.res.Configuration;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 
 import androidx.core.app.ActivityCompat;
@@ -30,7 +33,7 @@ public abstract class Utils extends Application {
     // indirizzo email a cui sono mandati i feedback
     public static final String FEEDBACK_MAIL = "l.pantani5@studenti.unipi.it";
     // link api. codice pisa: 3600042527 | codice italia: 3600365331 | codice toscana: 3600041977
-    public static final String OSM_IMPORT_STRING = "https://www.overpass-api.de/api/interpreter?data=[out:json];area(id:3600041977)-%3E.searchArea;(node[%22amenity%22=%22waste_basket%22](area.searchArea);node[%22amenity%22=%22waste_disposal%22](area.searchArea);node[%22amenity%22=%22recycling%22](area.searchArea););out%20body;%3E;out%20skel%20qt;";
+    public static final String OSM_IMPORT_STRING = "https://www.overpass-api.de/api/interpreter?data=[out:json];area(id:3600365331)-%3E.searchArea;(node[%22amenity%22=%22waste_basket%22](area.searchArea);node[%22amenity%22=%22waste_disposal%22](area.searchArea);node[%22amenity%22=%22recycling%22](area.searchArea););out%20body;%3E;out%20skel%20qt;";
 
     // coordinate di default nel caso l'utente non dia l'accesso alla posizione
     public static final double DEFAULT_LOCATION_LAT = 41.902782;
@@ -86,6 +89,17 @@ public abstract class Utils extends Application {
             default:
                 return -1;
         }
+    }
+
+    /**
+     * Restituisce se il dispositivo è connesso ad Internet o no.
+     * @return vero se il dispositivo è connesso, falso altrimenti
+     */
+    public static boolean isNetworkAvailable(Context context) {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
     /**
@@ -145,6 +159,7 @@ public abstract class Utils extends Application {
             gmap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
         }
     }
+
 
     /**
      * Aggiorno lo stile di mappa secondo le preferenze dell'utente
@@ -206,5 +221,14 @@ public abstract class Utils extends Application {
             InputMethodManager imm = (InputMethodManager)a.getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
+    }
+
+    /**
+     * Restituisce la rotazione del dispositivo.
+     * @param context contesto
+     * @return un intero che definisce la rotazione, usare Surface.ROTATION_x per i tipi di orientamento standard
+     */
+    public static int getRotation(Context context) {
+        return ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getRotation();
     }
 }

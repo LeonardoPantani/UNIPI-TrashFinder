@@ -16,6 +16,8 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Marker;
 import com.google.gson.Gson;
 
+import java.util.Objects;
+
 import it.unipi.di.pantani.trashfinder.R;
 import it.unipi.di.pantani.trashfinder.data.marker.POIMarker;
 
@@ -71,16 +73,16 @@ public class POIMarkerWindowAdapter implements GoogleMap.InfoWindowAdapter {
             view.findViewById(R.id.infowindow_section_notes).setVisibility(View.GONE);
         }
 
-        if(mode == 0) {
+        if(mode == 0) { // sono in visualizzazione
             // modifica consiglio della infowindow
-            if(marker.equals(getCompassSelectedMarker())) {
+            if(areMarkersEqual(marker, getCompassSelectedMarker())) {
                 infoWindowTip.setText(view.getResources().getString(R.string.infowindow_tipitemselected));
             } else {
                 infoWindowTip.setText(view.getResources().getString(R.string.infowindow_tipclickcompass));
             }
-        } else {
+        } else { // sono in editor
             // modifica consiglio della infowindow
-            if(marker.equals(getEditorSelectedMarker())) {
+            if(areMarkersEqual(marker, getEditorSelectedMarker())) {
                 infoWindowTip.setText(view.getResources().getString(R.string.infowindow_tipitemselected));
             } else {
                 infoWindowTip.setText(view.getResources().getString(R.string.infowindow_tipedit));
@@ -100,5 +102,13 @@ public class POIMarkerWindowAdapter implements GoogleMap.InfoWindowAdapter {
     public View getInfoWindow(@NonNull Marker marker) {
         renderInfoWindowText(marker, mWindow);
         return mWindow;
+    }
+
+    public static boolean areMarkersEqual(Marker a, Marker b) {
+        if(a != null && b != null) {
+            return Objects.equals(a.getSnippet(), b.getSnippet());
+        } else {
+            return false;
+        }
     }
 }

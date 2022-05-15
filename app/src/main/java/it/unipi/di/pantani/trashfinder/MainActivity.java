@@ -86,6 +86,7 @@ public class MainActivity extends AppCompatActivity implements NavController.OnD
         NavigationUI.setupWithNavController(navigationView, navController);
         navController.addOnDestinationChangedListener(this);
 
+        binding.navView.getHeaderView(0).setOnClickListener(this::onClickNavLogin);
 
         if (!checkPerms(getBaseContext())) {
             showPermissionWarningDialog();
@@ -104,12 +105,8 @@ public class MainActivity extends AppCompatActivity implements NavController.OnD
     }
 
     public void requirePermissionsIntro(View view) {
-        if (!checkPerms(getBaseContext())) {
+        if (!checkPerms(view.getContext())) {
             requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUIRE_PERMISSION_CODE_INTRO);
-        }
-
-        if (checkPerms(getBaseContext())) {
-            view.setEnabled(false);
         }
     }
 
@@ -198,9 +195,21 @@ public class MainActivity extends AppCompatActivity implements NavController.OnD
         }
     }
 
+    /**
+     * Eseguito al click sulla parte alta del navigation drawer.
+     * @param view view del
+     */
     public void onClickNavLogin(View view) {
         Toast.makeText(getApplicationContext(), getResources().getString(R.string.coming_soon), Toast.LENGTH_SHORT).show();
+        drawer.close();
+    }
 
+    /**
+     * Chiudo il drawer laterale quando si preme il tasto indietro.
+     */
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
         drawer.close();
     }
 }
