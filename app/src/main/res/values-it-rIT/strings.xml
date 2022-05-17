@@ -48,8 +48,7 @@
     <string name="waiting_for_sensors">In attesa dei sensori…</string>
     <string name="waiting_for_gps">In attesa del GPS…</string>
     <string name="dialog_nolocationperm_title">Impossibile ottenere posizione</string>
-    <string name="dialog_nolocationperm_desc">Non hai fornito il permesso per accedere alla posizione.</string>
-    <string name="dialog_nolocationperm_button_ok">Oh no! Che peccato</string>
+    <string name="dialog_nolocationperm_desc">Some features may not work as intended, but you can still use %1$s as you like.</string>
     <string name="dialog_nolocationperm_button_grantperms">Dai permessi</string>
     <string name="intro_location_permissiongranted">Grazie! Goditi tutte le funzionalità di %1$s.</string>
     <string name="intro_location_permissiondenied">Potrai cambiare i permessi dell\'app dalle impostazioni dello smartphone.</string>
@@ -82,9 +81,7 @@
     <string name="feedback_thanks">Grazie per star dedicando del tempo per fornire il tuo feedback. E\' molto importante per noi che l\'utente sia soddisfatto durante l\'utilizzo della nostra app.</string>
     <string name="feedback_smile_description">Faccina sorridente</string>
     <string name="coming_soon">Prossimamente…</string>
-    <string name="credits">App sviluppata da Leonardo Pantani come progetto del corso di SAM\n\nTutti i diritti riservati©</string>
-    <string name="section_home">Home</string>
-    <string name="section_community">Community</string>
+    <string name="credits">App sviluppata da Leonardo Pantani come progetto del corso di SAM. Tutti i diritti riservati.</string>
     <string name="community_yourcontribute_title">I tuoi contributi:</string>
     <string name="community_yourcontribute_proposedchanges">Modifiche proposte:</string>
     <string name="community_yourcontribute_evaluatedchanges">Modifiche valutate (prossimamente):</string>
@@ -155,9 +152,20 @@
     <string name="compass_selecteditem_imgdesc">Immagine oggetto selezionato</string>
     <string name="compass_selecteditem_noitem_title">Seleziona un cestino da seguire</string>
     <string name="compass_selecteditem_noitem_desc">Tocca per selezionare un cestino sulla mappa. Una freccia che punta la sua direzione apparirà qui sotto.</string>
-    <string name="section_login">Login</string>
     <string name="compass_cardview_notype">Questo cestino non ha un tipo specificato, ci dispiace!</string>
     <string name="placeholder">Questa sezione sarà sostituita con qualcos\'altro. Chissà con che cosa</string>
     <string name="compass_deselect">Deseleziona</string>
     <string name="placeholder2">Questa\nsezione\nsarà\nsostituita\ncon\nqualcos\'altro.\nChissà\ncon\nche\ncosa</string>
+    <string name="compass_nopermission_title">Nessun accesso alla posizione</string>
+    <string name="compass_nopermission_desc">La Bussola non funzionerà se non dai a %1$s l\'accesso alla posizione.</string>
+    <string name="auth_logout_title">Logout</string>
+    <string name="auth_logout_desc">Potrai rieffettuare il login quando vuoi.</string>
+    <string name="auth_logout_successful">Logout effettuato.</string>
+    <string name="auth_login_successful">Hai effettuato il login. Ti diamo il benvenuto, %1$s!</string>
+    <string name="credits_settings">Crediti</string>
+    <string name="credits_map">Dati iniziali sui cestini da OpenStreetMap @ openstreetmap.org</string>
+    <string name="community_cannotcontribute_title">Non puoi contribuire</string>
+    <string name="community_cannotcontribute_desc">Immagine non puoi contribuire</string>
+    <string name="community_cannotcontribute_description">Grazie per voler migliorare la nostra mappa. Per prevenire abusi, tutti gli utenti devono effettuare il login prima di modificare la mappa.</string>
+    <string name="community_cannotcontribute_warning">Per contribuire, effettua il login.</string>
 </resources>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Item selezionato -->
+    <item android:color="?attr/colorSecondary" android:state_checked="true" />
+    <!-- Item premuto (non selezionato) -->
+    <item android:color="?android:textColorPrimary" android:state_pressed="true" />
+    <!-- Item default (non abilitato) -->
+    <item android:color="@android:color/darker_gray" android:state_enabled="false"/>
+    <!-- Item default -->
+    <item android:color="?android:textColorPrimary" />
+</selector>

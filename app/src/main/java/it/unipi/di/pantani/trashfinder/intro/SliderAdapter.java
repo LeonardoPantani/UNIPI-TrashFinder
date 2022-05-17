@@ -16,7 +16,6 @@ import it.unipi.di.pantani.trashfinder.databinding.SlideLayoutBinding;
 
 public class SliderAdapter extends PagerAdapter {
     private final Context context;
-    private SlideLayoutBinding binding;
 
     public final int[] imagesArray = {
             R.drawable.map_animation,
@@ -63,7 +62,7 @@ public class SliderAdapter extends PagerAdapter {
     @Override
     public Object instantiateItem(@NonNull ViewGroup container, int position) {
         LayoutInflater li = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        binding = SlideLayoutBinding.inflate(li, container, false);
+        it.unipi.di.pantani.trashfinder.databinding.SlideLayoutBinding binding = SlideLayoutBinding.inflate(li, container, false);
         View root = binding.getRoot();
 
         if(Utils.getThemeMode(context) == 1) { // modalità notte attiva

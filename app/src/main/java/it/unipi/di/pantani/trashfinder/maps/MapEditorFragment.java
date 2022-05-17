@@ -24,6 +24,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -73,6 +74,10 @@ public class MapEditorFragment extends Fragment implements OnMapReadyCallback {
 
     private Bundle bundle;
 
+    int currentView = 0;
+
+    // TODO impedire all'utente di visualizzare questa schermata se non è loggato
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
@@ -119,6 +124,22 @@ public class MapEditorFragment extends Fragment implements OnMapReadyCallback {
 
         // salvo il bundle
         bundle = savedInstanceState;
+
+        if(bundle != null) { // TODO salvare marker attualmente selezionato e posizione su mappa in caso di modifiche al config (tipo rotazione) difficile!!
+            if(bundle.containsKey("mode")) {
+                switch(bundle.getInt("mode")) {
+                    case 0:
+                        break;
+                    case 1:
+
+                        break;
+                    case 2:
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
 
         // return della view
         return root;
@@ -203,6 +224,8 @@ public class MapEditorFragment extends Fragment implements OnMapReadyCallback {
 
     // -- MODALITA' EDITING
     private void enableEditingMode(Marker marker) {
+        currentView = 1;
+
         mMap.getUiSettings().setScrollGesturesEnabled(false);
         mMap.getUiSettings().setZoomGesturesEnabled(false);
         mMap.getUiSettings().setMyLocationButtonEnabled(false);
@@ -222,6 +245,8 @@ public class MapEditorFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void disableEditingMode() {
+        currentView = 0;
+
         mMap.getUiSettings().setScrollGesturesEnabled(true);
         mMap.getUiSettings().setZoomGesturesEnabled(true);
         mMap.getUiSettings().setMyLocationButtonEnabled(true);
@@ -270,6 +295,8 @@ public class MapEditorFragment extends Fragment implements OnMapReadyCallback {
 
     // -- MODALITA' CREAZIONE
     private void enableCreationMode() {
+        currentView = 2;
+
         binding.mapeditorMarkericon.setVisibility(View.VISIBLE);
 
         binding.mapeditorSectionForm.removeAllViews();
@@ -277,6 +304,8 @@ public class MapEditorFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void disableCreationMode() {
+        currentView = 0;
+
         if(getActivity() != null) Utils.closeKeyboard(getActivity()); // chiude la tastiera
 
         binding.mapeditorMarkericon.setVisibility(View.GONE);
@@ -298,13 +327,14 @@ public class MapEditorFragment extends Fragment implements OnMapReadyCallback {
         POIMarker newM = new POIMarker(markerTypes, centerPoint.latitude, centerPoint.longitude, binding_form_new.mapeditorNotesNew.getText().toString());
 
         mMapViewModel.insert(newM);
-        clusterManager.addItem(new MyItemOnMap(centerPoint.latitude, centerPoint.longitude, getTitleFromMarker(context,newM), new Gson().toJson(newM)));
+        clusterManager.addItem(new MyItemOnMap(centerPoint.latitude, centerPoint.longitude, getTitleFromMarker(context, newM), new Gson().toJson(newM)));
         clusterManager.cluster();
 
         disableCreationMode();
     }
 
     private void onClickPhotoNew(View view) {
+        Toast.makeText(context, R.string.coming_soon, Toast.LENGTH_SHORT).show();
         /*
         ImageCapture.OutputFileOptions outputFileOptions =
                 new ImageCapture.OutputFileOptions.Builder(new File(...)).build();
@@ -394,6 +424,7 @@ public class MapEditorFragment extends Fragment implements OnMapReadyCallback {
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         if(mMap != null) outState.putParcelable("cp", mMap.getCameraPosition());
+        outState.putInt("mode", currentView); // 0 niente | 1 editing | 2 creazione;
         Log.d("ISTANZA", "mapeditor -> onSaveIstanceState");
     }
 }

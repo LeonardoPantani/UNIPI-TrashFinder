@@ -7,7 +7,8 @@
     <string name="coming_soon">Coming soon…</string>
     <string name="waiting_for_sensors">Waiting for sensors…</string>
     <string name="waiting_for_gps">Waiting for GPS…</string>
-    <string name="credits">App developed by Leonardo Pantani as SAM course Project\\n All Rights Reserved©</string>
+    <string name="credits">App developed by Leonardo Pantani as SAM course Project. All Rights Reserved.</string>
+    <string name="credits_map">Initial trash bin data is from OpenStreetMap @ openstreetmap.org</string>
     <string name="accuracy_high">High</string>
     <string name="accuracy_low">Low</string>
     <string name="fab_description">Navigate button</string>
@@ -19,18 +20,18 @@
     <string name="placeholder">This section is going to be replaced with something else. Who knows what</string>
     <string name="placeholder2">This\\nsection\\nis\\ngoing\\nto\\nbe\\nreplaced\\nwith\\nsomething\\nelse.\\nWho\\nknows\\nwhat</string>
 
+    <string name="auth_login_successful">You are now logged in. Welcome, %1$s!</string>
+    <string name="auth_logout_title">Log out</string>
+    <string name="auth_logout_desc">You will be able to log in back whenever you want.</string>
+    <string name="auth_logout_successful">You have been logged out.</string>
 
-    <string name="section_home">Home</string>
     <string name="section_maps">Map</string>
     <string name="section_compass">Compass</string>
-    <string name="section_community">Community</string>
     <string name="section_contributions">Contributions</string>
     <string name="section_mapeditor">Map Editor</string>
-    <string name="section_login">Login</string>
 
     <string name="dialog_nolocationperm_title">Unable to get location</string>
-    <string name="dialog_nolocationperm_desc">You have not granted the location permission.</string>
-    <string name="dialog_nolocationperm_button_ok">Oh no! Anyway</string>
+    <string name="dialog_nolocationperm_desc">Some features may not work as intended, but you can still use %1$s as you like.</string>
     <string name="dialog_nolocationperm_button_grantperms">Grant permissions</string>
 
     <string name="warning_noperms">This feature may not work if you do not grant the location permission to %1$s.</string>
@@ -72,8 +73,6 @@
     <string name="setting_map_type">Map Type</string>
     <string name="setting_map_type_roads">Roadmap</string>
     <string name="setting_map_type_satellite">Satellite</string>
-
-
     <!-- Compass settings -->
     <string name="compass_settings">Compass</string>
     <string name="setting_compass_update_interval">Update Interval (seconds)</string>
@@ -85,6 +84,9 @@
     <string name="setting_compass_measureunit_kilometers">kilometers</string>
     <string name="setting_compass_measureunit_feet">feet</string>
     <string name="setting_compass_measureunit_miles">miles</string>
+
+    <!-- Credits -->
+    <string name="credits_settings">Credits</string>
 
     <!-- COMPASS -->
     <string name="distance_difference">%1$.2f %2$s away</string>
@@ -114,6 +116,8 @@
     <string name="compass_selecteditem_noitem_desc">Tap here to select a bin on the map. An arrow pointing its direction will appear under this card.</string>
     <string name="compass_cardview_notype">This bin does not have any types set, sorry!</string>
     <string name="compass_deselect">Deselect</string>
+    <string name="compass_nopermission_title">No location access</string>
+    <string name="compass_nopermission_desc">Compass is not going to work if you do not grant the location permission to %1$s.</string>
 
     <!-- DRAWER -->
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -150,6 +154,11 @@
     <string name="community_gotomapeditor_title">Open map editor</string>
     <string name="community_gotomapeditor_desc">Click to propose new trash bin locations and edit already existing ones.</string>
     <string name="community_gotomapeditor_description">Go to map editor image</string>
+
+    <string name="community_cannotcontribute_title">Cannot contribute</string>
+    <string name="community_cannotcontribute_desc">Cannot contribute image</string>
+    <string name="community_cannotcontribute_description">Thanks for wanting to improve our map. To prevent abuses, all users must log in before editing the map.</string>
+    <string name="community_cannotcontribute_warning">To contribute, please log in.</string>
 
     <!-- MAP EDITOR -->
     <string name="mapeditor_youareineditingmode">You are in Editor Mode. Tap to add a new trash bin. To edit one click on it.</string>

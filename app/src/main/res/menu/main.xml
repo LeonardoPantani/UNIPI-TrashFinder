@@ -4,13 +4,13 @@
     <item
         android:id="@+id/action_feedback"
         android:icon="@drawable/ic_baseline_feedback_24"
-        app:iconTint="?attr/colorPrimary"
+        app:iconTint="?attr/colorSecondary"
         android:title="@string/label_feedback"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_settings"
         android:icon="@drawable/ic_baseline_settings_24"
-        app:iconTint="?attr/colorPrimary"
+        app:iconTint="?attr/colorSecondary"
         android:title="@string/label_settings"
         app:showAsAction="never" />
 </menu>

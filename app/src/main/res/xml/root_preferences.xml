@@ -58,4 +58,21 @@
             app:summaryOn="@string/setting_compass_show_tip_switchtomap_summaryOn"
             app:title="@string/setting_compass_show_tip_switchtomap" />
     </PreferenceCategory>
+
+    <PreferenceCategory
+        app:title="@string/credits_settings"
+        app:icon="@drawable/ic_baseline_info_24">
+        <Preference
+            android:key="pref_static_field_key"
+            android:selectable="false"
+            android:persistent="false"
+            android:title=""
+            android:summary="@string/credits_map"/>
+        <Preference
+            android:key="pref_static_field_key"
+            android:selectable="false"
+            android:persistent="false"
+            android:title=""
+            android:summary="@string/credits"/>
+    </PreferenceCategory>
 </PreferenceScreen>

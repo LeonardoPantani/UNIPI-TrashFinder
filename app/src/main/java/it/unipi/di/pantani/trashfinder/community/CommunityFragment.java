@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -13,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import it.unipi.di.pantani.trashfinder.R;
+import it.unipi.di.pantani.trashfinder.Utils;
 import it.unipi.di.pantani.trashfinder.databinding.FragmentCommunityBinding;
 
 public class CommunityFragment extends Fragment {
@@ -30,7 +32,7 @@ public class CommunityFragment extends Fragment {
         binding.communityGeneralstatsNumberchanges.setText(String.valueOf(0));
 
         // applico il listener alla card "apri editor mappa"
-        binding.communiyCardOpenmapeditor.setOnClickListener(this::onClickOpen);
+        binding.communityCardOpenmapeditor.setOnClickListener(this::onClickOpen);
 
         // view model
         mCommunityViewModel = new ViewModelProvider(this).get(CommunityViewModel.class);
@@ -48,9 +50,27 @@ public class CommunityFragment extends Fragment {
      * Funzione che viene chiamata appena la card "apri editor mappa" è premuta
      * @param view la view cliccata
      */
-    public void onClickOpen(View view) {
-        Navigation.findNavController(view).popBackStack(R.id.nav_maps, false); // primo
-        Navigation.findNavController(view).navigate(R.id.nav_mapeditor);
+    private void onClickOpen(View view) {
+        if(Utils.getCurrentUserAccount() != null) {
+            Navigation.findNavController(view).popBackStack(R.id.nav_maps, false); // primo
+            Navigation.findNavController(view).navigate(R.id.nav_mapeditor);
+        } else {
+            Toast.makeText(this.getContext(), R.string.community_cannotcontribute_warning, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void updateCards() {
+        if(Utils.getCurrentUserAccount() != null) {
+            binding.communityCardCannotcontribute.setVisibility(View.GONE);
+
+            binding.communityCardYourcontribution.setVisibility(View.VISIBLE);
+            binding.communityCardOpenmapeditor.setVisibility(View.VISIBLE);
+        } else {
+            binding.communityCardCannotcontribute.setVisibility(View.VISIBLE);
+
+            binding.communityCardYourcontribution.setVisibility(View.GONE);
+            binding.communityCardOpenmapeditor.setVisibility(View.GONE);
+        }
     }
 
     // --------- METODI ATTACH, DETACH, RESUME, PAUSE ---------
@@ -72,6 +92,7 @@ public class CommunityFragment extends Fragment {
         super.onResume();
         // mostro dati
         mCommunityViewModel.getMarkerNumber().observe(getViewLifecycleOwner(), numberOfBins -> binding.communityGeneralstatsNumbertrashbins.setText(String.valueOf(numberOfBins)));
+        updateCards();
         Log.d("ISTANZA", "community -> onResume");
     }
 
@@ -79,5 +100,11 @@ public class CommunityFragment extends Fragment {
     public void onPause() {
         super.onPause();
         Log.d("ISTANZA", "community -> onPause");
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        updateCards();
     }
 }

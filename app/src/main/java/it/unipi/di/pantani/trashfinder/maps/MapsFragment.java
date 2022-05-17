@@ -164,7 +164,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         if(!areMarkersEqual(marker, getCompassSelectedMarker())) {
             setCompassSelectedMarker(marker);
 
-            Snackbar mySnackbar = Snackbar.make(getActivity().findViewById(R.id.maps), getResources().getString(R.string.infowindow_setcompass), Snackbar.LENGTH_LONG);
+            Snackbar mySnackbar = Snackbar.make(getActivity().findViewById(R.id.maps), getResources().getString(R.string.infowindow_setcompass), Snackbar.LENGTH_SHORT);
             mySnackbar.setAction(R.string.button_open, view -> {
                 // ottengo il navController
                 NavHostFragment navHostFragment = (NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_content_main);

@@ -80,7 +80,7 @@ public class FeedbackActivity extends AppCompatActivity {
         try {
             startActivity(Intent.createChooser(i, getResources().getString(R.string.feedback_chooser)));
         } catch(ActivityNotFoundException e) {
-            Toast.makeText(FeedbackActivity.this, R.string.feedback_chooser_error, Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.feedback_chooser_error, Toast.LENGTH_LONG).show();
         }
         //finish();
     }

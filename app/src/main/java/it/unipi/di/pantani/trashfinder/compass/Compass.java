@@ -29,19 +29,15 @@ class Compass implements SensorEventListener {
     private final float[] I = new float[9];
 
     public Compass(Context context) {
-        sensorManager = (SensorManager) context
-                .getSystemService(Context.SENSOR_SERVICE);
+        sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
+        display = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
         gsensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         msensor = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
-
-        display = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
     }
 
     public void start() {
-        sensorManager.registerListener(this, gsensor,
-                SensorManager.SENSOR_DELAY_GAME);
-        sensorManager.registerListener(this, msensor,
-                SensorManager.SENSOR_DELAY_GAME);
+        sensorManager.registerListener(this, gsensor, SensorManager.SENSOR_DELAY_UI);
+        sensorManager.registerListener(this, msensor, SensorManager.SENSOR_DELAY_UI);
     }
 
     public void stop() {
@@ -80,8 +76,7 @@ class Compass implements SensorEventListener {
             if (success) {
                 float[] orientation = new float[3];
                 SensorManager.getOrientation(R, orientation);
-                float azimuth = (float) Math.toDegrees(orientation[0]);
-                azimuth = (azimuth + 360) % 360;
+                float azimuth = ((float) Math.toDegrees(orientation[0]) + 360) % 360;
 
                 // correggo l'azimuth in base alla rotazione del dispositivo
                 switch (display.getRotation()) {
@@ -105,5 +100,22 @@ class Compass implements SensorEventListener {
         if(listener != null) {
             listener.onSensorAccuracyChanged(accuracy);
         }
+    }
+
+    /**
+     * Calcolo traiettoria per l'orientamento della freccia
+     * @param startLat latitudine iniziale
+     * @param startLng longitudine iniziale
+     * @param endLat latitudine finale
+     * @param endLng longitudine finale
+     * @return angolo
+     */
+    public static double bearing(double startLat, double startLng, double endLat, double endLng){
+        double latitude1 = Math.toRadians(startLat);
+        double latitude2 = Math.toRadians(endLat);
+        double longDiff = Math.toRadians(endLng - startLng);
+        double y = Math.sin(longDiff)*Math.cos(latitude2);
+        double x = Math.cos(latitude1)*Math.sin(latitude2)-Math.sin(latitude1)*Math.cos(latitude2)*Math.cos(longDiff);
+        return (Math.toDegrees(Math.atan2(y, x))+360)%360;
     }
 }

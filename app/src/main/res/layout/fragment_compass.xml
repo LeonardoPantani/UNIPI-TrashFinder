@@ -94,7 +94,7 @@
         android:layout_height="wrap_content"
         android:text="@string/waiting_for_sensors"
         android:textSize="20sp"
-        android:visibility="invisible"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

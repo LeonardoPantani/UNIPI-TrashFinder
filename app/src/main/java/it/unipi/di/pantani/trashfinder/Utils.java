@@ -14,7 +14,8 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
+import android.net.Network;
+import android.net.NetworkCapabilities;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -22,6 +23,7 @@ import android.view.inputmethod.InputMethodManager;
 import androidx.core.app.ActivityCompat;
 import androidx.preference.PreferenceManager;
 
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.CameraPosition;
@@ -33,7 +35,7 @@ public abstract class Utils extends Application {
     // indirizzo email a cui sono mandati i feedback
     public static final String FEEDBACK_MAIL = "l.pantani5@studenti.unipi.it";
     // link api. codice pisa: 3600042527 | codice italia: 3600365331 | codice toscana: 3600041977
-    public static final String OSM_IMPORT_STRING = "https://www.overpass-api.de/api/interpreter?data=[out:json];area(id:3600365331)-%3E.searchArea;(node[%22amenity%22=%22waste_basket%22](area.searchArea);node[%22amenity%22=%22waste_disposal%22](area.searchArea);node[%22amenity%22=%22recycling%22](area.searchArea););out%20body;%3E;out%20skel%20qt;";
+    public static final String OSM_IMPORT_STRING = "https://www.overpass-api.de/api/interpreter?data=[out:json];area(id:3600041977)-%3E.searchArea;(node[%22amenity%22=%22waste_basket%22](area.searchArea);node[%22amenity%22=%22waste_disposal%22](area.searchArea);node[%22amenity%22=%22recycling%22](area.searchArea););out%20body;%3E;out%20skel%20qt;";
 
     // coordinate di default nel caso l'utente non dia l'accesso alla posizione
     public static final double DEFAULT_LOCATION_LAT = 41.902782;
@@ -95,11 +97,12 @@ public abstract class Utils extends Application {
      * Restituisce se il dispositivo è connesso ad Internet o no.
      * @return vero se il dispositivo è connesso, falso altrimenti
      */
-    public static boolean isNetworkAvailable(Context context) {
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    private Boolean isNetworkAvailable(Application application) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) application.getSystemService(Context.CONNECTIVITY_SERVICE);
+        Network nw = connectivityManager.getActiveNetwork();
+        if (nw == null) return false;
+        NetworkCapabilities actNw = connectivityManager.getNetworkCapabilities(nw);
+        return actNw != null && (actNw.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) || actNw.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) || actNw.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) || actNw.hasTransport(NetworkCapabilities.TRANSPORT_BLUETOOTH));
     }
 
     /**
@@ -211,6 +214,12 @@ public abstract class Utils extends Application {
         Utils.editorSelectedMarker = editorSelectedMarker;
     }
 
+    static GoogleSignInAccount currentUserAccount;
+    public static GoogleSignInAccount getCurrentUserAccount() {
+        return currentUserAccount;
+    }
+    public static void setCurrentUserAccount(GoogleSignInAccount a) { currentUserAccount = a; }
+
     /**
      * Chiude la tastiera.
      * @param a l'activity attuale
@@ -228,6 +237,7 @@ public abstract class Utils extends Application {
      * @param context contesto
      * @return un intero che definisce la rotazione, usare Surface.ROTATION_x per i tipi di orientamento standard
      */
+    @SuppressWarnings("deprecation")
     public static int getRotation(Context context) {
         return ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getRotation();
     }
