@@ -113,6 +113,8 @@ public class MainActivity extends AppCompatActivity implements NavController.OnD
         // Build a GoogleSignInClient with the options specified by gso.
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
+        initializeAccount();
+
         setPreference(this, "setting_show_intro_at_startup", false);
     }
 
@@ -271,6 +273,8 @@ public class MainActivity extends AppCompatActivity implements NavController.OnD
     }
 
     private void setTextNavDrawer(String title, String subTitle, Uri image) {
+        if(mBinding == null) return;
+
         View navHeader = mBinding.navView.getHeaderView(0);
 
         if(title != null && subTitle != null && image != null) {
@@ -293,18 +297,7 @@ public class MainActivity extends AppCompatActivity implements NavController.OnD
                 .into(((ImageView) navHeader.findViewById(R.id.nav_header_image)));
     }
 
-    /**
-     * Chiudo il drawer laterale quando si preme il tasto indietro.
-     */
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        mDrawer.close();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
+    private void initializeAccount() {
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
         if(account != null) {
             setTextNavDrawer(account.getDisplayName(), account.getEmail(), account.getPhotoUrl());
@@ -313,5 +306,14 @@ public class MainActivity extends AppCompatActivity implements NavController.OnD
             setTextNavDrawer(null, null, null);
             setCurrentUserAccount(null);
         }
+    }
+
+    /**
+     * Chiudo il drawer laterale quando si preme il tasto indietro.
+     */
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        mDrawer.close();
     }
 }

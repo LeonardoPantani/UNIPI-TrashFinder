@@ -20,13 +20,13 @@ public class POIRequest {
 
     private final String imageLink;
 
-    private final int userId;
+    private final String userEmail;
 
-    public POIRequest(@NonNull POIMarker element, long date, String imageLink, int userId) {
+    public POIRequest(@NonNull POIMarker element, long date, String imageLink, String userEmail) {
         this.element = element;
         this.date = date;
         this.imageLink = imageLink;
-        this.userId = userId;
+        this.userEmail = userEmail;
     }
 
     // GETTERS E SETTERS
@@ -47,8 +47,8 @@ public class POIRequest {
         return imageLink;
     }
 
-    public int getUserId() {
-        return userId;
+    public String getUserEmail() {
+        return userEmail;
     }
 
     public void setId(int id) {

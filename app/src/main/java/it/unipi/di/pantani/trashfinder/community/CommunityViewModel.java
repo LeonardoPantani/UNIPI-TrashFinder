@@ -7,16 +7,23 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
 import it.unipi.di.pantani.trashfinder.data.marker.POIMarkerRepository;
+import it.unipi.di.pantani.trashfinder.data.requests.POIRequestRepository;
 
 public class CommunityViewModel extends AndroidViewModel {
-    private final POIMarkerRepository mRepository;
+    private final POIMarkerRepository mMarkersRepository;
+    private final POIRequestRepository mRequestsRepository;
 
     public CommunityViewModel(@NonNull Application application) {
         super(application);
-        mRepository = new POIMarkerRepository(application);
+        mMarkersRepository = new POIMarkerRepository(application);
+        mRequestsRepository = new POIRequestRepository(application);
     }
 
     LiveData<Integer> getMarkerNumber() {
-        return mRepository.getNumberMarker();
+        return mMarkersRepository.getNumberMarker();
+    }
+
+    LiveData<Integer> getRequestNumber() {
+        return mRequestsRepository.getRequestNumber();
     }
 }

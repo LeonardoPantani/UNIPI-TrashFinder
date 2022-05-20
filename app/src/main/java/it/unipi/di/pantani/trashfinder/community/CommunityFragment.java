@@ -34,6 +34,9 @@ public class CommunityFragment extends Fragment {
         // applico il listener alla card "apri editor mappa"
         binding.communityCardOpenmapeditor.setOnClickListener(this::onClickOpen);
 
+        // applico il listener al pulsante "le tue richieste"
+        binding.communityCardYourcontributionButton.setOnClickListener(this::onClickYourChanges);
+
         // view model
         mCommunityViewModel = new ViewModelProvider(this).get(CommunityViewModel.class);
 
@@ -55,7 +58,19 @@ public class CommunityFragment extends Fragment {
             Navigation.findNavController(view).popBackStack(R.id.nav_maps, false); // primo
             Navigation.findNavController(view).navigate(R.id.nav_mapeditor);
         } else {
-            Toast.makeText(this.getContext(), R.string.community_cannotcontribute_warning, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this.getContext(), R.string.community_cannotcontribute_warning, Toast.LENGTH_LONG).show();
+        }
+    }
+
+    /**
+     * Funzione che viene chiamata appena viene premuto il tasto "tue modifiche"
+     * @param view la view cliccata
+     */
+    private void onClickYourChanges(View view) {
+        if(Utils.getCurrentUserAccount() != null) {
+            Navigation.findNavController(view).navigate(R.id.nav_requests);
+        } else {
+            Toast.makeText(this.getContext(), R.string.community_yourcontribute_warning, Toast.LENGTH_LONG).show();
         }
     }
 
@@ -65,6 +80,11 @@ public class CommunityFragment extends Fragment {
 
             binding.communityCardYourcontribution.setVisibility(View.VISIBLE);
             binding.communityCardOpenmapeditor.setVisibility(View.VISIBLE);
+
+            // mostro dati
+            mCommunityViewModel.getMarkerNumber().observe(getViewLifecycleOwner(), numberOfBins -> binding.communityGeneralstatsNumbertrashbins.setText(String.valueOf(numberOfBins)));
+            if(Utils.getCurrentUserAccount() != null)
+                mCommunityViewModel.getRequestNumber().observe(getViewLifecycleOwner(), numberOfRequests -> binding.communityYourcontributeProposedchanges.setText(String.valueOf(numberOfRequests)));
         } else {
             binding.communityCardCannotcontribute.setVisibility(View.VISIBLE);
 
@@ -90,8 +110,6 @@ public class CommunityFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        // mostro dati
-        mCommunityViewModel.getMarkerNumber().observe(getViewLifecycleOwner(), numberOfBins -> binding.communityGeneralstatsNumbertrashbins.setText(String.valueOf(numberOfBins)));
         updateCards();
         Log.d("ISTANZA", "community -> onResume");
     }
@@ -106,5 +124,6 @@ public class CommunityFragment extends Fragment {
     public void onStart() {
         super.onStart();
         updateCards();
+        Log.d("ISTANZA", "community -> onStart");
     }
 }

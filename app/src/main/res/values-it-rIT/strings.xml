@@ -159,13 +159,21 @@
     <string name="compass_nopermission_title">Nessun accesso alla posizione</string>
     <string name="compass_nopermission_desc">La Bussola non funzionerà se non dai a %1$s l\'accesso alla posizione.</string>
     <string name="auth_logout_title">Logout</string>
-    <string name="auth_logout_desc">Potrai rieffettuare il login quando vuoi.</string>
+    <string name="auth_logout_desc">Potrai rieffettuare il login quando vuoi. Ricorda che non puoi contribuire finché usi l\'app da ospite.</string>
     <string name="auth_logout_successful">Logout effettuato.</string>
-    <string name="auth_login_successful">Hai effettuato il login. Ti diamo il benvenuto, %1$s!</string>
+    <string name="auth_login_successful">Hai effettuato il login. Bentornato, %1$s!</string>
     <string name="credits_settings">Crediti</string>
     <string name="credits_map">Dati iniziali sui cestini da OpenStreetMap @ openstreetmap.org</string>
     <string name="community_cannotcontribute_title">Non puoi contribuire</string>
     <string name="community_cannotcontribute_desc">Immagine non puoi contribuire</string>
     <string name="community_cannotcontribute_description">Grazie per voler migliorare la nostra mappa. Per prevenire abusi, tutti gli utenti devono effettuare il login prima di modificare la mappa.</string>
     <string name="community_cannotcontribute_warning">Per contribuire, effettua il login.</string>
+    <string name="mapeditor_photo_new_taken">Foto salvata</string>
+    <string name="mapeditor_photo_alreadytaken_title">Foto già scattata</string>
+    <string name="mapeditor_photo_alreadytaken_desc">Puoi scattarne un\'altra se vuoi; la precedente sarà scartata.</string>
+    <string name="community_yourcontribute_button">Le tue richieste</string>
+    <string name="section_requests">Richieste</string>
+    <string name="community_yourcontribute_warning">Per vedere le tue richieste, effettua il login.</string>
+    <string name="requests_nothing">Non hai proposto alcun cambiamento alla mappa, per ora.</string>
+    <string name="requests_item_imgdesc">Immagine richiesta</string>
 </resources>

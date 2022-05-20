@@ -20,15 +20,16 @@
     <string name="placeholder">This section is going to be replaced with something else. Who knows what</string>
     <string name="placeholder2">This\\nsection\\nis\\ngoing\\nto\\nbe\\nreplaced\\nwith\\nsomething\\nelse.\\nWho\\nknows\\nwhat</string>
 
-    <string name="auth_login_successful">You are now logged in. Welcome, %1$s!</string>
+    <string name="auth_login_successful">You are now logged in. Welcome back, %1$s!</string>
     <string name="auth_logout_title">Log out</string>
-    <string name="auth_logout_desc">You will be able to log in back whenever you want.</string>
+    <string name="auth_logout_desc">You will be able to log in back whenever you want. Remember that you cannot contribute while using this app as a guest.</string>
     <string name="auth_logout_successful">You have been logged out.</string>
 
     <string name="section_maps">Map</string>
     <string name="section_compass">Compass</string>
     <string name="section_contributions">Contributions</string>
     <string name="section_mapeditor">Map Editor</string>
+    <string name="section_requests">Requests</string>
 
     <string name="dialog_nolocationperm_title">Unable to get location</string>
     <string name="dialog_nolocationperm_desc">Some features may not work as intended, but you can still use %1$s as you like.</string>
@@ -145,6 +146,7 @@
     <string name="community_yourcontribute_proposedchanges">Proposed changes:</string>
     <string name="community_yourcontribute_evaluatedchanges">Evaluated changes (coming soon):</string>
     <string name="community_yourcontribute_description">Your contribution image</string>
+    <string name="community_yourcontribute_button">Your requests</string>
 
     <string name="community_generalstats_title">General stats:</string>
     <string name="community_generalstats_numbertrashbins">Number of bins:</string>
@@ -159,6 +161,7 @@
     <string name="community_cannotcontribute_desc">Cannot contribute image</string>
     <string name="community_cannotcontribute_description">Thanks for wanting to improve our map. To prevent abuses, all users must log in before editing the map.</string>
     <string name="community_cannotcontribute_warning">To contribute, please log in.</string>
+    <string name="community_yourcontribute_warning">To view your requests, please log in.</string>
 
     <!-- MAP EDITOR -->
     <string name="mapeditor_youareineditingmode">You are in Editor Mode. Tap to add a new trash bin. To edit one click on it.</string>
@@ -174,6 +177,9 @@
     <string name="mapeditor_creatingmarker">You are creating a new trash bin. Move the map to overlap the selector with the location of the trash bin. Afterwards edit the details of the trash bin. When you have finished press on \"Create\".</string>
     <string name="map_nodata">No data</string>
     <string name="mapeditor_photo_new">Photo</string>
+    <string name="mapeditor_photo_new_taken">Photo saved</string>
+    <string name="mapeditor_photo_alreadytaken_title">Photo already taken</string>
+    <string name="mapeditor_photo_alreadytaken_desc">You can take another photo if you want; the previous one will be discarded.</string>
 
     <!-- MARKERS -->
     <string name="infowindow_defaultbintitle">Generic element</string>
@@ -202,4 +208,9 @@
     <string name="markertype_recyclingdepot">recycling depot</string>
 
     <string name="markertype_generic">trash bin</string>
+
+    <!-- REQUESTS -->
+    <string name="requests_item_title" translatable="false">(#%1$d) %2$s</string>
+    <string name="requests_item_imgdesc">Request image</string>
+    <string name="requests_nothing">You have not proposed any changes to the map yet.</string>
 </resources>

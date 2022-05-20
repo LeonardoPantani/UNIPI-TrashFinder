@@ -9,15 +9,13 @@
         android:id="@+id/nav_maps"
         android:name="it.unipi.di.pantani.trashfinder.maps.MapsFragment"
         android:label="@string/section_maps"
-        tools:layout="@layout/fragment_maps">
-    </fragment>
+        tools:layout="@layout/fragment_maps" />
 
     <fragment
         android:id="@+id/nav_compass"
         android:name="it.unipi.di.pantani.trashfinder.compass.CompassFragment"
         android:label="@string/section_compass"
-        tools:layout="@layout/fragment_compass">
-    </fragment>
+        tools:layout="@layout/fragment_compass" />
 
     <fragment
         android:id="@+id/nav_community"
@@ -30,4 +28,10 @@
         android:name="it.unipi.di.pantani.trashfinder.maps.MapEditorFragment"
         android:label="@string/section_mapeditor"
         tools:layout="@layout/fragment_map_editor" />
+
+    <fragment
+        android:id="@+id/nav_requests"
+        android:name="it.unipi.di.pantani.trashfinder.community.RequestsFragment"
+        android:label="@string/section_requests"
+        tools:layout="@layout/fragment_requests" />
 </navigation>

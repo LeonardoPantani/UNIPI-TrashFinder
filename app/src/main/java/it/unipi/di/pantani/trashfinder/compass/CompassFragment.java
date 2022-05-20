@@ -33,7 +33,6 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 
-import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 

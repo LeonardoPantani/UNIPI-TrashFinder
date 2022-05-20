@@ -1,9 +1,10 @@
 package it.unipi.di.pantani.trashfinder.data.requests;
 
 import android.app.Application;
-import android.database.Cursor;
 
 import androidx.lifecycle.LiveData;
+
+import java.util.List;
 
 /**
  * A Repository class abstracts access to multiple data sources.
@@ -15,31 +16,33 @@ import androidx.lifecycle.LiveData;
  */
 public class POIRequestRepository {
     private final POIRequestDAO mPOIRequestDAO;
-    private final Cursor mRequestCursor;
 
     public POIRequestRepository(Application application) {
         POIRequestRoomDatabase db = POIRequestRoomDatabase.getDatabase(application);
         mPOIRequestDAO = db.requestDAO();
-        mRequestCursor = mPOIRequestDAO.getRequests();
     }
 
-    LiveData<POIRequest> getById(int id) {
+    public LiveData<POIRequest> getById(int id) {
         return mPOIRequestDAO.getById(id);
     }
 
-    void insert(POIRequest request) {
+    public void insert(POIRequest request) {
         POIRequestRoomDatabase.databaseWriteExecutor.execute(() -> mPOIRequestDAO.insert(request));
     }
 
-    void delete(POIRequest request) {
+    public void delete(POIRequest request) {
         POIRequestRoomDatabase.databaseWriteExecutor.execute(() -> mPOIRequestDAO.delete(request));
     }
 
-    void deleteAll() {
+    public void deleteAll() {
         POIRequestRoomDatabase.databaseWriteExecutor.execute(mPOIRequestDAO::deleteAll);
     }
 
-    Cursor getRequests() {
-        return mRequestCursor;
+    public LiveData<List<POIRequest>> getRequests(String userEmail, int total, int startIndex) {
+        return mPOIRequestDAO.getRequests(userEmail, total, startIndex);
+    }
+
+    public LiveData<Integer> getRequestNumber() {
+        return mPOIRequestDAO.getRequestNumber();
     }
 }

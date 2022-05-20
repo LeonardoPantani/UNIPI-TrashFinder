@@ -11,14 +11,22 @@ import static it.unipi.di.pantani.trashfinder.data.marker.POIMarker.getPOIMarker
 import static it.unipi.di.pantani.trashfinder.data.marker.POIMarker.getTitleFromMarker;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.FileProvider;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.PreferenceManager;
 
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,6 +49,8 @@ import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.collections.MarkerManager;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -48,6 +58,7 @@ import it.unipi.di.pantani.trashfinder.R;
 import it.unipi.di.pantani.trashfinder.Utils;
 import it.unipi.di.pantani.trashfinder.data.marker.MyItemOnMap;
 import it.unipi.di.pantani.trashfinder.data.marker.POIMarker;
+import it.unipi.di.pantani.trashfinder.data.requests.POIRequest;
 import it.unipi.di.pantani.trashfinder.databinding.EditorEmptyBinding;
 import it.unipi.di.pantani.trashfinder.databinding.EditorFormBinding;
 import it.unipi.di.pantani.trashfinder.databinding.EditorFormNewBinding;
@@ -58,6 +69,7 @@ public class MapEditorFragment extends Fragment implements OnMapReadyCallback {
     private Context context;
     private SharedPreferences sp;
     private MapsViewModel mMapViewModel;
+    private MapEditorViewModel mMapEditorViewModel;
     private ClusterManager<MyItemOnMap> clusterManager;
 
     private FragmentMapEditorBinding binding;
@@ -101,8 +113,11 @@ public class MapEditorFragment extends Fragment implements OnMapReadyCallback {
         // mappa asincrona
         supportMapFragment.getMapAsync(this);
 
-        // view model
+        // view model mappa
         mMapViewModel = new ViewModelProvider(this).get(MapsViewModel.class);
+
+        // view model mapeditor
+        mMapEditorViewModel = new ViewModelProvider(this).get(MapEditorViewModel.class);
 
         // preparo markerTypes
         markerTypes = new HashSet<>();
@@ -290,6 +305,9 @@ public class MapEditorFragment extends Fragment implements OnMapReadyCallback {
     private void onClickSave(View view) {
         mMapViewModel.update(poiMarkerSelected.getId(), markerTypes, poiMarkerSelected.getLatitude(), poiMarkerSelected.getLongitude(), binding_form.mapeditorNotes.getText().toString());
 
+        // inserisco una nuova richiesta (nota: non c'è un'immagine da inserire nel caso di modifiche!)
+        mMapEditorViewModel.insert(new POIRequest(new POIMarker(markerTypes, poiMarkerSelected.getLatitude(), poiMarkerSelected.getLongitude(), binding_form.mapeditorNotes.getText().toString()), System.currentTimeMillis(), null, Utils.getCurrentUserAccount().getEmail()));
+
         disableEditingMode();
     }
 
@@ -307,6 +325,9 @@ public class MapEditorFragment extends Fragment implements OnMapReadyCallback {
         currentView = 0;
 
         if(getActivity() != null) Utils.closeKeyboard(getActivity()); // chiude la tastiera
+
+        binding_form_new.mapeditorPhotoNew.setTag(null);
+        binding_form_new.mapeditorPhotoNew.setText(R.string.mapeditor_photo_new);
 
         binding.mapeditorMarkericon.setVisibility(View.GONE);
 
@@ -330,28 +351,67 @@ public class MapEditorFragment extends Fragment implements OnMapReadyCallback {
         clusterManager.addItem(new MyItemOnMap(centerPoint.latitude, centerPoint.longitude, getTitleFromMarker(context, newM), new Gson().toJson(newM)));
         clusterManager.cluster();
 
+        if(uri != null) {
+            mMapEditorViewModel.insert(new POIRequest(newM, System.currentTimeMillis(), uri.toString(), Utils.getCurrentUserAccount().getEmail()));
+        } else {
+            Toast.makeText(context, R.string.generic_error, Toast.LENGTH_SHORT).show();
+        }
+
         disableCreationMode();
     }
 
+    Uri uri;
     private void onClickPhotoNew(View view) {
-        Toast.makeText(context, R.string.coming_soon, Toast.LENGTH_SHORT).show();
-        /*
-        ImageCapture.OutputFileOptions outputFileOptions =
-                new ImageCapture.OutputFileOptions.Builder(new File(...)).build();
-        imageCapture.takePicture(outputFileOptions, cameraExecutor,
-                new ImageCapture.OnImageSavedCallback() {
-                    @Override
-                    public void onImageSaved(ImageCapture.OutputFileResults outputFileResults) {
-                        // insert your code here.
-                    }
-                    @Override
-                    public void onError(ImageCaptureException error) {
-                        // insert your code here.
-                    }
-                }
-        );
+        if(view.getTag() != null) { // se è già stata salvata una foto
+            AlertDialog alertDialog = new AlertDialog.Builder(context).create();
+            alertDialog.setTitle(getResources().getString(R.string.mapeditor_photo_alreadytaken_title));
+            alertDialog.setMessage(getResources().getString(R.string.mapeditor_photo_alreadytaken_desc));
+            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, getResources().getString(R.string.button_cancel),
+                    (dialog, which) -> dialog.dismiss());
+            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getResources().getString(R.string.button_ok),
+                    (dialog, which) -> takePhoto());
+            alertDialog.show();
+        } else {
+            takePhoto();
+        }
+    }
 
-         */
+    private void takePhoto() { // TODO farsi dare il permesso per scrivere su memoria (dovrebbe essere necessario, vedere manifest)
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                // Error occurred while creating the File
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                uri = FileProvider.getUriForFile(getActivity(),
+                        "it.unipi.di.pantani.trashfinder.fileprovider",
+                        photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+                someActivityResultLauncher.launch(takePictureIntent);
+            }
+        }
+
+    }
+
+    ActivityResultLauncher<Intent> someActivityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    binding_form_new.mapeditorPhotoNew.setText(R.string.mapeditor_photo_new_taken);
+                    binding_form_new.mapeditorPhotoNew.setTag(true);
+                }
+            });
+
+    private File createImageFile() throws IOException {
+        String imageFileName = "trashbinimage_" + System.currentTimeMillis();
+        File storageDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        return new File(storageDir, imageFileName + ".jpg");
     }
 
     // -- Condivisi (salvataggio della select dei tipi di cestini)

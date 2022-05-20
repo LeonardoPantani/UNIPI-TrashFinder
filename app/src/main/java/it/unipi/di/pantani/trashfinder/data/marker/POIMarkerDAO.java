@@ -27,8 +27,8 @@ public interface POIMarkerDAO {
     @Query("DELETE FROM marker_table")
     void deleteAll();
 
-    @Query("SELECT * FROM marker_table WHERE (latitude BETWEEN latitude-1 AND latitude+1) AND (longitude BETWEEN longitude-1 AND latitude+1)")
-    LiveData<List<POIMarker>> getNearMarkers();
+    @Query("SELECT * FROM marker_table")
+    LiveData<List<POIMarker>> getMarkers();
 
     @Query("SELECT COUNT(*) FROM marker_table")
     LiveData<Integer> getMarkerNumber();

@@ -23,7 +23,7 @@ public class POIMarkerRepository {
     public POIMarkerRepository(Application application) {
         POIMarkerRoomDatabase db = POIMarkerRoomDatabase.getDatabase(application);
         mPOIMarkerDAO = db.markerDao();
-        mMarkerList = mPOIMarkerDAO.getNearMarkers();
+        mMarkerList = mPOIMarkerDAO.getMarkers();
         markersNumber = mPOIMarkerDAO.getMarkerNumber();
     }
 
