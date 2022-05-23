@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/maps_filter"
+        android:icon="@drawable/ic_baseline_filter_alt_24"
+        android:title="@string/maps_filter"
+        android:visible="false"
+        app:showAsAction="ifRoom"
+        app:iconTint="?attr/colorOnPrimary" />
+
     <item
         android:id="@+id/action_feedback"
         android:icon="@drawable/ic_baseline_feedback_24"

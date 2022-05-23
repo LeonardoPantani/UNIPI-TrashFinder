@@ -38,6 +38,7 @@ import androidx.navigation.ui.NavigationUI;
 import androidx.preference.PreferenceManager;
 import androidx.viewpager.widget.ViewPager;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -45,7 +46,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
-import com.squareup.picasso.Picasso;
 
 import it.unipi.di.pantani.trashfinder.databinding.ActivityMainBinding;
 import it.unipi.di.pantani.trashfinder.feedback.FeedbackActivity;
@@ -172,10 +172,10 @@ public class MainActivity extends AppCompatActivity implements NavController.OnD
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
-    // MENU
     @SuppressLint("RestrictedApi")
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        // MENU
         getMenuInflater().inflate(R.menu.main, menu);
         if (menu instanceof MenuBuilder) {
             ((MenuBuilder) menu).setOptionalIconsVisible(true);
@@ -210,13 +210,6 @@ public class MainActivity extends AppCompatActivity implements NavController.OnD
         ActionBar ab = getSupportActionBar();
         if(ab != null)
             ab.setTitle(getResources().getString(R.string.app_name) + " - " + ab.getTitle());
-
-        /* // DEBUG
-        Log.d("ISTANZA2", "> " + navDestination.getDisplayName());
-        for(NavBackStackEntry a : navController.getBackQueue()) {
-            Log.d("ISTANZA2", "Backstack -> " + a.getDestination().getDisplayName());
-        }
-         */
     }
 
     /**
@@ -238,10 +231,14 @@ public class MainActivity extends AppCompatActivity implements NavController.OnD
             alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getResources().getString(R.string.button_ok),
                     (dialog, which) -> {
                         mGoogleSignInClient.signOut();
-
                         setTextNavDrawer(null, null, null);
                         setCurrentUserAccount(null);
                         Toast.makeText(this,R.string.auth_logout_successful, Toast.LENGTH_SHORT).show();
+                        /*
+                         questo risolve il problema in cui si faccia il logout da una sezione
+                         inaccessibile se non loggati, o diversa rispetto alla versione non loggata.
+                         */
+                        mNavController.popBackStack(R.id.nav_maps, false);
                     });
             alertDialog.show();
         } else {
@@ -290,10 +287,12 @@ public class MainActivity extends AppCompatActivity implements NavController.OnD
             mNavigationView.getMenu().findItem(R.id.nav_mapeditor).setEnabled(false);
         }
 
-        Picasso.with(this)
+        Glide.with(this)
                 .load(image)
-                .error(R.mipmap.ic_appicon)
-                .placeholder(R.mipmap.ic_appicon)
+                .error(R.drawable.ic_baseline_running_with_errors_24)
+                .placeholder(R.drawable.ic_baseline_downloading_24)
+                .fallback(R.mipmap.ic_appicon)
+                .fitCenter()
                 .into(((ImageView) navHeader.findViewById(R.id.nav_header_image)));
     }
 

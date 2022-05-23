@@ -18,13 +18,13 @@ import java.util.Set;
 public class POIMarkerRepository {
     private final POIMarkerDAO mPOIMarkerDAO;
     private final LiveData<List<POIMarker>> mMarkerList;
-    private final LiveData<Integer> markersNumber;
+    private final LiveData<Integer> mMarkersNumber;
 
     public POIMarkerRepository(Application application) {
         POIMarkerRoomDatabase db = POIMarkerRoomDatabase.getDatabase(application);
         mPOIMarkerDAO = db.markerDao();
         mMarkerList = mPOIMarkerDAO.getMarkers();
-        markersNumber = mPOIMarkerDAO.getMarkerNumber();
+        mMarkersNumber = mPOIMarkerDAO.getMarkerNumber();
     }
 
     public LiveData<List<POIMarker>> getMarkerList() {
@@ -48,6 +48,6 @@ public class POIMarkerRepository {
     }
 
     public LiveData<Integer> getNumberMarker() {
-        return markersNumber;
+        return mMarkersNumber;
     }
 }

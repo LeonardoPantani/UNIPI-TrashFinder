@@ -47,9 +47,8 @@ public abstract class POIMarkerRoomDatabase extends RoomDatabase {
         if (INSTANCE == null) {
             synchronized (POIMarkerRoomDatabase.class) {
                 if (INSTANCE == null) {
-                    INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
-                            POIMarkerRoomDatabase.class, "marker_database")
-                            .addCallback(sRoomDatabaseCallback) // aggiunto per riempire il database
+                    INSTANCE = Room.databaseBuilder(context.getApplicationContext(), POIMarkerRoomDatabase.class, "marker_database")
+                            .addCallback(sRoomDatabaseCallback) // aggiunto per riempire il database;
                             .build();
                 }
             }
@@ -66,6 +65,7 @@ public abstract class POIMarkerRoomDatabase extends RoomDatabase {
             databaseWriteExecutor.execute(() -> {
                 POIMarkerDAO dao = INSTANCE.markerDao();
                 dao.deleteAll();
+                Log.d("ISTANZA", "DB> Inizio procedura di importazione dei dati sui cestini...");
 
                 /*
                     Eseguo un task asincrono per popolare inizialmente il database con dati ottenuti
@@ -88,7 +88,7 @@ public abstract class POIMarkerRoomDatabase extends RoomDatabase {
                         StringBuilder buffer = new StringBuilder();
                         String line;
 
-                        Log.d("ISTANZA", "DB> In attesa dei dati...");
+                        Log.d("ISTANZA", "DB> Dati recuperati. Elaborazione...");
                         long time = System.currentTimeMillis();
                         while ((line = reader.readLine()) != null) {
                             buffer.append(line).append("\n");
@@ -204,5 +204,7 @@ public abstract class POIMarkerRoomDatabase extends RoomDatabase {
         dao.insert(new POIMarker(Set.of(POIMarker.MarkerType.recyclingdepot), 43.72363829574406, 10.417132187214595, "Centro GEOFOR"));
         dao.insert(new POIMarker(Set.of(POIMarker.MarkerType.trashbin_indifferenziato, POIMarker.MarkerType.trashbin_plastica, POIMarker.MarkerType.trashbin_carta), 43.721768389743055, 10.408047122841685, ""));
         dao.insert(new POIMarker(Set.of(POIMarker.MarkerType.trashbin_indifferenziato), 43.72276671037211, 10.436552726467875, ""));
+
+
     }
 }

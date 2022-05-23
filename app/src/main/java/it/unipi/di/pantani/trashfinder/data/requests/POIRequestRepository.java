@@ -42,6 +42,10 @@ public class POIRequestRepository {
         return mPOIRequestDAO.getRequests(userEmail, total, startIndex);
     }
 
+    public LiveData<Integer> getUserRequestNumber(String userEmail) {
+        return mPOIRequestDAO.getUserRequestNumber(userEmail);
+    }
+
     public LiveData<Integer> getRequestNumber() {
         return mPOIRequestDAO.getRequestNumber();
     }

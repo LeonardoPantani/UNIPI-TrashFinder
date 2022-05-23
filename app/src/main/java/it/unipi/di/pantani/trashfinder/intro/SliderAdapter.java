@@ -15,7 +15,7 @@ import it.unipi.di.pantani.trashfinder.Utils;
 import it.unipi.di.pantani.trashfinder.databinding.SlideLayoutBinding;
 
 public class SliderAdapter extends PagerAdapter {
-    private final Context context;
+    private final Context mContext;
 
     public final int[] imagesArray = {
             R.drawable.map_animation,
@@ -39,8 +39,8 @@ public class SliderAdapter extends PagerAdapter {
             R.string.intro_desc_5
     };
 
-    public SliderAdapter(Context context) {
-        this.context = context;
+    public SliderAdapter(Context mContext) {
+        this.mContext = mContext;
     }
 
     @Override
@@ -61,27 +61,27 @@ public class SliderAdapter extends PagerAdapter {
     @NonNull
     @Override
     public Object instantiateItem(@NonNull ViewGroup container, int position) {
-        LayoutInflater li = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater li = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         it.unipi.di.pantani.trashfinder.databinding.SlideLayoutBinding binding = SlideLayoutBinding.inflate(li, container, false);
         View root = binding.getRoot();
 
-        if(Utils.getThemeMode(context) == 1) { // modalità notte attiva
-            binding.constraintLayout.setBackgroundColor(context.getResources().getColor(R.color.darkgray, context.getTheme()));
+        if(Utils.getThemeMode(mContext) == 1) { // modalità notte attiva
+            binding.constraintLayout.setBackgroundColor(mContext.getResources().getColor(R.color.darkgray, mContext.getTheme()));
         }
         binding.slideimg.setImageResource(imagesArray[position]);
-        binding.txtTitle.setText(context.getResources().getString(titleArray[position]));
-        binding.txtDescription.setText(context.getResources().getString(descArray[position]));
+        binding.txtTitle.setText(mContext.getResources().getString(titleArray[position]));
+        binding.txtDescription.setText(mContext.getResources().getString(descArray[position]));
 
         if(position == titleArray.length-2) {
             binding.buttonRequirePermissions.setVisibility(View.VISIBLE);
-            if(checkPerms(context)) {
+            if(checkPerms(mContext)) {
                 binding.buttonRequirePermissions.setEnabled(false);
             }
         }
 
         if(position == titleArray.length-1) {
             binding.buttonEnd.setVisibility(View.VISIBLE);
-            binding.buttonEnd.setText(context.getString(R.string.start_using_app, context.getResources().getString(R.string.app_name)));
+            binding.buttonEnd.setText(mContext.getString(R.string.start_using_app, mContext.getResources().getString(R.string.app_name)));
             binding.arrowNext.setVisibility(View.INVISIBLE);
             binding.txtSwipe.setVisibility(View.INVISIBLE);
         }

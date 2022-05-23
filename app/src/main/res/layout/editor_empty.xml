@@ -8,10 +8,12 @@
     android:layout_marginHorizontal="15dp">
 
     <androidx.constraintlayout.utils.widget.ImageFilterView
+        android:id="@+id/mapeditor_empty_youareineditingmode_image"
         android:src="@drawable/ic_baseline_add_circle_24"
         android:layout_width="50dp"
         android:layout_height="50dp"/>
     <TextView
+        android:id="@+id/mapeditor_empty_youareineditingmode_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/mapeditor_youareineditingmode"

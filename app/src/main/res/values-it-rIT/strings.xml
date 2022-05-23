@@ -140,7 +140,7 @@
     <string name="mapeditor_delete">Elimina il cestino</string>
     <string name="mapeditor_save">Salva le modifiche</string>
     <string name="mapeditor_suredelete">Confermi?</string>
-    <string name="mapeditor_suredelete_desc">Il cestino selezionato sarà eliminato. Non potrai recuperare questa modifica una volta confermata.</string>
+    <string name="mapeditor_suredelete_desc">Una richiesta di eliminazione di questo cestino sarà inviata. Nota: in questa demo, il cestino sarà eliminato.</string>
     <string name="mapeditor_save_new">Crea il cestino</string>
     <string name="mapeditor_marker_new_description">Icona cestino</string>
     <string name="mapeditor_creatingmarker">Stai creando un nuovo cestino. Muovi la mappa in modo da sovrapporre il selettore con la posizione del cestino. In seguito modifica i dettagli del cestino e premi su \"Crea\" quando hai finito.</string>
@@ -176,4 +176,21 @@
     <string name="community_yourcontribute_warning">Per vedere le tue richieste, effettua il login.</string>
     <string name="requests_nothing">Non hai proposto alcun cambiamento alla mappa, per ora.</string>
     <string name="requests_item_imgdesc">Immagine richiesta</string>
+    <string name="requests_item_title">(ric. #%1$d) %3$s %2$s</string>
+    <string name="requests_item_bintypes">Tipi cestino:</string>
+    <string name="requests_item_binimage">Immagine cestino:</string>
+    <string name="mapeditor_warning_new">Ingrandisci un po\' di più per essere più preciso e poter aggiungere il cestino</string>
+    <string name="mapeditor_dialog_warning_title">Impossibile salvare la richiesta</string>
+    <string name="mapeditor_dialog_warning_desc">Ecco una lista di problemi con la tua richiesta:\n%1$s</string>
+    <string name="mapeditor_form_errorempty">Scegli almeno 1 tipo di cestino.</string>
+    <string name="mapeditor_form_errorrdemptytypes">Scegli almeno 1 tipo di spazzatura che l\'isola ecologica accetta.</string>
+    <string name="mapeditor_form_errorphotonottaken">Scatta una foto del cestino che stai aggiungendo alla mappa.</string>
+    <string name="mapeditor_youareineditingmode2">Sei in Modalità Editor. Per modificare un cestino, cliccaci sopra nella mappa.</string>
+    <string name="requests_action_creation">creazione</string>
+    <string name="requests_action_deletion">eliminazione</string>
+    <string name="requests_action_update">modifica</string>
+    <string name="version">%1$s versione %2$s</string>
+    <string name="maps_filter">Filtro</string>
+    <string name="maps_filter_title">Tipi di cestini visibili</string>
+    <string name="maps_bulkeditfilterbutton">Cambia tutti</string>
 </resources>

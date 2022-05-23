@@ -23,7 +23,7 @@ public class CommunityViewModel extends AndroidViewModel {
         return mMarkersRepository.getNumberMarker();
     }
 
-    LiveData<Integer> getRequestNumber() {
-        return mRequestsRepository.getRequestNumber();
+    LiveData<Integer> getUserRequestNumber(String userEmail) {
+        return mRequestsRepository.getUserRequestNumber(userEmail);
     }
 }

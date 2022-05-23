@@ -2,11 +2,9 @@ package it.unipi.di.pantani.trashfinder.data.requests;
 
 import android.content.Context;
 
-import androidx.annotation.NonNull;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
-import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -31,31 +29,10 @@ public abstract class POIRequestRoomDatabase extends RoomDatabase {
         if (INSTANCE == null) {
             synchronized (POIRequestRoomDatabase.class) {
                 if (INSTANCE == null) {
-                    INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
-                                    POIRequestRoomDatabase.class, "request_database")
-                            .addCallback(sRoomDatabaseCallback) // aggiunto per riempire il database
-                            .build();
+                    INSTANCE = Room.databaseBuilder(context.getApplicationContext(), POIRequestRoomDatabase.class, "request_database").build();
                 }
             }
         }
         return INSTANCE;
     }
-
-    private static final RoomDatabase.Callback sRoomDatabaseCallback = new RoomDatabase.Callback() {
-        @Override
-        public void onCreate(@NonNull SupportSQLiteDatabase db) {
-            super.onCreate(db);
-
-            // eseguito al primo avvio
-            databaseWriteExecutor.execute(() -> {
-                POIRequestDAO dao = INSTANCE.requestDAO();
-                dao.deleteAll();
-
-
-                Executors.newSingleThreadExecutor().execute(() -> {
-                    // TODO
-                });
-            });
-        }
-    };
 }

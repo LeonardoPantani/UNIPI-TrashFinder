@@ -23,13 +23,14 @@ import it.unipi.di.pantani.trashfinder.data.marker.POIMarker;
 
 public class POIMarkerWindowAdapter implements GoogleMap.InfoWindowAdapter {
     private final View mWindow;
-    private final int mode;
+    private final int mMode;
+    private final Gson mGson;
 
-    @SuppressLint("InflateParams")
-    public POIMarkerWindowAdapter(Context context, int mode) {
+    public POIMarkerWindowAdapter(Context context, int mMode) {
         super();
-        this.mode = mode;
-        mWindow = LayoutInflater.from(context).inflate(R.layout.marker_window, null);
+        this.mMode = mMode;
+        mGson = new Gson();
+        mWindow = View.inflate(context, R.layout.marker_window, null);
     }
 
     private void renderInfoWindowText(Marker marker, View view) {
@@ -41,7 +42,8 @@ public class POIMarkerWindowAdapter implements GoogleMap.InfoWindowAdapter {
             "m" è il marker che contiene le informazioni dei punti di interesse visualizzati sulla mappa
          */
         String markerSnippet = marker.getSnippet();
-        POIMarker m = new Gson().fromJson(markerSnippet, POIMarker.class);
+        POIMarker m = mGson.fromJson(markerSnippet, POIMarker.class);
+        if(m == null) return;
 
         // textview della infowindow
         TextView infoWindowTitle = view.findViewById(R.id.infowindow_title);
@@ -73,7 +75,7 @@ public class POIMarkerWindowAdapter implements GoogleMap.InfoWindowAdapter {
             view.findViewById(R.id.infowindow_section_notes).setVisibility(View.GONE);
         }
 
-        if(mode == 0) { // sono in visualizzazione
+        if(mMode == 0) { // sono in visualizzazione
             // modifica consiglio della infowindow
             if(areMarkersEqual(marker, getCompassSelectedMarker())) {
                 infoWindowTip.setText(view.getResources().getString(R.string.infowindow_tipitemselected));

@@ -16,15 +16,22 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.preference.PreferenceManager;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
@@ -40,26 +47,37 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
+import com.google.maps.android.clustering.algo.NonHierarchicalViewBasedAlgorithm;
 import com.google.maps.android.collections.MarkerManager;
 
+import java.lang.reflect.Type;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 import it.unipi.di.pantani.trashfinder.R;
+import it.unipi.di.pantani.trashfinder.Utils;
 import it.unipi.di.pantani.trashfinder.data.marker.MyItemOnMap;
 import it.unipi.di.pantani.trashfinder.data.marker.POIMarker;
 
 public class MapsFragment extends Fragment implements OnMapReadyCallback {
     private GoogleMap mMap;
-    private Context context;
+    private Context mContext;
     private SharedPreferences sp;
     private MapsViewModel mMapViewModel;
-    private ProgressBar progressBar;
-    private ClusterManager<MyItemOnMap> clusterManager;
-    private Bundle bundle;
+    private ProgressBar mProgressBar;
+    private ClusterManager<MyItemOnMap> mClusterManager;
+    private Bundle mBundle;
+    private Set<POIMarker.MarkerType> mMarkerTypes;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        sp = PreferenceManager.getDefaultSharedPreferences(context);
+        sp = PreferenceManager.getDefaultSharedPreferences(mContext);
+        setHasOptionsMenu(true);
         // inizializzazione view
         View view = inflater.inflate(R.layout.fragment_maps, container, false);
         // inizializzazione fragment mappa
@@ -68,11 +86,13 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         // mappa asincrona
         supportMapFragment.getMapAsync(this);
         // barra di caricamento
-        progressBar = view.findViewById(R.id.progressbar);
+        mProgressBar = view.findViewById(R.id.progressbar);
+        // menù filtraggio
+        initializeFilter();
         // view model
         mMapViewModel = new ViewModelProvider(this).get(MapsViewModel.class);
         // salvo il bundle
-        bundle = savedInstanceState;
+        mBundle = savedInstanceState;
         // return della view
         return view;
     }
@@ -84,46 +104,39 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         mMap = googleMap;
 
         // attivo la modalità location enabled
-        if(checkPerms(context))
+        if(checkPerms(mContext))
             mMap.setMyLocationEnabled(true);
 
         // aggiorno lo stile di mappa
-        updateMapStyleByPreference(context, mMap);
+        updateMapStyleByPreference(mContext, mMap);
 
         initializeClusterSystem();
     }
 
     public void initializeClusterSystem() {
-        if(clusterManager != null) return;
+        Log.d("ISTANZA", "maps -> inizializzazione sistema cluster");
+        if(mClusterManager != null) return;
 
-        if(bundle != null) {
-            mMap.moveCamera(CameraUpdateFactory.newCameraPosition((CameraPosition) bundle.getParcelable("cp")));
+        if(mBundle != null) {
+            CameraPosition cp = mBundle.getParcelable("cp");
+            if(cp != null)
+                mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cp));
         } else {
-            pointLocation(context, mMap);
+            pointLocation(mContext, mMap);
         }
 
-        progressBar.setVisibility(View.VISIBLE);
-
-        clusterManager = new ClusterManager<>(context, mMap);
-        MarkerManager.Collection markerCollection = clusterManager.getMarkerCollection();
-        mMap.setOnCameraIdleListener(clusterManager);
+        mClusterManager = new ClusterManager<>(mContext, mMap);
+        mClusterManager.setAlgorithm(new NonHierarchicalViewBasedAlgorithm<>(Utils.getScreenWidth(), Utils.getScreenHeight()));
+        MarkerManager.Collection markerCollection = mClusterManager.getMarkerCollection();
+        mMap.setOnCameraIdleListener(mClusterManager);
         mMap.setOnInfoWindowCloseListener(this::onInfoWindowClose);
-        markerCollection.setInfoWindowAdapter(new POIMarkerWindowAdapter(context, 0));
+        mClusterManager.setOnClusterClickListener(this::onClusterClick);
+        markerCollection.setInfoWindowAdapter(new POIMarkerWindowAdapter(mContext, 0));
         markerCollection.setOnMarkerClickListener(this::onMarkerClick);
         markerCollection.setOnInfoWindowClickListener(this::onInfoWindowClick);
 
-        // aggiungo marker alla mappa
-        mMapViewModel.getNearMarkers().observe(getViewLifecycleOwner(), markers -> {
-            Log.d("ISTANZA", "maps -> inizializzazione sistema cluster");
-            for(POIMarker m : markers) {
-                clusterManager.addItem(new MyItemOnMap(m.getLatitude(), m.getLongitude(), getTitleFromMarker(context, m), new Gson().toJson(m)));
-            }
-            clusterManager.cluster();
-
-            if(markers.size() != 0) {
-                progressBar.setVisibility(View.INVISIBLE);
-            }
-        });
+        mProgressBar.setVisibility(View.VISIBLE);
+        refreshMap();
     }
 
     private void onInfoWindowClose(Marker marker) {
@@ -133,6 +146,12 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
+    @SuppressWarnings("SameReturnValue")
+    private boolean onClusterClick(Cluster<MyItemOnMap> item) {
+        return true;
+    }
+
+    @SuppressWarnings("SameReturnValue")
     private boolean onMarkerClick(Marker marker) {
         CameraPosition cameraPosition = new CameraPosition.Builder()
                 .target(new LatLng((marker.getPosition().latitude+0.00025), marker.getPosition().longitude))
@@ -149,7 +168,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         mapIntent.setPackage("com.google.android.apps.maps");
 
         // mostro il pulsante "naviga" solo se c'è un app che supporta l'intent di navigazione
-        if(mapIntent.resolveActivity(context.getPackageManager()) != null && getActivity() != null) {
+        if(mapIntent.resolveActivity(mContext.getPackageManager()) != null && getActivity() != null) {
             ExtendedFloatingActionButton a = getActivity().findViewById(R.id.fab);
             a.setOnClickListener(view -> startActivity(mapIntent));
             a.show();
@@ -185,26 +204,163 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         marker.hideInfoWindow();
     }
 
+    private void initializeFilter() {
+        mMarkerTypes = new HashSet<>();
+        Gson gson = new Gson();
+        Type type = new TypeToken<HashSet<POIMarker.MarkerType>>() {}.getType();
+
+        // recupero da preferenze
+        String toConvert = sp.getString("setting_markerfilter", "");
+        if(toConvert.equals("")) {
+            mMarkerTypes.addAll(Arrays.asList(POIMarker.MarkerType.values()));
+        } else {
+            mMarkerTypes = gson.fromJson(toConvert, type);
+        }
+    }
+
+    // -- Condivisi (salvataggio della select dei tipi di cestini)
+    public void clickFilterMap() {
+        Set<POIMarker.MarkerType> tempTypes = new HashSet<>();
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        builder.setTitle(mContext.getResources().getString(R.string.maps_filter_title));
+
+        // Popolo la checkbox list
+        POIMarker.MarkerType[] elements = new POIMarker.MarkerType[POIMarker.MarkerType.values().length];
+        String[] types = new String[POIMarker.MarkerType.values().length];
+        boolean[] checkedItems = new boolean[POIMarker.MarkerType.values().length];
+
+        int i = 0;
+        for(POIMarker.MarkerType t : POIMarker.MarkerType.values()) {
+            elements[i] = t;
+            types[i] = POIMarker.getMarkerTypeName(mContext, t);
+            checkedItems[i] = mMarkerTypes.contains(t);
+            if(checkedItems[i]) {
+                tempTypes.add(t);
+            }
+            i++;
+        }
+
+        builder.setMultiChoiceItems(types, checkedItems, (dialog, which, isChecked) -> {
+            if(isChecked) {
+                tempTypes.add(elements[which]);
+            } else {
+                tempTypes.remove(elements[which]);
+            }
+        });
+
+        builder.setPositiveButton(R.string.button_ok, (dialog, which) -> {
+            mMarkerTypes = tempTypes;
+            Gson gson = new Gson();
+            Type type = new TypeToken<HashSet<POIMarker.MarkerType>>() {}.getType();
+            Utils.setPreference(mContext, "setting_markerfilter", gson.toJson(mMarkerTypes, type));
+
+            mProgressBar.setVisibility(View.VISIBLE);
+            final Handler handler = new Handler(Looper.getMainLooper());
+            handler.postDelayed(this::refreshMap, 250);
+        });
+        builder.setNegativeButton(R.string.button_cancel, null);
+        builder.setNeutralButton(R.string.maps_bulkeditfilterbutton, null);
+
+        AlertDialog dialog = builder.create();
+        dialog.setOnShowListener(dialogInterface -> {
+            Button button = dialog.getButton(AlertDialog.BUTTON_NEUTRAL);
+            button.setOnClickListener(view -> {
+                ListView checkboxlist = dialog.getListView();
+                boolean newValue;
+                if(tempTypes.size() == POIMarker.MarkerType.values().length) { // se son selezionati tutti
+                    newValue = false;
+                } else if(tempTypes.size() == 0) { // non ce n'è nessuno selezionato
+                    newValue = true;
+                } else { // alcuni sono selezionati
+                    newValue = true;
+                }
+                for (int j = 0; j < checkboxlist.getAdapter().getCount(); j++) {
+                    checkboxlist.setItemChecked(j, newValue);
+                    checkedItems[j] = newValue;
+                    if(!newValue) {
+                        tempTypes.remove(elements[j]);
+                    } else {
+                        tempTypes.add(elements[j]);
+                    }
+                }
+            });
+        });
+
+        dialog.show();
+    }
+
+    /**
+     * Specifica se il marcatore attuale deve essere aggiunto in mappa o no.
+     * @param elem l'elemento da aggiungere
+     * @return vero se l'elemento andrebbe aggiunto, falso altrimenti
+     */
+    private boolean shallAddMarker(Set<POIMarker.MarkerType> elem) {
+        HashSet<POIMarker.MarkerType> a = new HashSet<>(elem);
+        a.retainAll(mMarkerTypes);
+
+        return 0 < a.size();
+    }
+
+    /**
+     * Aggiunge i marcatori alla mappa.
+     */
+    private void refreshMap() {
+        mClusterManager.clearItems();
+
+        mMapViewModel.getNearMarkers().observe(getViewLifecycleOwner(), markers -> {
+            Log.d("ISTANZA", "maps -> aggiornamento marcatori su mappa");
+            Gson gson = new Gson();
+
+            for(POIMarker m : markers) {
+                if(shallAddMarker(m.getTypes())) {
+                    mClusterManager.addItem(new MyItemOnMap(m.getLatitude(), m.getLongitude(), getTitleFromMarker(mContext, m), gson.toJson(m)));
+                }
+            }
+            mClusterManager.cluster();
+
+            if(markers.size() != 0) {
+                mProgressBar.setVisibility(View.INVISIBLE);
+                Log.d("ISTANZA", "maps -> aggiornamento ai marcatori su mappa applicato");
+            }
+        });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.maps_filter) {
+            clickFilterMap();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        menu.findItem(R.id.maps_filter).setVisible(true);
+        super.onPrepareOptionsMenu(menu);
+    }
+
     // -------------
 
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        this.context = context;
+        this.mContext = context;
         Log.d("ISTANZA", "maps -> onAttach");
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        context = null;
+        mContext = null;
         Log.d("ISTANZA", "maps -> onDetach");
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        updateMapStyleByPreference(context, mMap);
+        updateMapStyleByPreference(mContext, mMap);
         Log.d("ISTANZA", "maps -> onResume");
     }
 

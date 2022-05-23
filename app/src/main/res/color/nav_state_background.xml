@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Item premuto (selezionato) -->
+    <item android:alpha="0.4" android:color="?attr/colorSecondaryVariant" android:state_pressed="true" android:state_checked="true"/>
     <!-- Item premuto (non selezionato) -->
     <item android:color="@android:color/transparent" android:state_pressed="true"/>
-    <!-- Item attivo -->
-    <item android:alpha="0.4" android:color="?attr/colorSecondaryVariant" android:state_activated="true"/>
     <!-- Item selezionato -->
     <item android:alpha="0.4" android:color="?attr/colorSecondaryVariant" android:state_checked="true"/>
     <!-- Item default -->

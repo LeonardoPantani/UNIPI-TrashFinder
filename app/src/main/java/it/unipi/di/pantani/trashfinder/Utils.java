@@ -10,14 +10,16 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkCapabilities;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 
 import androidx.core.app.ActivityCompat;
@@ -31,11 +33,19 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 
+import java.net.URLConnection;
+import java.util.HashSet;
+import java.util.Set;
+
+import it.unipi.di.pantani.trashfinder.data.marker.POIMarker;
+
 public abstract class Utils extends Application {
     // indirizzo email a cui sono mandati i feedback
     public static final String FEEDBACK_MAIL = "l.pantani5@studenti.unipi.it";
     // link api. codice pisa: 3600042527 | codice italia: 3600365331 | codice toscana: 3600041977
-    public static final String OSM_IMPORT_STRING = "https://www.overpass-api.de/api/interpreter?data=[out:json];area(id:3600041977)-%3E.searchArea;(node[%22amenity%22=%22waste_basket%22](area.searchArea);node[%22amenity%22=%22waste_disposal%22](area.searchArea);node[%22amenity%22=%22recycling%22](area.searchArea););out%20body;%3E;out%20skel%20qt;";
+    public static final String OSM_IMPORT_STRING = "https://www.overpass-api.de/api/interpreter?data=[out:json];area(id:3600365331)-%3E.searchArea;(node[%22amenity%22=%22waste_basket%22](area.searchArea);node[%22amenity%22=%22waste_disposal%22](area.searchArea);node[%22amenity%22=%22recycling%22](area.searchArea););out%20body;%3E;out%20skel%20qt;";
+    // indirizzo web di open street map
+    public static final String OSM_WEBSITE = "https://www.openstreetmap.org/about";
 
     // coordinate di default nel caso l'utente non dia l'accesso alla posizione
     public static final double DEFAULT_LOCATION_LAT = 41.902782;
@@ -126,6 +136,23 @@ public abstract class Utils extends Application {
     public static void setPreference(Context context, String preferenceName, String preferenceValue) {
         SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
         editor.putString(preferenceName, preferenceValue);
+        editor.apply();
+    }
+
+    /**
+     * Imposta una preferenza
+     * @param context contesto
+     * @param preferenceName nome della preferenza da impostare
+     * @param preferenceValue il valore della preferenza
+     */
+    public static void setPreference(Context context, String preferenceName, Set<POIMarker.MarkerType> preferenceValue) {
+        Set<String> a = new HashSet<>();
+        for(POIMarker.MarkerType t : preferenceValue) {
+            a.add(String.valueOf(t));
+        }
+
+        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        editor.putStringSet(preferenceName, a);
         editor.apply();
     }
 
@@ -233,12 +260,39 @@ public abstract class Utils extends Application {
     }
 
     /**
-     * Restituisce la rotazione del dispositivo.
-     * @param context contesto
-     * @return un intero che definisce la rotazione, usare Surface.ROTATION_x per i tipi di orientamento standard
+     * Restituisce se un uri punta ad un'immagine o no.
+     * @param uri l'uri da verificare
+     * @return vero se l'uri si riferisce ad un'immagine, falso altrimenti
      */
-    @SuppressWarnings("deprecation")
-    public static int getRotation(Context context) {
-        return ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getRotation();
+    public static boolean isImageFile(Uri uri) {
+        if(uri == null) return false;
+        String mimeType = URLConnection.guessContentTypeFromName(uri.getPath());
+        return mimeType != null && mimeType.startsWith("image");
+    }
+
+    /**
+     * Restituisce se il sistema è in grado di scattare foto.
+     * @param context contesto
+     * @return vero se l'intent per scattare una foto darà problemi o no.
+     */
+    public static boolean canTakePhoto(Context context) {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        return takePictureIntent.resolveActivity(context.getPackageManager()) != null;
+    }
+
+    /**
+     * Larghezza schermo
+     * @return la larghezza dello schermo in pixel.
+     */
+    public static int getScreenWidth() {
+        return Resources.getSystem().getDisplayMetrics().widthPixels;
+    }
+
+    /**
+     * Lunghezza schermo
+     * @return la lunghezza dello schermo in pixel.
+     */
+    public static int getScreenHeight() {
+        return Resources.getSystem().getDisplayMetrics().heightPixels;
     }
 }

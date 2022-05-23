@@ -20,28 +20,27 @@ import it.unipi.di.pantani.trashfinder.databinding.FragmentRequestsBinding;
  * A fragment representing a list of Items.
  */
 public class RequestsFragment extends Fragment {
-    private FragmentRequestsBinding binding;
-    private RequestsViewModel mRequestsViewModel;
+    private FragmentRequestsBinding mBinding;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        binding = FragmentRequestsBinding.inflate(inflater, container, false);
-        View root = binding.getRoot();
+        mBinding = FragmentRequestsBinding.inflate(inflater, container, false);
+        View root = mBinding.getRoot();
 
         Context context = root.getContext();
-        RecyclerView recyclerView = (RecyclerView) binding.requestsRv;
+        RecyclerView recyclerView = mBinding.requestsRv;
         RequestsRVAdapter adapter = new RequestsRVAdapter(context, recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.setAdapter(adapter);
 
-        mRequestsViewModel = new ViewModelProvider(this).get(RequestsViewModel.class);
+        RequestsViewModel requestsViewModel = new ViewModelProvider(this).get(RequestsViewModel.class);
 
         // mostro dati
-        mRequestsViewModel.getRequests(Utils.getCurrentUserAccount().getEmail(), 10, 0).observe(getViewLifecycleOwner(), requestsList -> {
+        requestsViewModel.getRequests(Utils.getCurrentUserAccount().getEmail(), 10, 0).observe(getViewLifecycleOwner(), requestsList -> {
             if(requestsList != null && requestsList.size() != 0) {
-                binding.requestsRv.setVisibility(View.VISIBLE);
-                binding.requestsNothing.setVisibility(View.GONE);
+                mBinding.requestsRv.setVisibility(View.VISIBLE);
+                mBinding.requestsNothing.setVisibility(View.GONE);
 
                 adapter.updateList(requestsList);
             }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
@@ -72,6 +73,17 @@
             android:text="@string/mapeditor_save_new"
             android:layout_marginStart="10dp"
             android:layout_weight="0.5"
+            android:enabled="false"
             tools:ignore="ButtonStyle" />
     </LinearLayout>
+    <TextView
+        android:id="@+id/mapeditor_warning_new"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/red"
+        android:drawablePadding="5dp"
+        android:text="@string/mapeditor_warning_new"
+        android:visibility="gone"
+        app:drawableLeftCompat="@drawable/ic_baseline_info_24"
+        app:drawableTint="@color/dark_red"/>
 </LinearLayout>

@@ -19,11 +19,16 @@
     <string name="button_open">Open</string>
     <string name="placeholder">This section is going to be replaced with something else. Who knows what</string>
     <string name="placeholder2">This\\nsection\\nis\\ngoing\\nto\\nbe\\nreplaced\\nwith\\nsomething\\nelse.\\nWho\\nknows\\nwhat</string>
+    <string name="version">%1$s version %2$s</string>
 
     <string name="auth_login_successful">You are now logged in. Welcome back, %1$s!</string>
     <string name="auth_logout_title">Log out</string>
     <string name="auth_logout_desc">You will be able to log in back whenever you want. Remember that you cannot contribute while using this app as a guest.</string>
     <string name="auth_logout_successful">You have been logged out.</string>
+
+    <string name="maps_filter">Filter</string>
+    <string name="maps_filter_title">Types of bins you want to see</string>
+    <string name="maps_bulkeditfilterbutton">Change all</string>
 
     <string name="section_maps">Map</string>
     <string name="section_compass">Compass</string>
@@ -165,13 +170,14 @@
 
     <!-- MAP EDITOR -->
     <string name="mapeditor_youareineditingmode">You are in Editor Mode. Tap to add a new trash bin. To edit one click on it.</string>
+    <string name="mapeditor_youareineditingmode2">You are in Editor Mode. To edit a trash bin, click on it on the map.</string>
     <string name="mapeditor_notes">Notes</string>
     <string name="mapeditor_markertype">Trash bin type</string>
     <string name="mapeditor_editingmarker">You are editing the selected trash bin.</string>
     <string name="mapeditor_delete">Delete trash bin</string>
     <string name="mapeditor_save">Save changes</string>
     <string name="mapeditor_suredelete">Are you sure?</string>
-    <string name="mapeditor_suredelete_desc">The selected trash bin is going to be deleted. You will not be able to recover this edit once done.</string>
+    <string name="mapeditor_suredelete_desc">A request for deletion of this trash bin will be submitted. Note: in this demo, the trash bin will be deleted immediately.</string>
     <string name="mapeditor_save_new">Create trash bin</string>
     <string name="mapeditor_marker_new_description">Trash bin icon</string>
     <string name="mapeditor_creatingmarker">You are creating a new trash bin. Move the map to overlap the selector with the location of the trash bin. Afterwards edit the details of the trash bin. When you have finished press on \"Create\".</string>
@@ -180,6 +186,12 @@
     <string name="mapeditor_photo_new_taken">Photo saved</string>
     <string name="mapeditor_photo_alreadytaken_title">Photo already taken</string>
     <string name="mapeditor_photo_alreadytaken_desc">You can take another photo if you want; the previous one will be discarded.</string>
+    <string name="mapeditor_warning_new">Zoom in a bit more to be more precise to add the trash bin.</string>
+    <string name="mapeditor_dialog_warning_title">Cannot save request</string>
+    <string name="mapeditor_dialog_warning_desc">Here is a list of problems with your request:\\n%1$s</string>
+    <string name="mapeditor_form_errorempty">Choose at least 1 type of trash bin.</string>
+    <string name="mapeditor_form_errorrdemptytypes">Specify at least 1 type of trash that the recycling depot accepts.</string>
+    <string name="mapeditor_form_errorphotonottaken">Take a photo of the trash bin you are adding to the map.</string>
 
     <!-- MARKERS -->
     <string name="infowindow_defaultbintitle">Generic element</string>
@@ -210,7 +222,12 @@
     <string name="markertype_generic">trash bin</string>
 
     <!-- REQUESTS -->
-    <string name="requests_item_title" translatable="false">(#%1$d) %2$s</string>
+    <string name="requests_action_creation">creation</string>
+    <string name="requests_action_deletion">deletion</string>
+    <string name="requests_action_update">update</string>
+    <string name="requests_item_title">(req. #%1$d) %2$s %3$s</string>
     <string name="requests_item_imgdesc">Request image</string>
     <string name="requests_nothing">You have not proposed any changes to the map yet.</string>
+    <string name="requests_item_bintypes">Bin types:</string>
+    <string name="requests_item_binimage">Bin image:</string>
 </resources>

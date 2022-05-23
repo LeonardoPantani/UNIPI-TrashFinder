@@ -25,6 +25,9 @@ public interface POIRequestDAO {
     @Query("SELECT * FROM poirequest_table WHERE userEmail = :userEmail ORDER BY date DESC LIMIT :total OFFSET :startIndex")
     LiveData<List<POIRequest>> getRequests(String userEmail, int total, int startIndex);
 
+    @Query("SELECT COUNT(*) FROM poirequest_table WHERE userEmail = :userEmail")
+    LiveData<Integer> getUserRequestNumber(String userEmail);
+
     @Query("SELECT COUNT(*) FROM poirequest_table")
     LiveData<Integer> getRequestNumber();
 }

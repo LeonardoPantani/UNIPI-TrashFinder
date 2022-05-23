@@ -17,16 +17,16 @@ import it.unipi.di.pantani.trashfinder.Utils;
 import it.unipi.di.pantani.trashfinder.databinding.ActivityFeedbackBinding;
 
 public class FeedbackActivity extends AppCompatActivity {
-    private ActivityFeedbackBinding binding;
+    private ActivityFeedbackBinding mBinding;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityFeedbackBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+        mBinding = ActivityFeedbackBinding.inflate(getLayoutInflater());
+        setContentView(mBinding.getRoot());
 
         // applico il listener al pulsante "invio feedback"
-        binding.feedbackSend.setOnClickListener(this::onClickSend);
+        mBinding.feedbackSend.setOnClickListener(this::onClickSend);
 
         // metto nella actionbar la possibilità di tornare indietro
         ActionBar actionBar = getSupportActionBar();
@@ -38,16 +38,16 @@ public class FeedbackActivity extends AppCompatActivity {
     private boolean validateForm() {
         boolean valid = true;
 
-        int type = binding.feedbackType.getCheckedRadioButtonId();
+        int type = mBinding.feedbackType.getCheckedRadioButtonId();
         if(type != R.id.feedback_type_error && type != R.id.feedback_type_suggestion) {
-            binding.feedbackTypeError.setError(getResources().getString(R.string.feedback_type_field_error));
-            binding.feedbackTypeSuggestion.setError(getResources().getString(R.string.feedback_type_field_error));
+            mBinding.feedbackTypeError.setError(getResources().getString(R.string.feedback_type_field_error));
+            mBinding.feedbackTypeSuggestion.setError(getResources().getString(R.string.feedback_type_field_error));
             valid = false;
         }
 
-        String text = binding.feedbackText.getText().toString();
+        String text = mBinding.feedbackText.getText().toString();
         if(text.length() < 10 || text.length() > 500) {
-            binding.feedbackText.setError(getResources().getString(R.string.feedback_text_error));
+            mBinding.feedbackText.setError(getResources().getString(R.string.feedback_text_error));
             valid = false;
         }
 
@@ -65,11 +65,11 @@ public class FeedbackActivity extends AppCompatActivity {
         Intent i = new Intent(Intent.ACTION_SENDTO);
         i.setData(Uri.parse("mailto:"));
         i.putExtra(Intent.EXTRA_EMAIL, new String[] {Utils.FEEDBACK_MAIL});
-        i.putExtra(Intent.EXTRA_TEXT, binding.feedbackText.getText().toString());
+        i.putExtra(Intent.EXTRA_TEXT, mBinding.feedbackText.getText().toString());
         String subject;
-        if(binding.feedbackType.getCheckedRadioButtonId() == R.id.feedback_type_error) {
+        if(mBinding.feedbackType.getCheckedRadioButtonId() == R.id.feedback_type_error) {
             subject = "Error";
-        } else if(binding.feedbackType.getCheckedRadioButtonId() == R.id.feedback_type_suggestion) {
+        } else if(mBinding.feedbackType.getCheckedRadioButtonId() == R.id.feedback_type_suggestion) {
             subject = "Suggestion";
         } else {
             subject = "Other";

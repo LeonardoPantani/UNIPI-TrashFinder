@@ -100,8 +100,8 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="2"
-            android:textSize="14sp"
-            android:textColor="#777"
-            android:text="@string/placeholder" />
+            android:text="@string/placeholder"
+            android:textColor="#757575"
+            android:textSize="14sp" />
     </LinearLayout>
 </LinearLayout>

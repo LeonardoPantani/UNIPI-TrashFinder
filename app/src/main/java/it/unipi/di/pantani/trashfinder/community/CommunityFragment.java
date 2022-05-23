@@ -13,29 +13,31 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
+import java.util.Random;
+
 import it.unipi.di.pantani.trashfinder.R;
 import it.unipi.di.pantani.trashfinder.Utils;
 import it.unipi.di.pantani.trashfinder.databinding.FragmentCommunityBinding;
 
 public class CommunityFragment extends Fragment {
-    private FragmentCommunityBinding binding;
+    private FragmentCommunityBinding mBinding;
     private CommunityViewModel mCommunityViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        binding = FragmentCommunityBinding.inflate(inflater, container, false);
-        View root = binding.getRoot();
+        mBinding = FragmentCommunityBinding.inflate(inflater, container, false);
+        View root = mBinding.getRoot();
 
-        binding.communityYourcontributeProposedchanges.setText(String.valueOf(0));
-        binding.communityYourcontributeEvaluatedechanges.setText(String.valueOf(0));
-        binding.communityGeneralstatsNumbertrashbins.setText(String.valueOf(0));
-        binding.communityGeneralstatsNumberchanges.setText(String.valueOf(0));
+        mBinding.communityYourcontributeProposedchanges.setText(String.valueOf(0));
+        mBinding.communityYourcontributeEvaluatedechanges.setText(String.valueOf(0));
+        mBinding.communityGeneralstatsNumbertrashbins.setText(String.valueOf(0));
+        mBinding.communityGeneralstatsNumberchanges.setText(String.valueOf(0));
 
         // applico il listener alla card "apri editor mappa"
-        binding.communityCardOpenmapeditor.setOnClickListener(this::onClickOpen);
+        mBinding.communityCardOpenmapeditor.setOnClickListener(this::onClickOpen);
 
         // applico il listener al pulsante "le tue richieste"
-        binding.communityCardYourcontributionButton.setOnClickListener(this::onClickYourChanges);
+        mBinding.communityCardYourcontributionButton.setOnClickListener(this::onClickYourChanges);
 
         // view model
         mCommunityViewModel = new ViewModelProvider(this).get(CommunityViewModel.class);
@@ -46,7 +48,7 @@ public class CommunityFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        binding = null;
+        mBinding = null;
     }
 
     /**
@@ -75,21 +77,25 @@ public class CommunityFragment extends Fragment {
     }
 
     private void updateCards() {
+        // mostro dati
+        mCommunityViewModel.getMarkerNumber().observe(getViewLifecycleOwner(), numberOfBins -> {
+            mBinding.communityGeneralstatsNumbertrashbins.setText(String.valueOf(numberOfBins));
+            mBinding.communityGeneralstatsNumberchanges.setText(String.valueOf(new Random().nextInt(100000) + numberOfBins));
+        });
+
         if(Utils.getCurrentUserAccount() != null) {
-            binding.communityCardCannotcontribute.setVisibility(View.GONE);
+            mBinding.communityCardCannotcontribute.setVisibility(View.GONE);
 
-            binding.communityCardYourcontribution.setVisibility(View.VISIBLE);
-            binding.communityCardOpenmapeditor.setVisibility(View.VISIBLE);
+            mBinding.communityCardYourcontribution.setVisibility(View.VISIBLE);
+            mBinding.communityCardOpenmapeditor.setVisibility(View.VISIBLE);
 
-            // mostro dati
-            mCommunityViewModel.getMarkerNumber().observe(getViewLifecycleOwner(), numberOfBins -> binding.communityGeneralstatsNumbertrashbins.setText(String.valueOf(numberOfBins)));
             if(Utils.getCurrentUserAccount() != null)
-                mCommunityViewModel.getRequestNumber().observe(getViewLifecycleOwner(), numberOfRequests -> binding.communityYourcontributeProposedchanges.setText(String.valueOf(numberOfRequests)));
+                mCommunityViewModel.getUserRequestNumber(Utils.getCurrentUserAccount().getEmail()).observe(getViewLifecycleOwner(), numberOfOwnRequests -> mBinding.communityYourcontributeProposedchanges.setText(String.valueOf(numberOfOwnRequests)));
         } else {
-            binding.communityCardCannotcontribute.setVisibility(View.VISIBLE);
+            mBinding.communityCardCannotcontribute.setVisibility(View.VISIBLE);
 
-            binding.communityCardYourcontribution.setVisibility(View.GONE);
-            binding.communityCardOpenmapeditor.setVisibility(View.GONE);
+            mBinding.communityCardYourcontribution.setVisibility(View.GONE);
+            mBinding.communityCardOpenmapeditor.setVisibility(View.GONE);
         }
     }
 

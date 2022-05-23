@@ -1,6 +1,5 @@
 package it.unipi.di.pantani.trashfinder.data.requests;
 
-import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
@@ -13,7 +12,6 @@ public class POIRequest {
     @PrimaryKey(autoGenerate = true)
     private int id;
 
-    @NonNull
     private final POIMarker element;
 
     private final long date;
@@ -22,8 +20,15 @@ public class POIRequest {
 
     private final String userEmail;
 
-    public POIRequest(@NonNull POIMarker element, long date, String imageLink, String userEmail) {
+    /**
+     * se vero:  this.element contiene l'elemento candidato per l'eliminazione
+     * se falso: this.element contiene l'elemento aggiornato della richiesta
+     */
+    private final boolean deletion;
+
+    public POIRequest(POIMarker element, long date, String imageLink, String userEmail, boolean deletion) {
         this.element = element;
+        this.deletion = deletion;
         this.date = date;
         this.imageLink = imageLink;
         this.userEmail = userEmail;
@@ -34,9 +39,16 @@ public class POIRequest {
         return id;
     }
 
-    @NonNull
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public POIMarker getElement() {
         return element;
+    }
+
+    public boolean getDeletion() {
+        return deletion;
     }
 
     public long getDate() {
@@ -49,9 +61,5 @@ public class POIRequest {
 
     public String getUserEmail() {
         return userEmail;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 }

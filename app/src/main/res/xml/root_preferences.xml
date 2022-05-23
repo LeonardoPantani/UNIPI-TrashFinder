@@ -63,16 +63,21 @@
         app:title="@string/credits_settings"
         app:icon="@drawable/ic_baseline_info_24">
         <Preference
-            android:key="pref_static_field_key"
-            android:selectable="false"
+            android:key="settingstatic_osm"
             android:persistent="false"
             android:title=""
             android:summary="@string/credits_map"/>
         <Preference
-            android:key="pref_static_field_key"
+            android:key="settingstatic_author"
             android:selectable="false"
             android:persistent="false"
             android:title=""
             android:summary="@string/credits"/>
+        <Preference
+            android:key="settingstatic_version"
+            android:selectable="false"
+            android:persistent="false"
+            android:title=""
+            android:summary="@string/version"/>
     </PreferenceCategory>
 </PreferenceScreen>
