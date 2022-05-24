@@ -32,6 +32,7 @@
         android:contentDescription="@string/fab_description"
         android:text="@string/button_navigate"
         android:visibility="gone"
-        app:icon="@drawable/ic_baseline_compass_24"/>
+        android:backgroundTint="@color/beige_200"
+        app:icon="@drawable/ic_baseline_directions_24"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

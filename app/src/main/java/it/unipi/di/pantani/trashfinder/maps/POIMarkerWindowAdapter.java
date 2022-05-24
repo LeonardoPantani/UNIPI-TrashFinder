@@ -3,9 +3,7 @@ package it.unipi.di.pantani.trashfinder.maps;
 import static it.unipi.di.pantani.trashfinder.Utils.getCompassSelectedMarker;
 import static it.unipi.di.pantani.trashfinder.Utils.getEditorSelectedMarker;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 

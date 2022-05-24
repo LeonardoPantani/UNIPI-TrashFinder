@@ -231,7 +231,7 @@ public class MainActivity extends AppCompatActivity implements NavController.OnD
             alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getResources().getString(R.string.button_ok),
                     (dialog, which) -> {
                         mGoogleSignInClient.signOut();
-                        setTextNavDrawer(null, null, null);
+                        setTextNavDrawer(false, null, null);
                         setCurrentUserAccount(null);
                         Toast.makeText(this,R.string.auth_logout_successful, Toast.LENGTH_SHORT).show();
                         /*
@@ -261,7 +261,7 @@ public class MainActivity extends AppCompatActivity implements NavController.OnD
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
             setCurrentUserAccount(account);
             // utente collegato, aggiorno UI
-            setTextNavDrawer(account.getDisplayName(), account.getEmail(), account.getPhotoUrl());
+            setTextNavDrawer(true, account.getDisplayName(), account.getPhotoUrl());
             Toast.makeText(this, getResources().getString(R.string.auth_login_successful, account.getDisplayName()), Toast.LENGTH_SHORT).show();
         } catch (ApiException e) {
             // errore (l'utente ha annullato il login)
@@ -269,14 +269,14 @@ public class MainActivity extends AppCompatActivity implements NavController.OnD
         }
     }
 
-    private void setTextNavDrawer(String title, String subTitle, Uri image) {
+    private void setTextNavDrawer(boolean logged, String displayName, Uri image) {
         if(mBinding == null) return;
 
         View navHeader = mBinding.navView.getHeaderView(0);
 
-        if(title != null && subTitle != null && image != null) {
-            ((TextView)navHeader.findViewById(R.id.nav_header_title)).setText(title);
-            ((TextView)navHeader.findViewById(R.id.nav_header_subtitle)).setText(subTitle);
+        if(logged) {
+            ((TextView)navHeader.findViewById(R.id.nav_header_title)).setText(displayName);
+            ((TextView)navHeader.findViewById(R.id.nav_header_subtitle)).setText(getResources().getString(R.string.nav_header_subtitle_logged));
 
             mNavigationView.getMenu().findItem(R.id.nav_mapeditor).setEnabled(true);
         } else {
@@ -299,10 +299,10 @@ public class MainActivity extends AppCompatActivity implements NavController.OnD
     private void initializeAccount() {
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
         if(account != null) {
-            setTextNavDrawer(account.getDisplayName(), account.getEmail(), account.getPhotoUrl());
+            setTextNavDrawer(true, account.getDisplayName(), account.getPhotoUrl());
             setCurrentUserAccount(account);
         } else {
-            setTextNavDrawer(null, null, null);
+            setTextNavDrawer(false, null, null);
             setCurrentUserAccount(null);
         }
     }

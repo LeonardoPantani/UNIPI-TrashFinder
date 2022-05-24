@@ -42,6 +42,8 @@ import it.unipi.di.pantani.trashfinder.data.marker.POIMarker;
 public abstract class Utils extends Application {
     // indirizzo email a cui sono mandati i feedback
     public static final String FEEDBACK_MAIL = "l.pantani5@studenti.unipi.it";
+    // link file contenente dati cestini (simula API)
+    public static final String API_IMPORT_STRING = "https://drive.google.com/uc?id=1AHojX745Ok30wwgy_SGdSkioAu-EsHnh";
     // link api. codice pisa: 3600042527 | codice italia: 3600365331 | codice toscana: 3600041977
     public static final String OSM_IMPORT_STRING = "https://www.overpass-api.de/api/interpreter?data=[out:json];area(id:3600365331)-%3E.searchArea;(node[%22amenity%22=%22waste_basket%22](area.searchArea);node[%22amenity%22=%22waste_disposal%22](area.searchArea);node[%22amenity%22=%22recycling%22](area.searchArea););out%20body;%3E;out%20skel%20qt;";
     // indirizzo web di open street map
@@ -190,7 +192,6 @@ public abstract class Utils extends Application {
         }
     }
 
-
     /**
      * Aggiorno lo stile di mappa secondo le preferenze dell'utente
      * @param context contesto
@@ -268,6 +269,17 @@ public abstract class Utils extends Application {
         if(uri == null) return false;
         String mimeType = URLConnection.guessContentTypeFromName(uri.getPath());
         return mimeType != null && mimeType.startsWith("image");
+    }
+
+    /**
+     * Restituisce se il sistema è in grado di aprire la navigazione.
+     * @param context contesto
+     * @return vero se l'intent per navigare verso una posizione darà problemi o no.
+     */
+    public static boolean canNavigate(Context context) {
+        Uri gmmIntentUri = Uri.parse("google.navigation:q=0.0,0.0");
+        Intent navigateIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+        return navigateIntent.resolveActivity(context.getPackageManager()) != null;
     }
 
     /**

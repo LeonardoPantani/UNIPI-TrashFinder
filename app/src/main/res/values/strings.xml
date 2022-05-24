@@ -22,6 +22,7 @@
     <string name="version">%1$s version %2$s</string>
 
     <string name="auth_login_successful">You are now logged in. Welcome back, %1$s!</string>
+    <string name="auth_login_failed">Login failed. Error code: %1$d</string>
     <string name="auth_logout_title">Log out</string>
     <string name="auth_logout_desc">You will be able to log in back whenever you want. Remember that you cannot contribute while using this app as a guest.</string>
     <string name="auth_logout_successful">You have been logged out.</string>
@@ -130,6 +131,7 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Guest User</string>
     <string name="nav_header_subtitle">Tap here to log in.</string>
+    <string name="nav_header_subtitle_logged">Tap here to log out.</string>
     <string name="nav_header_desc">Navigation header</string>
 
     <!-- FEEDBACK -->
@@ -230,4 +232,7 @@
     <string name="requests_nothing">You have not proposed any changes to the map yet.</string>
     <string name="requests_item_bintypes">Bin types:</string>
     <string name="requests_item_binimage">Bin image:</string>
+    <string name="requests_navigation_imagedesc">Button navigate to bin location</string>
+    <string name="requests_navigation_title">Navigate to the bin location?</string>
+    <string name="requests_navigation_desc">Your phone\'s default app for navigation will be opened.</string>
 </resources>

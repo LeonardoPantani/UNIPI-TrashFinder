@@ -10,13 +10,14 @@ import androidx.room.TypeConverters;
 import com.google.android.gms.maps.model.Marker;
 import com.google.gson.Gson;
 
+import java.io.Serializable;
 import java.util.Set;
 
 import it.unipi.di.pantani.trashfinder.R;
 
 @Entity(tableName = "marker_table")
 @TypeConverters(ListConverter.class)
-public class POIMarker {
+public class POIMarker implements Serializable {
     @PrimaryKey(autoGenerate = true)
     private int id;
 

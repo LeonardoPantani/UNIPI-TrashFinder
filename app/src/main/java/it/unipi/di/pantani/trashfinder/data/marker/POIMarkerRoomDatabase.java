@@ -1,5 +1,6 @@
 package it.unipi.di.pantani.trashfinder.data.marker;
 
+import static it.unipi.di.pantani.trashfinder.Utils.API_IMPORT_STRING;
 import static it.unipi.di.pantani.trashfinder.Utils.OSM_IMPORT_STRING;
 
 import android.content.Context;
@@ -73,128 +74,151 @@ public abstract class POIMarkerRoomDatabase extends RoomDatabase {
                     esterna non va a buon fine carico (pochi) dati di prova.
                  */
                 Executors.newSingleThreadExecutor().execute(() -> {
-                    HttpURLConnection connection = null;
-                    BufferedReader reader = null;
+                    long time = System.currentTimeMillis();
+                    int amount = 0;
+
+                    String buffer;
+                    buffer = downloadData(API_IMPORT_STRING);
+                    if (buffer == null) buffer = downloadData(OSM_IMPORT_STRING);
+                    if (buffer == null) { manualAdd(); return; }
 
                     try {
-                        URL url = new URL(OSM_IMPORT_STRING);
-                        connection = (HttpURLConnection) url.openConnection();
-                        connection.connect();
+                        JSONObject response = new JSONObject(buffer);
+                        JSONArray responseArr = response.getJSONArray("elements");
 
-                        InputStream stream = connection.getInputStream();
+                        for (int i = 0; i < responseArr.length(); i++) {
+                            String elementStr = responseArr.getString(i);
+                            JSONObject elementObj = new JSONObject(elementStr);
 
-                        reader = new BufferedReader(new InputStreamReader(stream));
-
-                        StringBuilder buffer = new StringBuilder();
-                        String line;
-
-                        Log.d("ISTANZA", "DB> Dati recuperati. Elaborazione...");
-                        long time = System.currentTimeMillis();
-                        while ((line = reader.readLine()) != null) {
-                            buffer.append(line).append("\n");
-                        }
-                        try {
-                            JSONObject response = new JSONObject(buffer.toString());
-                            JSONArray responseArr = response.getJSONArray("elements");
-
-                            for (int i = 0; i < responseArr.length(); i++) {
-                                String elementStr = responseArr.getString(i);
-                                JSONObject elementObj = new JSONObject(elementStr);
-
-                                Set<POIMarker.MarkerType> types = new HashSet<>();
-                                if(elementObj.getJSONObject("tags").get("amenity").equals("recycling")) {
-                                    for (Iterator<String> it = elementObj.getJSONObject("tags").keys(); it.hasNext(); ) {
-                                        String type = it.next();
-                                        switch(type) {
-                                            case "recycling:cans":
-                                            case "recycling:aluminium_cans":
-                                            case "recycling:aluminium": {
-                                                types.add(POIMarker.MarkerType.trashbin_alluminio);
-                                                break;
-                                            }
-                                            case "recycling:batteries": {
-                                                types.add(POIMarker.MarkerType.trashbin_pile);
-                                                break;
-                                            }
-                                            case "recycling:glass_bottles":
-                                            case "recycling:glass": {
-                                                types.add(POIMarker.MarkerType.trashbin_vetro);
-                                                break;
-                                            }
-                                            case "recycling:beverage_cartons":
-                                            case "recycling:cartons":
-                                            case "recycling:paper_packaging":
-                                            case "recycling:paper": {
-                                                types.add(POIMarker.MarkerType.trashbin_carta);
-                                                break;
-                                            }
-                                            case "recycling:clothes": {
-                                                types.add(POIMarker.MarkerType.trashbin_vestiti);
-                                                break;
-                                            }
-                                            case "recycling:PET":
-                                            case "recycling:plastic_packaging":
-                                            case "recycling:plastic_bottles":
-                                            case "recycling:plastic": {
-                                                types.add(POIMarker.MarkerType.trashbin_plastica);
-                                                break;
-                                            }
-                                            case "recycling:organic":
-                                            case "recycling:garden_waste":
-                                            case "recycling:green_waste": {
-                                                types.add(POIMarker.MarkerType.trashbin_organico);
-                                                break;
-                                            }
-                                            case "recycling:drugs": {
-                                                types.add(POIMarker.MarkerType.trashbin_farmaci);
-                                                break;
-                                            }
-                                            case "recycling:waste_oil":
-                                            case "recycling:engine_oil":
-                                            case "recycling:cooking_oil":
-                                            case "recycling:oil": {
-                                                types.add(POIMarker.MarkerType.trashbin_olio);
-                                                break;
-                                            }
-                                            case "recycling:waste":
-                                            default: {
-                                                types.add(POIMarker.MarkerType.trashbin_indifferenziato);
-                                                break;
-                                            }
+                            Set<POIMarker.MarkerType> types = new HashSet<>();
+                            if (elementObj.getJSONObject("tags").get("amenity").equals("recycling")) {
+                                for (Iterator<String> it = elementObj.getJSONObject("tags").keys(); it.hasNext(); ) {
+                                    String type = it.next();
+                                    switch (type) {
+                                        case "recycling:cans":
+                                        case "recycling:aluminium_cans":
+                                        case "recycling:aluminium": {
+                                            types.add(POIMarker.MarkerType.trashbin_alluminio);
+                                            break;
+                                        }
+                                        case "recycling:batteries": {
+                                            types.add(POIMarker.MarkerType.trashbin_pile);
+                                            break;
+                                        }
+                                        case "recycling:glass_bottles":
+                                        case "recycling:glass": {
+                                            types.add(POIMarker.MarkerType.trashbin_vetro);
+                                            break;
+                                        }
+                                        case "recycling:beverage_cartons":
+                                        case "recycling:cartons":
+                                        case "recycling:paper_packaging":
+                                        case "recycling:paper": {
+                                            types.add(POIMarker.MarkerType.trashbin_carta);
+                                            break;
+                                        }
+                                        case "recycling:clothes": {
+                                            types.add(POIMarker.MarkerType.trashbin_vestiti);
+                                            break;
+                                        }
+                                        case "recycling:PET":
+                                        case "recycling:plastic_packaging":
+                                        case "recycling:plastic_bottles":
+                                        case "recycling:plastic": {
+                                            types.add(POIMarker.MarkerType.trashbin_plastica);
+                                            break;
+                                        }
+                                        case "recycling:organic":
+                                        case "recycling:garden_waste":
+                                        case "recycling:green_waste": {
+                                            types.add(POIMarker.MarkerType.trashbin_organico);
+                                            break;
+                                        }
+                                        case "recycling:drugs": {
+                                            types.add(POIMarker.MarkerType.trashbin_farmaci);
+                                            break;
+                                        }
+                                        case "recycling:waste_oil":
+                                        case "recycling:engine_oil":
+                                        case "recycling:cooking_oil":
+                                        case "recycling:oil": {
+                                            types.add(POIMarker.MarkerType.trashbin_olio);
+                                            break;
+                                        }
+                                        case "recycling:waste":
+                                        default: {
+                                            types.add(POIMarker.MarkerType.trashbin_indifferenziato);
+                                            break;
                                         }
                                     }
-                                } else if(elementObj.getJSONObject("tags").get("amenity").equals("waste_transfer_station")) {
-                                    types.add(POIMarker.MarkerType.recyclingdepot);
-                                } else {
-                                    types.add(POIMarker.MarkerType.trashbin_indifferenziato);
                                 }
-                                dao.insert(new POIMarker(types, elementObj.getDouble("lat"), elementObj.getDouble("lon"), ""));
+                            } else if (elementObj.getJSONObject("tags").get("amenity").equals("waste_transfer_station")) {
+                                types.add(POIMarker.MarkerType.recyclingdepot);
+                            } else {
+                                types.add(POIMarker.MarkerType.trashbin_indifferenziato);
                             }
-                        } catch (JSONException e) { // errore json
-                            e.printStackTrace();
-                            manualAdd();
+                            dao.insert(new POIMarker(types, elementObj.getDouble("lat"), elementObj.getDouble("lon"), ""));
+                            amount++;
                         }
-
-                        Log.d("ISTANZA", "DB> Dati salvati e lista dei POI pronta (" + (System.currentTimeMillis()-time) + "ms).");
-                    } catch (IOException e) { // errore input output (connessione di solito)
+                    } catch (JSONException e) { // errore json
                         e.printStackTrace();
                         manualAdd();
-                    } finally {
-                        if (connection != null) {
-                            connection.disconnect();
-                        }
-                        try {
-                            if (reader != null) {
-                                reader.close();
-                            }
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
                     }
+
+                    Log.d("ISTANZA", "DB> Dati salvati e lista dei " + amount + " POI pronta (" + (System.currentTimeMillis() - time) + "ms).");
                 });
             });
         }
     };
+
+
+    private static String downloadData(final String inputUrl) {
+        String ret = null;
+
+        HttpURLConnection connection = null;
+        BufferedReader reader = null;
+
+        try {
+            Log.d("ISTANZA", "DB> URL recupero: '" + inputUrl + "'.");
+            URL url = new URL(API_IMPORT_STRING);
+            connection = (HttpURLConnection) url.openConnection();
+            HttpURLConnection.setFollowRedirects(false);
+            connection.setConnectTimeout(5 * 1000);
+            connection.connect();
+            Log.d("ISTANZA", "DB> Connesso a '" + inputUrl + "'.");
+
+            InputStream stream = connection.getInputStream();
+
+            reader = new BufferedReader(new InputStreamReader(stream));
+
+            StringBuilder buffer = new StringBuilder();
+            String line;
+
+            Log.d("ISTANZA", "DB> Dati recuperati da '" + inputUrl + "'. Elaborazione...");
+            long time = System.currentTimeMillis();
+            while ((line = reader.readLine()) != null) {
+                buffer.append(line).append("\n");
+            }
+
+            return buffer.toString();
+        } catch (IOException e) { // errore input output (connessione probabilmente)
+            Log.d("ISTANZA", "DB> Errore durante il recupero dei dati da '" + inputUrl + "'.");
+            e.printStackTrace();
+        } finally {
+            if (connection != null) {
+                connection.disconnect();
+            }
+            try {
+                if (reader != null) {
+                    reader.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return null;
+    }
 
     private static void manualAdd() {
         // eseguito al primo avvio
@@ -204,7 +228,5 @@ public abstract class POIMarkerRoomDatabase extends RoomDatabase {
         dao.insert(new POIMarker(Set.of(POIMarker.MarkerType.recyclingdepot), 43.72363829574406, 10.417132187214595, "Centro GEOFOR"));
         dao.insert(new POIMarker(Set.of(POIMarker.MarkerType.trashbin_indifferenziato, POIMarker.MarkerType.trashbin_plastica, POIMarker.MarkerType.trashbin_carta), 43.721768389743055, 10.408047122841685, ""));
         dao.insert(new POIMarker(Set.of(POIMarker.MarkerType.trashbin_indifferenziato), 43.72276671037211, 10.436552726467875, ""));
-
-
     }
 }

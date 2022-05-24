@@ -29,6 +29,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,7 +54,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Set;
 
 import it.unipi.di.pantani.trashfinder.R;
 import it.unipi.di.pantani.trashfinder.Utils;
@@ -78,12 +79,10 @@ public class MapEditorFragment extends Fragment implements OnMapReadyCallback {
     private EditorFormBinding mBindingForm;
     private EditorFormNewBinding mBindingFormNew;
 
-    private POIMarker mPOIMarkerSelected;
-    private Marker mMarkerSelected;
-    private Set<POIMarker.MarkerType> mMarkerTypes;
-
     private Bundle mBundle;
-    private int mCurrentView = 0;
+
+    private POIMarker mPOIMarkerSelected;
+    private HashSet<POIMarker.MarkerType> mMarkerTypes;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -132,21 +131,6 @@ public class MapEditorFragment extends Fragment implements OnMapReadyCallback {
 
         // salvo il bundle
         mBundle = savedInstanceState;
-
-        if(mBundle != null) { // TODO salvare marker attualmente selezionato e posizione su mappa in caso di modifiche al config (tipo rotazione)
-            if(mBundle.containsKey("mode")) {
-                switch(mBundle.getInt("mode")) {
-                    case 0:
-                        break;
-                    case 1:
-                        break;
-                    case 2:
-                        break;
-                    default:
-                        break;
-                }
-            }
-        }
 
         // return della view
         return root;
@@ -252,8 +236,6 @@ public class MapEditorFragment extends Fragment implements OnMapReadyCallback {
 
     // -- MODALITA' EDITING
     private void enableEditingMode(Marker marker) {
-        mCurrentView = 1;
-
         mMap.getUiSettings().setScrollGesturesEnabled(false);
         mMap.getUiSettings().setZoomGesturesEnabled(false);
         mMap.getUiSettings().setMyLocationButtonEnabled(false);
@@ -262,7 +244,6 @@ public class MapEditorFragment extends Fragment implements OnMapReadyCallback {
 
         POIMarker m = getPOIMarkerByMarker(marker);
         mPOIMarkerSelected = m;
-        mMarkerSelected = marker;
         setEditorSelectedMarker(marker);
 
         mBinding.mapeditorSectionForm.removeAllViews();
@@ -273,14 +254,11 @@ public class MapEditorFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void disableEditingMode() {
-        mCurrentView = 0;
-
         mMap.getUiSettings().setScrollGesturesEnabled(true);
         mMap.getUiSettings().setZoomGesturesEnabled(true);
         mMap.getUiSettings().setMyLocationButtonEnabled(true);
 
         mPOIMarkerSelected = null;
-        mMarkerSelected = null;
 
         // chiude la tastiera
         if(getActivity() != null) Utils.closeKeyboard(getActivity());
@@ -311,7 +289,6 @@ public class MapEditorFragment extends Fragment implements OnMapReadyCallback {
 
                     // SOLO PERCHE' E' UNA DEMO
                     mMapViewModel.delete(mPOIMarkerSelected);
-                    mMarkerSelected.remove();
 
                     disableEditingMode();
                 });
@@ -349,7 +326,6 @@ public class MapEditorFragment extends Fragment implements OnMapReadyCallback {
 
     // -- MODALITA' CREAZIONE
     private void enableCreationMode() {
-        mCurrentView = 2;
         mCustomRenderer.setZoomChangeListener(this::onZoomChange);
 
         mBinding.mapeditorMarkericon.setVisibility(View.VISIBLE);
@@ -359,7 +335,6 @@ public class MapEditorFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void disableCreationMode() {
-        mCurrentView = 0;
         mCustomRenderer.unsetZoomChangeListener();
 
         if(getActivity() != null) Utils.closeKeyboard(getActivity()); // chiude la tastiera
@@ -455,7 +430,7 @@ public class MapEditorFragment extends Fragment implements OnMapReadyCallback {
 
     // -- Condivisi (salvataggio della select dei tipi di cestini)
     private void saveEditMarkerType(View view) {
-        Set<POIMarker.MarkerType> tempTypes = new HashSet<>();
+        HashSet<POIMarker.MarkerType> tempTypes = new HashSet<>();
 
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         builder.setTitle(mContext.getResources().getString(R.string.mapeditor_markertype));
@@ -486,8 +461,33 @@ public class MapEditorFragment extends Fragment implements OnMapReadyCallback {
 
         builder.setPositiveButton(R.string.button_ok, (dialog, which) -> mMarkerTypes = tempTypes);
         builder.setNegativeButton(R.string.button_cancel, null);
+        builder.setNeutralButton(R.string.maps_bulkeditfilterbutton, null);
 
         AlertDialog dialog = builder.create();
+        dialog.setOnShowListener(dialogInterface -> {
+            Button button = dialog.getButton(AlertDialog.BUTTON_NEUTRAL);
+            button.setOnClickListener(notused -> {
+                ListView checkboxlist = dialog.getListView();
+                boolean newValue;
+                if(tempTypes.size() == POIMarker.MarkerType.values().length) { // se son selezionati tutti
+                    newValue = false;
+                } else if(tempTypes.size() == 0) { // non ce n'è nessuno selezionato
+                    newValue = true;
+                } else { // alcuni sono selezionati
+                    newValue = true;
+                }
+                for (int j = 0; j < checkboxlist.getAdapter().getCount(); j++) {
+                    checkboxlist.setItemChecked(j, newValue);
+                    checkedItems[j] = newValue;
+                    if(!newValue) {
+                        tempTypes.remove(elements[j]);
+                    } else {
+                        tempTypes.add(elements[j]);
+                    }
+                }
+            });
+        });
+
         dialog.show();
     }
 
@@ -553,7 +553,7 @@ public class MapEditorFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onStart() {
         super.onStart();
-        if(!Utils.canTakePhoto(mContext) && mCurrentView == 0) {
+        if(!Utils.canTakePhoto(mContext)) {
             mBindingEmpty.mapeditorEmptyYouareineditingmodeImage.setImageResource(R.drawable.ic_baseline_edit_location_alt_24);
             mBindingEmpty.mapeditorEmptyYouareineditingmodeText.setText(getResources().getString(R.string.mapeditor_youareineditingmode2));
             mBindingEmpty.mapeditorEmpty.setOnClickListener(null);
@@ -570,7 +570,6 @@ public class MapEditorFragment extends Fragment implements OnMapReadyCallback {
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         if(mMap != null) outState.putParcelable("cp", mMap.getCameraPosition());
-        outState.putInt("mode", mCurrentView); // 0 niente | 1 editing | 2 creazione;
         Log.d("ISTANZA", "mapeditor -> onSaveIstanceState");
     }
 }

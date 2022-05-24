@@ -193,4 +193,9 @@
     <string name="maps_filter">Filtro</string>
     <string name="maps_filter_title">Tipi di cestini visibili</string>
     <string name="maps_bulkeditfilterbutton">Cambia tutti</string>
+    <string name="requests_navigation_imagedesc">Pulsante naviga alla posizione del cestino</string>
+    <string name="requests_navigation_title">Mostrare indicazioni per il cestino?</string>
+    <string name="requests_navigation_desc">L\'app predefinita di navigazione sarà aperta.</string>
+    <string name="nav_header_subtitle_logged">Tocca per scollegarti.</string>
+    <string name="auth_login_failed">Login fallito. Codice errore: %1$d</string>
 </resources>

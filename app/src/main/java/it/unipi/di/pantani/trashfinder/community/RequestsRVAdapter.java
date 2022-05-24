@@ -3,10 +3,13 @@ package it.unipi.di.pantani.trashfinder.community;
 import static it.unipi.di.pantani.trashfinder.data.marker.POIMarker.getMarkerTypeName;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.transition.TransitionManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +29,7 @@ import java.util.Locale;
 import java.util.stream.Collectors;
 
 import it.unipi.di.pantani.trashfinder.R;
+import it.unipi.di.pantani.trashfinder.Utils;
 import it.unipi.di.pantani.trashfinder.data.marker.POIMarker;
 import it.unipi.di.pantani.trashfinder.data.requests.POIRequest;
 
@@ -53,11 +57,36 @@ public class RequestsRVAdapter extends RecyclerView.Adapter<RequestsRVAdapter.Vi
         return new ViewHolder(root);
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
         POIRequest currentReq = mRequestsList.get(position);
         POIMarker currentElem = currentReq.getElement();
         String imageLink = currentReq.getImageLink();
+
+        if(currentElem == null) return;
+
+        // se l'attuale richiesta non è una eliminazione ed esiste un'app che sa gestire gli intent di navigazione
+        if(holder.mCanNavigate && !currentReq.getDeletion()) {
+                holder.mDirections.setOnClickListener(v -> {
+                    Uri gmmIntentUri = Uri.parse("google.navigation:q=" + currentElem.getLatitude() + "," + currentElem.getLongitude());
+                    Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                    mapIntent.setPackage("com.google.android.apps.maps");
+
+                    // mostra avviso
+                    AlertDialog alertDialog = new AlertDialog.Builder(mContext).create();
+                    alertDialog.setTitle(mContext.getResources().getString(R.string.requests_navigation_title));
+                    alertDialog.setMessage(mContext.getResources().getString(R.string.requests_navigation_desc));
+                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, mContext.getResources().getString(R.string.button_cancel),
+                            (dialog, which) -> dialog.dismiss());
+                    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, mContext.getResources().getString(R.string.button_ok),
+                            (dialog, which) -> mContext.startActivity(mapIntent));
+                    alertDialog.show();
+                });
+            holder.mDirections.setVisibility(View.VISIBLE);
+        } else {
+            holder.mDirections.setVisibility(View.GONE);
+        }
 
         final boolean isExpanded = holder.getAbsoluteAdapterPosition() == mExpandedPosition;
         holder.mExpanded.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
@@ -84,6 +113,7 @@ public class RequestsRVAdapter extends RecyclerView.Adapter<RequestsRVAdapter.Vi
             // modifica
             typeRequest = mContext.getResources().getString(R.string.requests_action_update);
         }
+
         holder.mContentTitle.setText(mContext.getResources().getString(R.string.requests_item_title, currentReq.getId(), POIMarker.getTitleFromMarker(mContext, currentElem), typeRequest));
         Date d = new Date(currentReq.getDate());
         SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy HH:mm", Locale.getDefault());
@@ -136,6 +166,9 @@ public class RequestsRVAdapter extends RecyclerView.Adapter<RequestsRVAdapter.Vi
         public final TextView mBinTypesHeader;
         public final TextView mBinImageHeader;
 
+        public final ImageView mDirections;
+        public boolean mCanNavigate = true;
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             mExpanded = itemView.findViewById(R.id.rv_itemexpanded);
@@ -146,6 +179,11 @@ public class RequestsRVAdapter extends RecyclerView.Adapter<RequestsRVAdapter.Vi
 
             mBinTypesHeader = itemView.findViewById(R.id.rv_item_bintypesheader);
             mBinImageHeader = itemView.findViewById(R.id.rv_item_binimageheader);
+
+            mDirections = itemView.findViewById(R.id.rv_item_directions);
+            if(!Utils.canNavigate(itemView.getContext())) {
+                mCanNavigate = false;
+            }
         }
     }
 }

@@ -71,7 +71,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     private ProgressBar mProgressBar;
     private ClusterManager<MyItemOnMap> mClusterManager;
     private Bundle mBundle;
-    private Set<POIMarker.MarkerType> mMarkerTypes;
+    private HashSet<POIMarker.MarkerType> mMarkerTypes;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -163,12 +163,12 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
         // mostro il pulsante per la navigazione
         LatLng selectedMarkerCoordinates = marker.getPosition();
-        Uri gmmIntentUri = Uri.parse("google.navigation:q=" + selectedMarkerCoordinates.latitude + "," + selectedMarkerCoordinates.longitude + "&mode=w");
+        Uri gmmIntentUri = Uri.parse("google.navigation:q=" + selectedMarkerCoordinates.latitude + "," + selectedMarkerCoordinates.longitude);
         Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
         mapIntent.setPackage("com.google.android.apps.maps");
 
         // mostro il pulsante "naviga" solo se c'è un app che supporta l'intent di navigazione
-        if(mapIntent.resolveActivity(mContext.getPackageManager()) != null && getActivity() != null) {
+        if(Utils.canNavigate(mContext) && getActivity() != null) {
             ExtendedFloatingActionButton a = getActivity().findViewById(R.id.fab);
             a.setOnClickListener(view -> startActivity(mapIntent));
             a.show();
@@ -220,7 +220,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
     // -- Condivisi (salvataggio della select dei tipi di cestini)
     public void clickFilterMap() {
-        Set<POIMarker.MarkerType> tempTypes = new HashSet<>();
+        HashSet<POIMarker.MarkerType> tempTypes = new HashSet<>();
 
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         builder.setTitle(mContext.getResources().getString(R.string.maps_filter_title));
