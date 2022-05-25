@@ -50,6 +50,7 @@ import com.google.android.material.navigation.NavigationView;
 import it.unipi.di.pantani.trashfinder.databinding.ActivityMainBinding;
 import it.unipi.di.pantani.trashfinder.feedback.FeedbackActivity;
 import it.unipi.di.pantani.trashfinder.intro.SliderAdapter;
+import it.unipi.di.pantani.trashfinder.services.DownloadService;
 import it.unipi.di.pantani.trashfinder.settings.SettingsActivity;
 
 public class MainActivity extends AppCompatActivity implements NavController.OnDestinationChangedListener {
@@ -67,6 +68,11 @@ public class MainActivity extends AppCompatActivity implements NavController.OnD
     protected void onCreate(Bundle savedInstanceState) {
         mSharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         super.onCreate(savedInstanceState);
+
+        if(!mSharedPrefs.getBoolean("finished_import", false)) {
+            Intent intent = new Intent(MainActivity.this, DownloadService.class);
+            startService(intent);
+        }
 
         if(!mSharedPrefs.getBoolean("setting_show_intro_at_startup", true)) {
             startApp(null);

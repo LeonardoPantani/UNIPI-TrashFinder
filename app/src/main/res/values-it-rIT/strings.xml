@@ -198,4 +198,16 @@
     <string name="requests_navigation_desc">L\'app predefinita di navigazione sarà aperta.</string>
     <string name="nav_header_subtitle_logged">Tocca per scollegarti.</string>
     <string name="auth_login_failed">Login fallito. Codice errore: %1$d</string>
+    <string name="notificationchannel_downloads_title">Servizio di Download</string>
+    <string name="notificationchannel_downloads_desc">Ti notifica riguardo ai download dei dati sui cestini</string>
+    <string name="notification_downloadstarted_title">Download dei dati iniziali sui cestini…</string>
+    <string name="notification_downloadstarted_desc">Fonte download: %1$s</string>
+    <string name="notification_downloadfailed_title">Download dei dati iniziali sui cestini…</string>
+    <string name="notification_downloadfailed_desc">Impossibile scaricare i dati richiesti.</string>
+    <string name="notification_downloadcompleted_title">Download dei dati iniziali completato.</string>
+    <string name="notification_downloadcompleted_desc">Tra pochi istanti potrai vedere tutti i cestini sulla mappa.</string>
+    <string name="notification_downloadmanual_title">Download dei dati iniziali fallito permanentemente.</string>
+    <string name="notification_downloadmanual_desc">Mostreremo alcuni cestini di default sulla mappa.</string>
+    <string name="setting_general_downloadagaindata_title">Invalida dati attuali sui cestini</string>
+    <string name="setting_general_downloadagaindata_desc">Tocca per scaricare di nuovo la lista dei cestini.</string>
 </resources>

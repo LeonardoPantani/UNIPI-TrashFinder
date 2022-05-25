@@ -25,7 +25,7 @@ public abstract class POIRequestRoomDatabase extends RoomDatabase {
     private static final int NUMBER_OF_THREADS = 4;
     static final ExecutorService databaseWriteExecutor = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
 
-    static POIRequestRoomDatabase getDatabase(final Context context) {
+    public static POIRequestRoomDatabase getDatabase(final Context context) {
         if (INSTANCE == null) {
             synchronized (POIRequestRoomDatabase.class) {
                 if (INSTANCE == null) {

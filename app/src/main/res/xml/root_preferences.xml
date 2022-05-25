@@ -10,6 +10,12 @@
             app:summaryOff="@string/show_intro_at_startup_summaryOff"
             app:summaryOn="@string/show_intro_at_startup_summaryOn"
             app:title="@string/show_intro_at_startup" />
+        <Preference
+            android:key="setting_downloadagaindata"
+            android:selectable="true"
+            android:persistent="false"
+            android:title="@string/setting_general_downloadagaindata_title"
+            android:summary="@string/setting_general_downloadagaindata_desc"/>
     </PreferenceCategory>
 
     <PreferenceCategory

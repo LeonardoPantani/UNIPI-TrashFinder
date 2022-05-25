@@ -44,6 +44,8 @@ public class SettingsActivity extends AppCompatActivity {
 
     public static class SettingsFragment extends PreferenceFragmentCompat {
         SwitchPreferenceCompat setting_show_intro_at_startup;
+        Preference setting_general_downloadagaindata;
+
         Preference settingstatic_osm;
         Preference settingstatic_version;
 
@@ -64,6 +66,10 @@ public class SettingsActivity extends AppCompatActivity {
             if(setting_show_intro_at_startup != null)
                 setting_show_intro_at_startup.setOnPreferenceChangeListener(this::onShowIntroChange);
 
+            setting_general_downloadagaindata = findPreference("setting_downloadagaindata");
+            if(setting_general_downloadagaindata != null)
+                setting_general_downloadagaindata.setOnPreferenceClickListener(this::onDownloadAgainClick);
+
             settingstatic_osm = findPreference("settingstatic_osm");
             if(settingstatic_osm != null)
                 settingstatic_osm.setOnPreferenceClickListener(this::onOSMCreditsClick);
@@ -80,6 +86,20 @@ public class SettingsActivity extends AppCompatActivity {
             }
 
             setting_map_type.setOnPreferenceChangeListener(this::onMapTypeChange);
+        }
+
+        private boolean onDownloadAgainClick(Preference preference) {
+            setting_general_downloadagaindata.setEnabled(false);
+
+            Utils.setPreference(getContext(), "finished_import", false);
+
+            View currentView = getView();
+            if(currentView == null) return false;
+            Snackbar mySnackbar = Snackbar.make(currentView, getResources().getString(R.string.show_intro_at_startup_tiprestart_title, getResources().getString(R.string.app_name)), Snackbar.LENGTH_LONG);
+            mySnackbar.setAction(R.string.show_intro_at_startup_tiprestart_button, view -> Utils.triggerRebirth(currentView.getContext()));
+            mySnackbar.show();
+
+            return true;
         }
 
         @SuppressWarnings("SameReturnValue")
@@ -103,7 +123,7 @@ public class SettingsActivity extends AppCompatActivity {
                 View currentView = getView();
                 if(currentView == null) return false;
 
-                Snackbar mySnackbar = Snackbar.make(currentView, getResources().getString(R.string.show_intro_at_startup_tiprestart_title, getResources().getString(R.string.app_name)), Snackbar.LENGTH_SHORT);
+                Snackbar mySnackbar = Snackbar.make(currentView, getResources().getString(R.string.show_intro_at_startup_tiprestart_title, getResources().getString(R.string.app_name)), Snackbar.LENGTH_LONG);
                 mySnackbar.setAction(R.string.show_intro_at_startup_tiprestart_button, view -> Utils.triggerRebirth(currentView.getContext()));
                 mySnackbar.show();
             }

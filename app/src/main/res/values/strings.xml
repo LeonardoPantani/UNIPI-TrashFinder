@@ -21,6 +21,18 @@
     <string name="placeholder2">This\\nsection\\nis\\ngoing\\nto\\nbe\\nreplaced\\nwith\\nsomething\\nelse.\\nWho\\nknows\\nwhat</string>
     <string name="version">%1$s version %2$s</string>
 
+    <string name="notificationchannel_downloads_title">Download Service</string>
+    <string name="notificationchannel_downloads_desc">Notifies you regarding downloads of trash bin data</string>
+
+    <string name="notification_downloadstarted_title">Downloading initial trash bin data…</string>
+    <string name="notification_downloadstarted_desc">Download source: %1$s</string>
+    <string name="notification_downloadfailed_title">Downloading initial trash bin data…</string>
+    <string name="notification_downloadfailed_desc">Failed to download the required data.</string>
+    <string name="notification_downloadcompleted_title">Download of initial trash bin data complete.</string>
+    <string name="notification_downloadcompleted_desc">In a few moments you will be able to see all trash bins on the map.</string>
+    <string name="notification_downloadmanual_title">Download of initial trash bin data failed permanently.</string>
+    <string name="notification_downloadmanual_desc">We will show some default trash bins on the map.</string>
+
     <string name="auth_login_successful">You are now logged in. Welcome back, %1$s!</string>
     <string name="auth_login_failed">Login failed. Error code: %1$d</string>
     <string name="auth_logout_title">Log out</string>
@@ -70,6 +82,8 @@
     <string name="show_intro_at_startup_summaryOn">Introduction will be shown at the next startup</string>
     <string name="show_intro_at_startup_tiprestart_title">Would you like to restart %1$s?</string>
     <string name="show_intro_at_startup_tiprestart_button">Restart</string>
+    <string name="setting_general_downloadagaindata_title">Invalidate current trash bin data</string>
+    <string name="setting_general_downloadagaindata_desc">Tap here to download again the trash bin list.</string>
     <!-- Map settings -->
     <string name="map_settings">Map</string>
     <string name="setting_map_theme">Theme</string>

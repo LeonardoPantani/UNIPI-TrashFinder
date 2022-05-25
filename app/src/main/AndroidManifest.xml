@@ -54,5 +54,7 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+
+        <service android:name="it.unipi.di.pantani.trashfinder.services.DownloadService"/>
     </application>
 </manifest>
