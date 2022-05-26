@@ -45,9 +45,11 @@ public abstract class Utils extends Application {
     // link file contenente dati cestini (simula API)
     public static final String API_IMPORT_STRING = "https://drive.google.com/uc?id=1AHojX745Ok30wwgy_SGdSkioAu-EsHnh";
     // link api. codice pisa: 3600042527 | codice italia: 3600365331 | codice toscana: 3600041977
-    public static final String OSM_IMPORT_STRING = "https://www.overpass-api.de/api/interpreter?data=[out:json];area(id:3600365331)-%3E.searchArea;(node[%22amenity%22=%22waste_basket%22](area.searchArea);node[%22amenity%22=%22waste_disposal%22](area.searchArea);node[%22amenity%22=%22recycling%22](area.searchArea););out%20body;%3E;out%20skel%20qt;";
+    public static final String OSM_IMPORT_STRING = "https://www.overpass-api.de/api/interpreter?data=[out:json];area(id:3600041977)-%3E.searchArea;(node[%22amenity%22=%22waste_basket%22](area.searchArea);node[%22amenity%22=%22waste_disposal%22](area.searchArea);node[%22amenity%22=%22recycling%22](area.searchArea););out%20body;%3E;out%20skel%20qt;";
     // indirizzo web di open street map
     public static final String OSM_WEBSITE = "https://www.openstreetmap.org/about";
+    // indirizzo web github progetto
+    public static final String GITHUB_WEBSITE = "https://github.com/LeonardoPantani/";
 
     // coordinate di default nel caso l'utente non dia l'accesso alla posizione
     public static final double DEFAULT_LOCATION_LAT = 41.902782;
@@ -61,7 +63,6 @@ public abstract class Utils extends Application {
 
     // codice richiesta permessi nell'introduzione all'app
     public static final int REQUIRE_PERMISSION_CODE_INTRO = 1;
-
 
     /**
      * Verifica che determinati permessi siano stati forniti.
@@ -272,27 +273,6 @@ public abstract class Utils extends Application {
     }
 
     /**
-     * Restituisce se il sistema è in grado di aprire la navigazione.
-     * @param context contesto
-     * @return vero se l'intent per navigare verso una posizione darà problemi o no.
-     */
-    public static boolean canNavigate(Context context) {
-        Uri gmmIntentUri = Uri.parse("google.navigation:q=0.0,0.0");
-        Intent navigateIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-        return navigateIntent.resolveActivity(context.getPackageManager()) != null;
-    }
-
-    /**
-     * Restituisce se il sistema è in grado di scattare foto.
-     * @param context contesto
-     * @return vero se l'intent per scattare una foto darà problemi o no.
-     */
-    public static boolean canTakePhoto(Context context) {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        return takePictureIntent.resolveActivity(context.getPackageManager()) != null;
-    }
-
-    /**
      * Larghezza schermo
      * @return la larghezza dello schermo in pixel.
      */
@@ -306,5 +286,49 @@ public abstract class Utils extends Application {
      */
     public static int getScreenHeight() {
         return Resources.getSystem().getDisplayMetrics().heightPixels;
+    }
+
+    /**
+     * Restituisce se il sistema è in grado di aprire la navigazione.
+     * @param context contesto
+     * @return vero se l'intent per navigare verso una posizione non darà problemi, falso altrimenti.
+     */
+    public static boolean canNavigate(Context context) {
+        Uri gmmIntentUri = Uri.parse("google.navigation:q=0.0,0.0");
+        Intent navigateIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+        return navigateIntent.resolveActivity(context.getPackageManager()) != null;
+    }
+
+    /**
+     * Restituisce se il sistema è in grado di scattare foto.
+     * @param context contesto
+     * @return vero se l'intent per scattare una foto non darà problemi, falso altrimenti.
+     */
+    public static boolean canTakePhoto(Context context) {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        return takePictureIntent.resolveActivity(context.getPackageManager()) != null;
+    }
+
+    // Nota: i 2 metodi successivi non funzionano (restituiscono sempre false) da API 30 se non richiedo permessi speciali nel manifest (non presenti).
+    /**
+     * Restituisce se il sistema è in grado di inviare una email.
+     * @param context contesto
+     * @return vero se l'intent per inviare la mail non darà problemi, falso altrimenti.
+     */
+    public static boolean canSendEmail(Context context) {
+        Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
+        emailIntent.setData(Uri.parse("mailto:"));
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] {Utils.FEEDBACK_MAIL});
+        return emailIntent.resolveActivity(context.getPackageManager()) != null;
+    }
+
+    /**
+     * Restituisce se il sistema è in grado di aprire un sito web.
+     * @param context contesto
+     * @return vero se l'intent per aprire il sito web non darà problemi, falso altrimenti.
+     */
+    public static boolean canOpenWebsite(Context context) {
+        Intent openIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(GITHUB_WEBSITE));
+        return openIntent.resolveActivity(context.getPackageManager()) != null;
     }
 }

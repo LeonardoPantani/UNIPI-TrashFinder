@@ -48,7 +48,7 @@
     <string name="waiting_for_sensors">In attesa dei sensori…</string>
     <string name="waiting_for_gps">In attesa del GPS…</string>
     <string name="dialog_nolocationperm_title">Impossibile ottenere posizione</string>
-    <string name="dialog_nolocationperm_desc">Some features may not work as intended, but you can still use %1$s as you like.</string>
+    <string name="dialog_nolocationperm_desc">Alcune funzioni potrebbero non funzionare come previsto, ma potrai continuare ad usare %1$s come desideri.</string>
     <string name="dialog_nolocationperm_button_grantperms">Dai permessi</string>
     <string name="intro_location_permissiongranted">Grazie! Goditi tutte le funzionalità di %1$s.</string>
     <string name="intro_location_permissiondenied">Potrai cambiare i permessi dell\'app dalle impostazioni dello smartphone.</string>

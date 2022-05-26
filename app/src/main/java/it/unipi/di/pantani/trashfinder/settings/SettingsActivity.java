@@ -46,6 +46,7 @@ public class SettingsActivity extends AppCompatActivity {
         SwitchPreferenceCompat setting_show_intro_at_startup;
         Preference setting_general_downloadagaindata;
 
+        Preference settingstatic_author;
         Preference settingstatic_osm;
         Preference settingstatic_version;
 
@@ -73,6 +74,10 @@ public class SettingsActivity extends AppCompatActivity {
             settingstatic_osm = findPreference("settingstatic_osm");
             if(settingstatic_osm != null)
                 settingstatic_osm.setOnPreferenceClickListener(this::onOSMCreditsClick);
+
+            settingstatic_author = findPreference("settingstatic_author");
+            if(settingstatic_author != null)
+                settingstatic_author.setOnPreferenceClickListener(this::onAuthorClick);
 
             settingstatic_version = findPreference("settingstatic_version");
             if(settingstatic_version != null)
@@ -113,6 +118,16 @@ public class SettingsActivity extends AppCompatActivity {
         }
 
         @SuppressWarnings("SameReturnValue")
+        private boolean onAuthorClick(Preference preference) {
+            Uri uri = Uri.parse(Utils.GITHUB_WEBSITE);
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            return true;
+        }
+
+        @SuppressWarnings("SameReturnValue")
         public boolean onMapTypeChange(Preference preference, Object newValue) {
             setting_map_theme.setEnabled(newValue.equals("roads"));
             return true;
@@ -140,6 +155,5 @@ public class SettingsActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
-
     }
 }

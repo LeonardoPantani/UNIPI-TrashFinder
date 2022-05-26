@@ -80,6 +80,7 @@ public class CommunityFragment extends Fragment {
         // mostro dati
         mCommunityViewModel.getMarkerNumber().observe(getViewLifecycleOwner(), numberOfBins -> {
             mBinding.communityGeneralstatsNumbertrashbins.setText(String.valueOf(numberOfBins));
+            // scelgo un numero casuale perché non ho un database che mi restituisce quante modifiche sono state fatte in totale
             mBinding.communityGeneralstatsNumberchanges.setText(String.valueOf(new Random().nextInt(100000) + numberOfBins));
         });
 

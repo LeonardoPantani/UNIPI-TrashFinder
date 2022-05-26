@@ -75,7 +75,6 @@
             android:summary="@string/credits_map"/>
         <Preference
             android:key="settingstatic_author"
-            android:selectable="false"
             android:persistent="false"
             android:title=""
             android:summary="@string/credits"/>
