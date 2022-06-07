@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2021/2022
+ * Leonardo Pantani - 598896
+ * University of Pisa - Department of Computer Science
+ */
+
 package it.unipi.di.pantani.trashfinder.services;
 
 import static it.unipi.di.pantani.trashfinder.Utils.API_IMPORT_STRING;
@@ -5,9 +11,11 @@ import static it.unipi.di.pantani.trashfinder.Utils.OSM_IMPORT_STRING;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 
@@ -30,6 +38,7 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.Executors;
 
+import it.unipi.di.pantani.trashfinder.MainActivity;
 import it.unipi.di.pantani.trashfinder.R;
 import it.unipi.di.pantani.trashfinder.Utils;
 import it.unipi.di.pantani.trashfinder.data.marker.POIMarker;
@@ -38,6 +47,8 @@ import it.unipi.di.pantani.trashfinder.data.marker.POIMarkerRoomDatabase;
 
 public class DownloadService extends Service {
     private Context mContext;
+
+    private boolean forceManual = false;
 
     @Override
     public void onCreate() {
@@ -48,6 +59,11 @@ public class DownloadService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        Bundle b = intent.getExtras();
+        if(b != null) {
+            forceManual = b.getBoolean("forceManual", false);
+        }
+
         return START_NOT_STICKY;
     }
 
@@ -74,6 +90,12 @@ public class DownloadService extends Service {
 
             long time = System.currentTimeMillis();
             int amount = 0;
+
+            if(forceManual) {
+                amount = manualAdd(dao);
+                Log.d("ISTANZA", "DB> Dati salvati e lista dei " + amount + " POI pronta (" + (System.currentTimeMillis() - time) + "ms). L'utente ha scelto di non scaricare da dati mobili.");
+                return;
+            }
 
             String buffer;
             sendNotificationStart("Drive");
@@ -167,7 +189,7 @@ public class DownloadService extends Service {
                     dao.insert(new POIMarker(types, elementObj.getDouble("lat"), elementObj.getDouble("lon"), ""));
                     amount++;
                 }
-                Utils.setPreference(mContext,"finished_import", true);
+                Utils.setPreference(mContext, "finished_import", true);
                 sendNotificationCompleted();
             } catch (JSONException e) { // errore json
                 e.printStackTrace();
@@ -229,6 +251,15 @@ public class DownloadService extends Service {
         return null;
     }
 
+    /**
+     * Aggiunge manualmente (senza scaricare nulla dalla rete) dei marker di default al database.
+     * Inoltre, imposta la preferenza "finished_import" su true, in modo da non dover rieffettuare
+     * l'importazione ad una futura apertura dell'app.
+     * Nel caso i dati appena caricati non bastassero, l'utente dovrà semplicemente andare nelle
+     * impostazioni e toccare su "Invalida dati".
+     * @param dao il dao per interfacciarsi col database
+     * @return il numero di elementi aggiunti, per motivi di logging
+     */
     @SuppressWarnings("SameReturnValue")
     private int manualAdd(POIMarkerDAO dao) {
         dao.deleteAll();
@@ -237,7 +268,7 @@ public class DownloadService extends Service {
         dao.insert(new POIMarker(Set.of(POIMarker.MarkerType.trashbin_indifferenziato, POIMarker.MarkerType.trashbin_plastica, POIMarker.MarkerType.trashbin_carta), 43.721768389743055, 10.408047122841685, ""));
         dao.insert(new POIMarker(Set.of(POIMarker.MarkerType.trashbin_indifferenziato), 43.72276671037211, 10.436552726467875, ""));
 
-        Utils.setPreference(mContext,"finished_import", true);
+        Utils.setPreference(mContext, "finished_import", true);
 
         return 3;
     }
@@ -294,11 +325,19 @@ public class DownloadService extends Service {
     private void sendNotificationCompleted() {
         cancelNotification(1);
 
+        /*
+            Un Pending Intent è un token (riferimento) che permette ad un'altra app di eseguire
+            un'azione per conto dell'app che ha specificato l'intent. In questo caso viene usato per
+            lanciare l'attività Main, quando la notifica viene toccata.
+         */
+        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, new Intent(this, MainActivity.class), PendingIntent.FLAG_IMMUTABLE);
+
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "downloadservice")
                 .setSmallIcon(R.drawable.ic_baseline_celebration_24)
                 .setContentTitle(getResources().getString(R.string.notification_downloadcompleted_title))
                 .setContentText(getResources().getString(R.string.notification_downloadcompleted_desc))
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setContentIntent(contentIntent);
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
         notificationManager.notify(3, builder.build());

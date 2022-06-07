@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2021/2022
+ * Leonardo Pantani - 598896
+ * University of Pisa - Department of Computer Science
+ */
+
 package it.unipi.di.pantani.trashfinder.data.marker;
 
 import android.content.Context;
@@ -16,7 +22,7 @@ import java.util.Set;
 import it.unipi.di.pantani.trashfinder.R;
 
 @Entity(tableName = "marker_table")
-@TypeConverters(ListConverter.class)
+@TypeConverters(POIMarkerConverter.class)
 public class POIMarker implements Serializable {
     @PrimaryKey(autoGenerate = true)
     private int id;

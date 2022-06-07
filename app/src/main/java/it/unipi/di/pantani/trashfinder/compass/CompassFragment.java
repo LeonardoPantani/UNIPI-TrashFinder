@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2021/2022
+ * Leonardo Pantani - 598896
+ * University of Pisa - Department of Computer Science
+ */
+
 package it.unipi.di.pantani.trashfinder.compass;
 
 import static it.unipi.di.pantani.trashfinder.Utils.checkPerms;
@@ -80,6 +86,9 @@ public class CompassFragment extends Fragment {
         return root;
     }
 
+    /**
+     * Preparazione bussola.
+     */
     private void setupCompass() {
         mCompass = new Compass(mContext);
         Compass.CompassListener cl = getCompassListener();
@@ -88,6 +97,9 @@ public class CompassFragment extends Fragment {
         mReadySensor = false;
     }
 
+    /**
+     * Preparazione posizione.
+     */
     private void setupLocation() {
         mUserLocation = new UserLocation(mContext);
         UserLocation.UserLocationListener ull = getUserLocationListener();
@@ -99,6 +111,10 @@ public class CompassFragment extends Fragment {
         }
     }
 
+    /**
+     * Callbacks chiamati dalla classe UserLocation quando cambia qualcosa.
+     * @return il corpo delle funzioni da chiamare
+     */
     private UserLocation.UserLocationListener getUserLocationListener() {
         return new UserLocation.UserLocationListener() {
             @Override
@@ -121,6 +137,10 @@ public class CompassFragment extends Fragment {
         };
     }
 
+    /**
+     * Callbacks chiamati dalla classe Compass quando cambia qualcosa.
+     * @return il corpo delle funzioni da chiamare
+     */
     private Compass.CompassListener getCompassListener() {
         return new Compass.CompassListener() {
             public void onNewAzimuth(float azimuth) {
@@ -195,10 +215,18 @@ public class CompassFragment extends Fragment {
         };
     }
 
+    /**
+     * Listener del click sulla cardview.
+     * @param view la view cliccata
+     */
     private void onClickCardView(View view) {
         Navigation.findNavController(view).popBackStack(R.id.nav_maps, false); // primo
     }
 
+    /**
+     * Listener del click sul pulsante di deselezione del cestino cliccato.
+     * @param view non usato
+     */
     private void onClickDeselectButton(View view) {
         setCompassSelectedMarker(null);
         handleCompass();

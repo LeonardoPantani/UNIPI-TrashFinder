@@ -1,6 +1,14 @@
+/*
+ * Copyright (c) 2021/2022
+ * Leonardo Pantani - 598896
+ * University of Pisa - Department of Computer Science
+ */
+
 package it.unipi.di.pantani.trashfinder;
 
+import static it.unipi.di.pantani.trashfinder.Utils.IMPORT_SIZE;
 import static it.unipi.di.pantani.trashfinder.Utils.REQUIRE_PERMISSION_CODE_INTRO;
+import static it.unipi.di.pantani.trashfinder.Utils.amIOnCellular;
 import static it.unipi.di.pantani.trashfinder.Utils.checkPerms;
 import static it.unipi.di.pantani.trashfinder.Utils.setCurrentUserAccount;
 import static it.unipi.di.pantani.trashfinder.Utils.setPreference;
@@ -47,6 +55,8 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 
+import java.text.DecimalFormat;
+
 import it.unipi.di.pantani.trashfinder.databinding.ActivityMainBinding;
 import it.unipi.di.pantani.trashfinder.feedback.FeedbackActivity;
 import it.unipi.di.pantani.trashfinder.intro.SliderAdapter;
@@ -64,14 +74,19 @@ public class MainActivity extends AppCompatActivity implements NavController.OnD
 
     public GoogleSignInClient mGoogleSignInClient;
 
+    public boolean mAskImportLater = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         mSharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         super.onCreate(savedInstanceState);
 
         if(!mSharedPrefs.getBoolean("finished_import", false)) {
-            Intent intent = new Intent(MainActivity.this, DownloadService.class);
-            startService(intent);
+            if(!amIOnCellular(this)) {
+                importTrashBins(false);
+            } else {
+                mAskImportLater = true;
+            }
         }
 
         if(!mSharedPrefs.getBoolean("setting_show_intro_at_startup", true)) {
@@ -89,8 +104,6 @@ public class MainActivity extends AppCompatActivity implements NavController.OnD
 
         mNavigationView = mBinding.navView;
         mDrawer = mBinding.drawerLayout;
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.nav_maps, R.id.nav_compass, R.id.nav_community, R.id.nav_mapeditor)
                 .setOpenableLayout(mDrawer)
@@ -110,6 +123,10 @@ public class MainActivity extends AppCompatActivity implements NavController.OnD
 
         if (!checkPerms(getBaseContext())) {
             showPermissionWarningDialog();
+        }
+
+        if(mAskImportLater) {
+            showDownloadDialog();
         }
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -161,6 +178,32 @@ public class MainActivity extends AppCompatActivity implements NavController.OnD
         alertDialog.show();
 
         setPreference(this, "shown_permission_warning", true);
+    }
+
+    public void showDownloadDialog() {
+        if(amIOnCellular(this)) {
+            DecimalFormat df = new DecimalFormat("#0.0");
+            String mb = df.format(IMPORT_SIZE);
+
+            AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+            alertDialog.setTitle(getResources().getString(R.string.dialog_importoncellular_title));
+            alertDialog.setMessage(getResources().getString(R.string.dialog_importoncellular_desc, getResources().getString(R.string.app_name), mb));
+            alertDialog.setCanceledOnTouchOutside(false);
+            alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getResources().getString(R.string.button_no),
+                    (dialog, which) -> {
+                        dialog.dismiss();
+                        importTrashBins(true);
+                        Toast.makeText(this, getResources().getString(R.string.import_nodownload), Toast.LENGTH_LONG).show();
+                    });
+            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getResources().getString(R.string.button_ok),
+                    (dialog, which) -> {
+                        importTrashBins(false);
+                        Toast.makeText(this, getResources().getString(R.string.import_download_starting), Toast.LENGTH_LONG).show();
+                    });
+            alertDialog.show();
+        } else {
+            importTrashBins(false);
+        }
     }
 
     @Override
@@ -220,7 +263,7 @@ public class MainActivity extends AppCompatActivity implements NavController.OnD
 
     /**
      * Eseguito al click sulla parte alta del navigation drawer.
-     * @param view view del
+     * @param view view dell'header
      */
     public void onClickNavHeader(View view) {
         mDrawer.close();
@@ -253,7 +296,7 @@ public class MainActivity extends AppCompatActivity implements NavController.OnD
         }
     }
 
-    // You can do the assignment inside onAttach or onCreate, i.e, before the activity is displayed
+    // versione complicata della registerForResult
     public ActivityResultLauncher<Intent> someActivityResultLauncher = registerForActivityResult(
         new ActivityResultContracts.StartActivityForResult(),
             result -> {
@@ -293,11 +336,12 @@ public class MainActivity extends AppCompatActivity implements NavController.OnD
             mNavigationView.getMenu().findItem(R.id.nav_mapeditor).setEnabled(false);
         }
 
+        // mostro l'immagine del profilo dell'utente connesso, altrimenti ne mostro una di default
         Glide.with(this)
                 .load(image)
                 .error(R.drawable.ic_baseline_running_with_errors_24)
                 .placeholder(R.drawable.ic_baseline_downloading_24)
-                .fallback(R.mipmap.ic_appicon)
+                .fallback(R.mipmap.ic_appicon) // se "image" è null metto questo
                 .fitCenter()
                 .into(((ImageView) navHeader.findViewById(R.id.nav_header_image)));
     }
@@ -311,6 +355,15 @@ public class MainActivity extends AppCompatActivity implements NavController.OnD
             setTextNavDrawer(false, null, null);
             setCurrentUserAccount(null);
         }
+    }
+
+    @SuppressWarnings("SameParameterValue")
+    private void importTrashBins(boolean forceManual) {
+        Intent intent = new Intent(MainActivity.this, DownloadService.class);
+        if(forceManual) {
+            intent.putExtra("forceManual", true);
+        }
+        startService(intent);
     }
 
     /**

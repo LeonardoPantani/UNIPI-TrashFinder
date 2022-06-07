@@ -1,7 +1,14 @@
+/*
+ * Copyright (c) 2021/2022
+ * Leonardo Pantani - 598896
+ * University of Pisa - Department of Computer Science
+ */
+
 package it.unipi.di.pantani.trashfinder.maps;
 
 import static it.unipi.di.pantani.trashfinder.Utils.EDITMODE_NO_CLUSTER_MIN_ZOOM;
 import static it.unipi.di.pantani.trashfinder.Utils.MARKER_ZOOM;
+import static it.unipi.di.pantani.trashfinder.Utils.canTakePhoto;
 import static it.unipi.di.pantani.trashfinder.Utils.checkPerms;
 import static it.unipi.di.pantani.trashfinder.Utils.getEditorSelectedMarker;
 import static it.unipi.di.pantani.trashfinder.Utils.pointLocation;
@@ -375,6 +382,7 @@ public class MapEditorFragment extends Fragment implements OnMapReadyCallback {
         disableCreationMode();
     }
 
+    // parte foto
     Uri uri;
     private void onClickPhotoNew(View view) {
         if(view.getTag() != null) { // se è già stata salvata una foto
@@ -392,18 +400,19 @@ public class MapEditorFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void takePhoto() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        // Ensure that there's a camera activity to handle the intent
-        if (takePictureIntent.resolveActivity(mContext.getPackageManager()) != null) {
-            // Create the File where the photo should go
+        if (canTakePhoto(mContext)) { // se c'è un'app che è in grado di gestire l'intent
+            // creo il file dove dovrebbe andare la foto
             File photoFile = null;
             try {
                 photoFile = createImageFile();
             } catch (IOException ex) {
-                // Error occurred while creating the File
+                Log.e("ISTANZA", "errore durante la creazione del file: " + ex.getLocalizedMessage());
             }
-            // Continue only if the File was successfully created
+
+            // se il file è stato creato, continuo
             if (photoFile != null) {
+                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
                 uri = FileProvider.getUriForFile(mContext,
                         "it.unipi.di.pantani.trashfinder.fileprovider",
                         photoFile);
@@ -494,10 +503,10 @@ public class MapEditorFragment extends Fragment implements OnMapReadyCallback {
     private boolean validateCreate() {
         ArrayList<String> errors = new ArrayList<>();
         /*
-        Controlli:
-        markerTypes non deve essere vuoto
-        se non vuoto ed è selezionata "isola ecologica", si deve indicare almeno un tipo
-        deve essere stata scattata una foto
+            Controlli:
+            markerTypes non deve essere vuoto
+            se non vuoto ed è selezionata "isola ecologica", si deve indicare almeno un tipo
+            deve essere stata scattata una foto
          */
         if(mMarkerTypes.size() == 0) {
             errors.add(getResources().getString(R.string.mapeditor_form_errorempty));
@@ -553,7 +562,7 @@ public class MapEditorFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onStart() {
         super.onStart();
-        if(!Utils.canTakePhoto(mContext)) {
+        if(!canTakePhoto(mContext)) {
             mBindingEmpty.mapeditorEmptyYouareineditingmodeImage.setImageResource(R.drawable.ic_baseline_edit_location_alt_24);
             mBindingEmpty.mapeditorEmptyYouareineditingmodeText.setText(getResources().getString(R.string.mapeditor_youareineditingmode2));
             mBindingEmpty.mapeditorEmpty.setOnClickListener(null);

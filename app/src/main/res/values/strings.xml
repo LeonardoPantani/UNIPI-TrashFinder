@@ -14,6 +14,7 @@
     <string name="fab_description">Navigate button</string>
     <string name="button_cancel">Cancel</string>
     <string name="button_ok">OK</string>
+    <string name="button_no">No</string>
     <string name="button_delete">Delete</string>
     <string name="button_navigate">Navigate</string>
     <string name="button_open">Open</string>
@@ -53,6 +54,12 @@
     <string name="dialog_nolocationperm_desc">Some features may not work as intended, but you can still use %1$s as you like.</string>
     <string name="dialog_nolocationperm_button_grantperms">Grant permissions</string>
 
+    <string name="dialog_importoncellular_title">Cellular data active</string>
+    <string name="dialog_importoncellular_desc">Can %1$s download ~%2$s MB of data from the Internet to be able to show trash bins in your area?</string>
+    <string name="import_download_starting">Download starting…</string>
+    <string name="import_download_completed">Download completed</string>
+    <string name="import_nodownload">We will use the sample trash bin data.</string>
+
     <string name="warning_noperms">This feature may not work if you do not grant the location permission to %1$s.</string>
 
     <!-- INTRODUCTION -->
@@ -71,7 +78,7 @@
     <string name="intro_location_permissiongranted">Thank you! Enjoy full functionalities of %1$s.</string>
     <string name="intro_location_permissiondenied">You will be able to change app permissions from your phone\'s settings.</string>
     <string name="intro_title_5">You are done!</string>
-    <string name="intro_desc_5">Press the button below to start using Trash Finder!</string>
+    <string name="intro_desc_5">We hope that %1$s will be useful for you. If you have any doubts or problems, do not hesitate to contact us.</string>
 
     <!-- SETTINGS -->
     <string name="label_settings">Settings</string>
@@ -159,7 +166,7 @@
     <string name="feedback_type_field_error">Choose a type of feedback</string>
     <string name="feedback_chooser">Select an app to send feedback</string>
     <string name="feedback_chooser_error">You do not have a valid app to send feedback.</string>
-    <string name="feedback_thanks">Thank you for taking the time to provide your feedback. It is very important to us that the user is satisfied while using our app.</string>
+    <string name="feedback_thanks">Thank you for taking the time to provide your feedback. It is very important to us that you are enjoy using our app.</string>
     <string name="feedback_smile_description">Smiley face</string>
 
     <!-- COMMUNITY -->

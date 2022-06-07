@@ -16,7 +16,7 @@
     <string name="intro_desc_2">Usa la mappa e bussola per trovare velocemente il cestino di cui hai bisogno</string>
     <string name="intro_desc_3">Chiunque può aggiornare la mappa per aggiungere nuovi cestini ed ecostazioni</string>
     <string name="intro_desc_4">E\' necessario che tu fornisca il permesso alla posizione per usare al meglio l\'app</string>
-    <string name="intro_desc_5">Premi il pulsante sottostante per iniziare ad usare Trash Finder!</string>
+    <string name="intro_desc_5">Ci auguriamo che %1$s sia di tua utilità. In caso di dubbi o problemi, non esitare a contattarci.</string>
     <string name="intro_title_1">Trova</string>
     <string name="intro_title_2">Risparmia tempo</string>
     <string name="intro_title_4">Posizione?</string>
@@ -78,7 +78,7 @@
     <string name="feedback_chooser_error">Non hai nessuna app valida per inviare il feedback.</string>
     <string name="label_feedback">Feedback</string>
     <string name="feedback_type_field_error">Seleziona un tipo di feedback</string>
-    <string name="feedback_thanks">Grazie per star dedicando del tempo per fornire il tuo feedback. E\' molto importante per noi che l\'utente sia soddisfatto durante l\'utilizzo della nostra app.</string>
+    <string name="feedback_thanks">Grazie per star dedicando del tempo per fornire il tuo feedback. E\' molto importante per noi che tu sia soddisfatto durante l\'utilizzo della nostra app.</string>
     <string name="feedback_smile_description">Faccina sorridente</string>
     <string name="coming_soon">Prossimamente…</string>
     <string name="credits">App sviluppata da Leonardo Pantani come progetto del corso di SAM. Tutti i diritti riservati.</string>
@@ -210,4 +210,10 @@
     <string name="notification_downloadmanual_desc">Mostreremo alcuni cestini di default sulla mappa.</string>
     <string name="setting_general_downloadagaindata_title">Invalida dati attuali sui cestini</string>
     <string name="setting_general_downloadagaindata_desc">Tocca per scaricare di nuovo la lista dei cestini.</string>
+    <string name="button_no">No</string>
+    <string name="dialog_importoncellular_title">Dati cellulare attivi</string>
+    <string name="dialog_importoncellular_desc">Può %1$s scaricare ~%2$s MB di dati da Internet per poter mostrare i cestini nella tua area?</string>
+    <string name="import_download_starting">Download in avvio…</string>
+    <string name="import_nodownload">Useremo dati dei cestini di prova.</string>
+    <string name="import_download_completed">Download completato</string>
 </resources>

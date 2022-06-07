@@ -1,4 +1,12 @@
+/*
+ * Copyright (c) 2021/2022
+ * Leonardo Pantani - 598896
+ * University of Pisa - Department of Computer Science
+ */
+
 package it.unipi.di.pantani.trashfinder.community;
+
+import static it.unipi.di.pantani.trashfinder.Utils.NUMBER_REQUESTS_LIST;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -17,7 +25,7 @@ import it.unipi.di.pantani.trashfinder.Utils;
 import it.unipi.di.pantani.trashfinder.databinding.FragmentRequestsBinding;
 
 /**
- * A fragment representing a list of Items.
+ * Frammento che mostra una lista di oggetti di tipo POIRequest.
  */
 public class RequestsFragment extends Fragment {
     private FragmentRequestsBinding mBinding;
@@ -37,7 +45,7 @@ public class RequestsFragment extends Fragment {
         RequestsViewModel requestsViewModel = new ViewModelProvider(this).get(RequestsViewModel.class);
 
         // mostro dati
-        requestsViewModel.getRequests(Utils.getCurrentUserAccount().getEmail(), 10, 0).observe(getViewLifecycleOwner(), requestsList -> {
+        requestsViewModel.getRequests(Utils.getCurrentUserAccount().getEmail(), NUMBER_REQUESTS_LIST, 0).observe(getViewLifecycleOwner(), requestsList -> {
             if(requestsList != null && requestsList.size() != 0) {
                 mBinding.requestsRv.setVisibility(View.VISIBLE);
                 mBinding.requestsNothing.setVisibility(View.GONE);

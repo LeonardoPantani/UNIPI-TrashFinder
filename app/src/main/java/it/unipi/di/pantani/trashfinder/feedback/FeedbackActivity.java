@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2021/2022
+ * Leonardo Pantani - 598896
+ * University of Pisa - Department of Computer Science
+ */
+
 package it.unipi.di.pantani.trashfinder.feedback;
 
 import android.content.ActivityNotFoundException;
@@ -35,6 +41,10 @@ public class FeedbackActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Si occupa della validazione del form.
+     * @return vero se è tutto ok, falso se qualche campo non rispetta i criteri.
+     */
     private boolean validateForm() {
         boolean valid = true;
 

@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2021/2022
+ * Leonardo Pantani - 598896
+ * University of Pisa - Department of Computer Science
+ */
+
 package it.unipi.di.pantani.trashfinder;
 
 import android.Manifest;
@@ -46,6 +52,8 @@ public abstract class Utils extends Application {
     public static final String API_IMPORT_STRING = "https://drive.google.com/uc?id=1hrZyy4vPipwm68A-_5v9Nvbpmz6pkvFN";
     // link api. codice pisa: 3600042527 | codice italia: 3600365331 | codice toscana: 3600041977
     public static final String OSM_IMPORT_STRING = "https://www.overpass-api.de/api/interpreter?data=[out:json];area(id:3600041977)-%3E.searchArea;(node[%22amenity%22=%22waste_basket%22](area.searchArea);node[%22amenity%22=%22waste_disposal%22](area.searchArea);node[%22amenity%22=%22recycling%22](area.searchArea););out%20body;%3E;out%20skel%20qt;";
+    // numero di megabytes da scaricare approssimativo (nella demo dipende dal codice che viene usato, ora: toscana)
+    public static final float IMPORT_SIZE = 0.5f;
     // indirizzo web di open street map
     public static final String OSM_WEBSITE = "https://www.openstreetmap.org/about";
     // indirizzo web github progetto
@@ -63,6 +71,9 @@ public abstract class Utils extends Application {
 
     // codice richiesta permessi nell'introduzione all'app
     public static final int REQUIRE_PERMISSION_CODE_INTRO = 1;
+
+    // numero di richieste visibili nella sezione "le mie richieste"
+    public static final int NUMBER_REQUESTS_LIST = 15;
 
     /**
      * Verifica che determinati permessi siano stati forniti.
@@ -248,6 +259,21 @@ public abstract class Utils extends Application {
         return currentUserAccount;
     }
     public static void setCurrentUserAccount(GoogleSignInAccount a) { currentUserAccount = a; }
+
+
+    /**
+     * Verifica se sono connesso alla rete dati o no.
+     * @param context contesto
+     * @return vero se sto usando la rete dati, falso altrimenti.
+     */
+    public static boolean amIOnCellular(Context context) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        Network nw = connectivityManager.getActiveNetwork();
+        if (nw == null) return false;
+        NetworkCapabilities actNw = connectivityManager.getNetworkCapabilities(nw);
+        return actNw != null && actNw.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR);
+    }
+
 
     /**
      * Chiude la tastiera.

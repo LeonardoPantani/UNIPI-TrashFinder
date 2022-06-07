@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2021/2022
+ * Leonardo Pantani - 598896
+ * University of Pisa - Department of Computer Science
+ */
+
 package it.unipi.di.pantani.trashfinder.community;
 
 import android.content.Context;
@@ -76,6 +82,10 @@ public class CommunityFragment extends Fragment {
         }
     }
 
+    /**
+     * Aggiorna i dati delle cards. E' chiamata dalla onStart (prima che vengano mostrati i contenuti)
+     * e dalla onResume(), chiamata quando si effettua il login dalla barra laterale.
+     */
     private void updateCards() {
         // mostro dati
         mCommunityViewModel.getMarkerNumber().observe(getViewLifecycleOwner(), numberOfBins -> {

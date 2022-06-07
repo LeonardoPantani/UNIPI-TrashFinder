@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2021/2022
+ * Leonardo Pantani - 598896
+ * University of Pisa - Department of Computer Science
+ */
+
 package it.unipi.di.pantani.trashfinder.intro;
 
 import static it.unipi.di.pantani.trashfinder.Utils.checkPerms;
@@ -81,6 +87,7 @@ public class SliderAdapter extends PagerAdapter {
 
         if(position == titleArray.length-1) {
             binding.buttonEnd.setVisibility(View.VISIBLE);
+            binding.txtDescription.setText(mContext.getResources().getString(descArray[position], mContext.getResources().getString(R.string.app_name)));
             binding.buttonEnd.setText(mContext.getString(R.string.start_using_app, mContext.getResources().getString(R.string.app_name)));
             binding.arrowNext.setVisibility(View.INVISIBLE);
             binding.txtSwipe.setVisibility(View.INVISIBLE);

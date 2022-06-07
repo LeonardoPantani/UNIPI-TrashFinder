@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2021/2022
+ * Leonardo Pantani - 598896
+ * University of Pisa - Department of Computer Science
+ */
+
 package it.unipi.di.pantani.trashfinder.community;
 
 import static it.unipi.di.pantani.trashfinder.data.marker.POIMarker.getMarkerTypeName;
@@ -88,6 +94,10 @@ public class RequestsRVAdapter extends RecyclerView.Adapter<RequestsRVAdapter.Vi
             holder.mDirections.setVisibility(View.GONE);
         }
 
+        /*
+            questa parte si occupa di mostrare e neascondere parti inizialmente visibili di ogni
+            oggetto della recycler view.
+         */
         final boolean isExpanded = holder.getAbsoluteAdapterPosition() == mExpandedPosition;
         holder.mExpanded.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
         holder.itemView.setActivated(isExpanded);
@@ -97,6 +107,7 @@ public class RequestsRVAdapter extends RecyclerView.Adapter<RequestsRVAdapter.Vi
             mExpandedPosition = isExpanded ? -1 : holder.getAbsoluteAdapterPosition();
             TransitionManager.beginDelayedTransition(mRV);
 
+            // più efficiente di aggiornare l'intera lista
             notifyItemChanged(mPreviousExpandedPosition);
             notifyItemChanged(holder.getAbsoluteAdapterPosition());
         });

@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2021/2022
+ * Leonardo Pantani - 598896
+ * University of Pisa - Department of Computer Science
+ */
+
 package it.unipi.di.pantani.trashfinder.compass;
 
 import android.annotation.SuppressLint;
@@ -48,6 +54,10 @@ class Compass implements SensorEventListener {
         listener = l;
     }
 
+    /*
+        parte di questo metodo è stata ottenuta dal seguente link:
+        https://stackoverflow.com/questions/28798585/android-determine-memory-leak-in-compass-sensormanager
+     */
     @SuppressLint("SwitchIntDef")
     @Override
     public void onSensorChanged(SensorEvent event) {

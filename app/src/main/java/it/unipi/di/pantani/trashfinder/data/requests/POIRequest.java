@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2021/2022
+ * Leonardo Pantani - 598896
+ * University of Pisa - Department of Computer Science
+ */
+
 package it.unipi.di.pantani.trashfinder.data.requests;
 
 import androidx.room.Entity;
@@ -7,7 +13,7 @@ import androidx.room.TypeConverters;
 import it.unipi.di.pantani.trashfinder.data.marker.POIMarker;
 
 @Entity(tableName = "poirequest_table")
-@TypeConverters(MarkerConverter.class)
+@TypeConverters(POIRequestConverter.class)
 public class POIRequest {
     @PrimaryKey(autoGenerate = true)
     private int id;

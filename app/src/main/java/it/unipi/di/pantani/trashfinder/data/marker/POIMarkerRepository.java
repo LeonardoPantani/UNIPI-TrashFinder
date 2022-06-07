@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2021/2022
+ * Leonardo Pantani - 598896
+ * University of Pisa - Department of Computer Science
+ */
+
 package it.unipi.di.pantani.trashfinder.data.marker;
 
 import android.app.Application;
@@ -44,7 +50,7 @@ public class POIMarkerRepository {
     }
 
     public void update(int id, Set<POIMarker.MarkerType> newTypes, double newLatitude, double newLongitude, String newNotes) {
-        POIMarkerRoomDatabase.databaseWriteExecutor.execute(() -> mPOIMarkerDAO.update(id, ListConverter.markersToString(newTypes), newLatitude, newLongitude, newNotes));
+        POIMarkerRoomDatabase.databaseWriteExecutor.execute(() -> mPOIMarkerDAO.update(id, POIMarkerConverter.markersToString(newTypes), newLatitude, newLongitude, newNotes));
     }
 
     public LiveData<Integer> getNumberMarker() {
