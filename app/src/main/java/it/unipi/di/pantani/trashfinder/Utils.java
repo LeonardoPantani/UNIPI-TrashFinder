@@ -49,11 +49,11 @@ public abstract class Utils extends Application {
     // indirizzo email a cui sono mandati i feedback
     public static final String FEEDBACK_MAIL = "l.pantani5@studenti.unipi.it";
     // link file contenente dati cestini (simula API). | id pisa: 1Gk1z7v93BfkYmd50w9ucyMzVaG_0wbae | id italia: 1AHojX745Ok30wwgy_SGdSkioAu-EsHnh | id toscana: 1hrZyy4vPipwm68A-_5v9Nvbpmz6pkvFN
-    public static final String API_IMPORT_STRING = "https://drive.google.com/uc?id=1hrZyy4vPipwm68A-_5v9Nvbpmz6pkvFN";
+    public static final String API_IMPORT_STRING = "https://drive.google.com/uc?id=1AHojX745Ok30wwgy_SGdSkioAu-EsHnh";
     // link api. codice pisa: 3600042527 | codice italia: 3600365331 | codice toscana: 3600041977
-    public static final String OSM_IMPORT_STRING = "https://www.overpass-api.de/api/interpreter?data=[out:json];area(id:3600041977)-%3E.searchArea;(node[%22amenity%22=%22waste_basket%22](area.searchArea);node[%22amenity%22=%22waste_disposal%22](area.searchArea);node[%22amenity%22=%22recycling%22](area.searchArea););out%20body;%3E;out%20skel%20qt;";
-    // numero di megabytes da scaricare approssimativo (nella demo dipende dal codice che viene usato, ora: toscana)
-    public static final float IMPORT_SIZE = 0.5f;
+    public static final String OSM_IMPORT_STRING = "https://www.overpass-api.de/api/interpreter?data=[out:json];area(id:3600365331)-%3E.searchArea;(node[%22amenity%22=%22waste_basket%22](area.searchArea);node[%22amenity%22=%22waste_disposal%22](area.searchArea);node[%22amenity%22=%22recycling%22](area.searchArea););out%20body;%3E;out%20skel%20qt;";
+    // numero di megabytes da scaricare approssimativo (nella demo dipende dal codice che viene usato, ora: italia)
+    public static final float IMPORT_SIZE = 8f;
     // indirizzo web di open street map
     public static final String OSM_WEBSITE = "https://www.openstreetmap.org/about";
     // indirizzo web github progetto

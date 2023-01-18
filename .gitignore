@@ -17,3 +17,6 @@
 local.properties
 /app/release/app-release.aab
 /private_key.pepk
+/app/release/app-release.apk
+/app/release/output-metadata.json
+/app/release/TrashFinder.apk
